@@ -1,6 +1,6 @@
 import { sql } from "@vercel/postgres";
 
-type Drink = {
+export type Drink = {
   id: number;
   name: string;
   createdAt: Date;
@@ -11,8 +11,9 @@ type Drink = {
   thumbsDown: number;
 };
 
-export async function getLatestInspirations(): Promise<Drink[]> {
-  const { rows } = await sql`SELECT * from DRINKS ORDER BY created_at DESC LIMIT 10;`;
+export async function getLatestDrinkIdeas(n: number): Promise<Drink[]> {
+  const { rows } =
+    await sql`SELECT * from DRINKS ORDER BY created_at DESC LIMIT ${n};`;
 
   return rows.map(
     (row) =>
