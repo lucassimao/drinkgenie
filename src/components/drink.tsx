@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -6,13 +8,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Drink } from "@/lib/drinks";
+import { thumbsDown, thumbsUp, type Drink } from "@/lib/drinks";
 import Image from "next/image";
+import { useActionState } from "react";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 
 type Props = { drink: Drink };
 
 export function Drink({ drink }: Props) {
+  const [state, thumbsUpAction, isPending] = useActionState(
+    thumbsUp,
+    drink.thumbsUp || 0,
+  );
+  const [state2, thumbsDownAction, isPending2] = useActionState(
+    thumbsDown,
+    drink.thumbsDown || 0,
+  );
+
   return (
     <Card className="mb-6 ml-3 w-full bg-white rounded-lg shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 ease-in-out">
       <CardHeader>
@@ -31,16 +43,28 @@ export function Drink({ drink }: Props) {
       </CardContent>
       <div className="flex justify-around items-center py-4">
         <div className="flex items-center">
-          <button className="flex items-center text-palette-yale_blue-700 focus:outline-none">
-            <FaRegThumbsUp />
-            <span className="text-lg font-bold">{drink.thumbsUp || 0}</span>
-          </button>
+          <form action={thumbsUpAction}>
+            <input type="hidden" name="drinkId" value={drink.id} />
+            <button
+              disabled={isPending}
+              className="flex items-center text-palette-yale_blue-700 focus:outline-none"
+            >
+              <FaRegThumbsUp />
+              <span className="text-lg font-bold">{state}</span>
+            </button>
+          </form>
         </div>
         <div className="flex items-center">
-          <button className="flex items-center text-palette-tomato focus:outline-none">
-            <FaRegThumbsDown />
-            <span className="text-lg font-bold">{drink.thumbsDown || 0}</span>
-          </button>
+          <form action={thumbsDownAction}>
+            <input type="hidden" name="drinkId" value={drink.id} />
+            <button
+              disabled={isPending2}
+              className="flex items-center text-palette-tomato focus:outline-none"
+            >
+              <FaRegThumbsDown />
+              <span className="text-lg font-bold">{state2}</span>
+            </button>
+          </form>
         </div>
       </div>
       <CardFooter className="flex flex-wrap justify-center p-4 bg-gradient-to-r from-beige to-naples-yellow rounded-b-lg">

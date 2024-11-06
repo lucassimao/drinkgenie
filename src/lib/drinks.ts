@@ -1,3 +1,4 @@
+"use server";
 import { sql } from "@vercel/postgres";
 
 export type Drink = {
@@ -47,4 +48,32 @@ export async function getBestIdeasListing(n: number): Promise<Drink[]> {
         thumbsDown: row.thumbs_down,
       }) as Drink,
   );
+}
+
+async function vote(drinkId: number, type: "up" | "down"): Promise<void> {
+  if (type == "up") {
+    await sql`UPDATE DRINKS SET thumbs_up = thumbs_up + 1  WHERE id = ${drinkId};`;
+  } else {
+    await sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId};`;
+  }
+}
+
+export async function thumbsUp(previousState: number, formData: FormData) {
+  const drinkId = formData.get("drinkId");
+  if (!drinkId) {
+    throw new Error("no drink");
+  }
+
+  await vote(+drinkId, "up");
+  return previousState + 1;
+}
+
+export async function thumbsDown(previousState: number, formData: FormData) {
+  const drinkId = formData.get("drinkId");
+  if (!drinkId) {
+    throw new Error("no drink");
+  }
+
+  await vote(+drinkId, "down");
+  return previousState + 1;
 }
