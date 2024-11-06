@@ -29,3 +29,22 @@ export async function getLatestDrinkIdeas(n: number): Promise<Drink[]> {
       }) as Drink,
   );
 }
+
+export async function getBestIdeasListing(n: number): Promise<Drink[]> {
+  const { rows } =
+    await sql`SELECT * from DRINKS ORDER BY thumbs_up DESC, created_at DESC LIMIT ${n};`;
+
+  return rows.map(
+    (row) =>
+      ({
+        id: row.id,
+        name: row.name,
+        createdAt: new Date(row.created_at),
+        description: row.description,
+        imageUrl: row.image_url,
+        ingredients: row.ingredients,
+        thumbsUp: row.thumbs_up,
+        thumbsDown: row.thumbs_down,
+      }) as Drink,
+  );
+}

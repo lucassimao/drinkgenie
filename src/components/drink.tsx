@@ -33,15 +33,13 @@ export function Drink({ drink }: Props) {
         <div className="flex items-center">
           <button className="flex items-center text-palette-yale_blue-700 focus:outline-none">
             <FaRegThumbsUp />
-            <span className="text-lg font-bold">123</span>
-            {/* Replace with dynamic likes */}
+            <span className="text-lg font-bold">{drink.thumbsUp || 0}</span>
           </button>
         </div>
         <div className="flex items-center">
           <button className="flex items-center text-palette-tomato focus:outline-none">
             <FaRegThumbsDown />
-            <span className="text-lg font-bold">10</span>
-            {/* Replace with dynamic dislikes */}
+            <span className="text-lg font-bold">{drink.thumbsDown || 0}</span>
           </button>
         </div>
       </div>
