@@ -12,6 +12,7 @@ import { thumbsDown, thumbsUp, type Drink } from "@/lib/drinks";
 import Image from "next/image";
 import { useActionState } from "react";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
+import { FaSpinner } from "react-icons/fa";
 
 type Props = { drink: Drink };
 
@@ -45,25 +46,30 @@ export function Drink({ drink }: Props) {
         <div className="flex items-center">
           <form action={thumbsUpAction}>
             <input type="hidden" name="drinkId" value={drink.id} />
-            <button
-              disabled={isPending}
-              className="flex items-center text-palette-yale_blue-700 focus:outline-none"
-            >
-              <FaRegThumbsUp />
-              <span className="text-lg font-bold">{state}</span>
-            </button>
+            {isPending && (
+              <FaSpinner className="animate-spin text-blue-500 text-4xl" />
+            )}
+            {!isPending && (
+              <button className="flex items-center text-palette-yale_blue-700 focus:outline-none">
+                <FaRegThumbsUp className="text-2xl" />
+                <span className="text-lg font-bold">{state}</span>
+              </button>
+            )}
           </form>
         </div>
         <div className="flex items-center">
           <form action={thumbsDownAction}>
             <input type="hidden" name="drinkId" value={drink.id} />
-            <button
-              disabled={isPending2}
-              className="flex items-center text-palette-tomato focus:outline-none"
-            >
-              <FaRegThumbsDown />
-              <span className="text-lg font-bold">{state2}</span>
-            </button>
+            {isPending2 && (
+              <FaSpinner className="animate-spin text-palette-tomato text-4xl" />
+            )}
+
+            {!isPending2 && (
+              <button className="flex items-center text-palette-tomato focus:outline-none">
+                <FaRegThumbsDown className="text-2xl" />
+                <span className="text-lg font-bold">{state2}</span>
+              </button>
+            )}
           </form>
         </div>
       </div>

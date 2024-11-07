@@ -75,5 +75,6 @@ export async function thumbsDown(previousState: number, formData: FormData) {
   }
 
   await vote(+drinkId, "down");
+  // optmistically increasing by 1
   return previousState + 1;
 }
