@@ -29,9 +29,20 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] List best drinks
 - [x] Vote up and down
 - [ ] Generate drink ideas
-    - Generate image
-    - Generate recipe
-    - upload image
-    - save  to database
-- [ ] Limit ideas to 3 per client
-- [ ] Ask $5 to unlock more ideas
+    ok Generate recipe using openai
+    ok save to database
+    ok Generate image using recraft
+    ok upload image
+    - redirect to details page
+    - gracifully handle errors
+- [ ] User management
+    - https://clerk.com/
+    - associate drink with user_id
+    - display user image in the Drink card
+
+- [ ] Limit ideas to logged in users
+- [ ] Payment
+      - Ask $5 to unlock more ideas
+      - Stripe integration
+- [ ] sitemap
+        - include all generated drinks
