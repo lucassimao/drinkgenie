@@ -1,4 +1,3 @@
-import { BestIdeasListing } from "@/components/bestIdeasListing";
 import { Form } from "@/components/form";
 import { LatestIdeasListing } from "@/components/latestIdeasListing";
 
@@ -18,11 +17,6 @@ export default async function Home() {
       </h2>
 
       <LatestIdeasListing />
-
-      <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight my-5">
-        Cheers to the Best !
-      </h2>
-      <BestIdeasListing />
     </main>
   );
 }

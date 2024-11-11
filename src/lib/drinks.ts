@@ -20,6 +20,7 @@ export type Drink = {
   preparationSteps: string[];
   thumbsUp: number;
   thumbsDown: number;
+  slug: string;
 };
 
 const DrinkRecipeSchema = z.object({
@@ -48,6 +49,7 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     thumbsUp: row.thumbs_up,
     thumbsDown: row.thumbs_down,
     preparationSteps: row.preparation_steps,
+    slug: row.slug,
   };
 }
 
@@ -61,10 +63,18 @@ async function saveDrink(
     "description" | "imageUrl" | "ingredients" | "name" | "preparationSteps"
   >,
 ): Promise<Drink> {
-  const { rows } =
-    await sql`INSERT INTO DRINKS (name,created_at,description,image_url,ingredients,thumbs_up, thumbs_down,preparation_steps) 
-      values (${dto.name},NOW(), ${dto.description}, ${dto.imageUrl},${serializeArray(dto.ingredients)},0,0, ${serializeArray(dto.preparationSteps)}) 
-      RETURNING *;`;
+  const slug = slugify(dto.name);
+
+  const { rows } = await sql`
+      WITH slug_check AS (
+        SELECT EXISTS (SELECT 1 FROM drinks WHERE slug = ${slug}) AS exists
+      )
+      INSERT INTO DRINKS (slug, name,created_at,description,image_url,ingredients,thumbs_up, thumbs_down,preparation_steps) 
+        VALUES (
+        (SELECT CASE WHEN exists THEN ${slug} || '-' || to_char(now(), 'YYYYMMDDHH24MISS') ELSE ${slug} END FROM slug_check),
+        ${dto.name},NOW(), ${dto.description}, ${dto.imageUrl},${serializeArray(dto.ingredients)},0,0, ${serializeArray(dto.preparationSteps)}) 
+      RETURNING *;
+    `;
 
   return mapRowToDrink(rows[0]);
 }
@@ -74,6 +84,11 @@ export async function getBestIdeasListing(n: number): Promise<Drink[]> {
     await sql`SELECT * from DRINKS ORDER BY thumbs_up DESC, created_at DESC LIMIT ${n};`;
 
   return rows.map(mapRowToDrink);
+}
+
+export async function getDrinkBySlug(slug: string): Promise<Drink | null> {
+  const { rows } = await sql`SELECT * from DRINKS where slug=${slug} LIMIT 1;`;
+  return mapRowToDrink(rows[0]);
 }
 
 async function vote(drinkId: number, type: "up" | "down"): Promise<void> {

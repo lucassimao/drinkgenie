@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { generateIdea } from "@/lib/drinks";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FaSpinner } from "react-icons/fa";
 
@@ -11,6 +12,7 @@ export function Form() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState("");
+  const router = useRouter();
 
   function onClickGenerateIdea() {
     startTransition(async () => {
@@ -19,6 +21,8 @@ export function Form() {
       const result = await generateIdea("dev", ingredients);
       if (typeof result == "string") {
         setError(result);
+      } else {
+        router.push(`drink/${result.slug}`);
       }
     });
   }

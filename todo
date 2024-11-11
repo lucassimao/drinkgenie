@@ -33,8 +33,8 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
     ok save to database
     ok Generate image using recraft
     ok upload image
-    - redirect to details page
-    - gracifully handle errors
+    ok redirect to details page
+    ok gracifully handle errors
 - [ ] User management
     - https://clerk.com/
     - associate drink with user_id
