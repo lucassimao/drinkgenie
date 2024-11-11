@@ -23,6 +23,7 @@ export function Form() {
     if (user && ingredients) {
       setIngredients(ingredients);
       localStorage.removeItem("ingredients");
+      triggerAction();
     }
   }, [user]);
 
