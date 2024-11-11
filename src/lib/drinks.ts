@@ -21,6 +21,8 @@ export type Drink = {
   thumbsUp: number;
   thumbsDown: number;
   slug: string;
+  userId: string;
+  userProfileImageUrl: string;
 };
 
 const DrinkRecipeSchema = z.object({
@@ -31,6 +33,8 @@ const DrinkRecipeSchema = z.object({
 });
 
 type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
+
+type User = { id: string; imageUrl: string };
 
 export async function getLatestDrinkIdeas(n: number): Promise<Drink[]> {
   const { rows } =
@@ -50,6 +54,8 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     thumbsDown: row.thumbs_down,
     preparationSteps: row.preparation_steps,
     slug: row.slug,
+    userId: row.user_id,
+    userProfileImageUrl: row.user_profile_image_url,
   };
 }
 
@@ -58,19 +64,22 @@ function serializeArray(arr: string[]): string {
 }
 
 async function saveDrink(
+  user: User,
   dto: Pick<
     Drink,
     "description" | "imageUrl" | "ingredients" | "name" | "preparationSteps"
   >,
 ): Promise<Drink> {
-  const slug = slugify(dto.name);
+  const slug = slugify(dto.name.toLowerCase());
 
   const { rows } = await sql`
       WITH slug_check AS (
         SELECT EXISTS (SELECT 1 FROM drinks WHERE slug = ${slug}) AS exists
       )
-      INSERT INTO DRINKS (slug, name,created_at,description,image_url,ingredients,thumbs_up, thumbs_down,preparation_steps) 
+      INSERT INTO DRINKS (user_id,user_profile_image_url,slug, name,created_at,description,image_url,ingredients,thumbs_up, thumbs_down,preparation_steps) 
         VALUES (
+        ${user.id},
+        ${user.imageUrl},
         (SELECT CASE WHEN exists THEN ${slug} || '-' || to_char(now(), 'YYYYMMDDHH24MISS') ELSE ${slug} END FROM slug_check),
         ${dto.name},NOW(), ${dto.description}, ${dto.imageUrl},${serializeArray(dto.ingredients)},0,0, ${serializeArray(dto.preparationSteps)}) 
       RETURNING *;
@@ -121,7 +130,7 @@ export async function thumbsDown(previousState: number, formData: FormData) {
 }
 
 export async function generateIdea(
-  userId: string,
+  user: User,
   ingredients: string,
 ): Promise<Drink | string> {
   if (ingredients.length > 100) {
@@ -129,17 +138,17 @@ export async function generateIdea(
   }
 
   if (typeof ingredients != "string" || ingredients.split(",").length < 3) {
-    return "List at least 3 ingredients you have at hand.";
+    return "List at least 3 ingredients.";
   }
 
-  if (typeof userId != "string") {
-    return "userId missing.";
+  if (!user) {
+    return "You need to authenticate first.";
   }
 
   try {
     const completion = await openai.beta.chat.completions.parse({
       model: "gpt-4o",
-      user: userId,
+      user: user.id,
       messages: [
         {
           role: "system",
@@ -208,7 +217,7 @@ export async function generateIdea(
       return "Oops! Something went wrong. Please try again.";
     }
 
-    const drink = await saveDrink({
+    const drink = await saveDrink(user, {
       name: recipe.parsed.name,
       preparationSteps: recipe.parsed.preparationSteps,
       description: recipe.parsed.description,
@@ -267,7 +276,7 @@ async function generateImage(drink: DrinkRecipe): Promise<string | null> {
 
   const blob = new Blob([binaryData], { type: "image/jpg" });
 
-  const putResult = await put(slugify(drink.name), blob, {
+  const putResult = await put(slugify(drink.name.toLowerCase()), blob, {
     access: "public",
     addRandomSuffix: true,
   });

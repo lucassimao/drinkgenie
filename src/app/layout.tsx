@@ -1,3 +1,5 @@
+import { Toolbar } from "@/components/toolbar";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
@@ -16,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={rubik.className}>{children}</body>
+      <ClerkProvider>
+        <body className={rubik.className}>
+          <Toolbar />
+          {children}
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

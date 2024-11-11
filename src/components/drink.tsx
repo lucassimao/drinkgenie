@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useActionState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { HiOutlineHandThumbDown, HiOutlineHandThumbUp } from "react-icons/hi2";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = { drink: Drink; displayPreparationSteps?: boolean };
 
@@ -43,9 +44,14 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
           alt={drink.description}
         />
       </CardContent>
-      <div className="flex justify-around items-center pb-4">
-        <div className="flex items-center">
-          <form action={thumbsUpAction}>
+      <div className="flex justify-between mx-4	 pb-4">
+        <Avatar className="mt-0 w-[25px] h-[25px]">
+          <AvatarImage src={drink.userProfileImageUrl} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+
+        <div className="flex items-center flex-end">
+          <form action={thumbsUpAction} className="mr-4">
             <input type="hidden" name="drinkId" value={drink.id} />
             {isPending && (
               <FaSpinner className="animate-spin text-blue-500 text-4xl" />
@@ -60,8 +66,6 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
               </button>
             )}
           </form>
-        </div>
-        <div className="flex items-center">
           <form action={thumbsDownAction}>
             <input type="hidden" name="drinkId" value={drink.id} />
             {isPending2 && (
