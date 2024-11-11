@@ -1,6 +1,8 @@
 import { Form } from "@/components/form";
 import { LatestIdeasListing } from "@/components/latestIdeasListing";
 
+export const maxDuration = 60; // Applies to the actions
+
 export default async function Home() {
   return (
     <main className="m-5 pt-[50px] h-screen rounded-lg flex flex-col items-center">

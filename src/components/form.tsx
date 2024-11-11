@@ -7,10 +7,8 @@ import { generateIdea } from "@/lib/drinks";
 import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { FaSpinner } from "react-icons/fa";
-
-export const maxDuration = 60; // Applies to the actions
 
 export function Form() {
   const [isPending, startTransition] = useTransition();
@@ -19,12 +17,17 @@ export function Form() {
   const router = useRouter();
   const { isSignedIn, user } = useUser();
 
-  function onClickGenerateIdea() {
-    if (!isSignedIn) {
-      localStorage.setItem("ingredients", ingredients);
-      router.push("sign-up");
-      return;
+  useEffect(() => {
+    const ingredients = localStorage.getItem(`ingredients`);
+
+    if (user && ingredients) {
+      setIngredients(ingredients);
+      localStorage.removeItem("ingredients");
     }
+  }, [user]);
+
+  function triggerAction() {
+    if (!user) return;
 
     startTransition(async () => {
       setError(null);
@@ -37,6 +40,16 @@ export function Form() {
         router.push(`drink/${result.slug}`);
       }
     });
+  }
+
+  function onClickGenerateIdea() {
+    if (isSignedIn) {
+      triggerAction();
+    } else {
+      localStorage.setItem("ingredients", ingredients);
+      router.push("sign-up");
+      return;
+    }
   }
 
   return (
