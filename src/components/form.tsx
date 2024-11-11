@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FaSpinner } from "react-icons/fa";
 
+export const maxDuration = 60; // Applies to the actions
+
 export function Form() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { put } from "@vercel/blob";
 import slugify from "slugify";
+import { revalidatePath } from "next/cache";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -211,9 +212,7 @@ export async function generateIdea(
       return "Sorry, we ran out of ideas for now.";
     }
 
-    console.log(`generating image ...`);
     const imageUrl = await generateImage(recipe.parsed);
-    console.log(`finished ${imageUrl}`);
 
     if (!imageUrl) {
       return "Oops! Something went wrong. Please try again.";
@@ -226,6 +225,8 @@ export async function generateIdea(
       imageUrl,
       ingredients: recipe.parsed.ingredients,
     });
+
+    revalidatePath("/");
 
     return drink;
 
