@@ -211,7 +211,9 @@ export async function generateIdea(
       return "Sorry, we ran out of ideas for now.";
     }
 
+    console.log(`generating image ...`);
     const imageUrl = await generateImage(recipe.parsed);
+    console.log(`finished ${imageUrl}`);
 
     if (!imageUrl) {
       return "Oops! Something went wrong. Please try again.";

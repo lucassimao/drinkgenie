@@ -19,7 +19,7 @@ Discover the most-loved drinks—highly rated and ready to pour!
 
 "Top Shelf Picks 🥂"
 Our community’s all-time favorites, voted and celebrated by fellow drink lovers!
-
+q
 "Fan Favorites 🍸"
 These drinks stole the spotlight—explore the sips everyone’s talking about!
 
@@ -29,16 +29,14 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] List best drinks
 - [x] Vote up and down
 - [x] Generate drink ideas
-      ok Generate recipe using openai
-      ok save to database
-      ok Generate image using recraft
-      ok upload image
-      ok redirect to details page
-      ok gracifully handle errors
 - [x] User management
-  - https://clerk.com/
-  - associate drink with user_id
-  - display user image in the Drink card
-  - Limit ideas to logged in users
+- [ ] Optmizations
+  - only vote if logged in
+  - only generate idea and move image generation to a vercel function 
+  - set up facebook, twitter for authenticatin in clerk
 - [ ] Payment - Ask $5 to unlock more ideas - Stripe integration
 - [ ] sitemap - include all generated drinks
+- [ ] vercel function to send social media posts
+- [ ] https://vercel.com/docs/production-checklist
+- Pagination
+- responsive layout
