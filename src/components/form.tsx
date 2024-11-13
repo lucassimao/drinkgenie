@@ -28,7 +28,9 @@ export function Form() {
         setError(null);
         const result = await generateIdea(ingredients);
         if (typeof result == "string") {
-          setError(result);
+          if (result == "No enough credits.") {
+            router.push(`/tip`);
+          } else setError(result);
         } else {
           router.push(`/drink/${result.slug}`);
         }

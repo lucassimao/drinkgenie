@@ -122,7 +122,6 @@ async function vote(drinkId: number, type: "up" | "down"): Promise<number> {
     result =
       await sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId} RETURNING thumbs_down;`;
   }
-  console.log(result);
   return type === "up" ? result.rows[0].thumbs_up : result.rows[0].thumbs_down;
 }
 
@@ -150,6 +149,16 @@ export async function thumbsDown(
   return await vote(+drinkId, "down");
 }
 
+async function getUserCredits(userId: string): Promise<number> {
+  const { rows } = await sql`
+    SELECT 
+      (SELECT count(*) FROM drinks WHERE user_id = ${userId}) AS drink_count,
+      (SELECT sum(total) FROM credits WHERE user_id = ${userId}) AS total_credits
+  `;
+
+  return rows[0].total_credits - rows[0].drink_count;
+}
+
 export async function generateIdea(
   ingredients: string,
 ): Promise<Drink | string> {
@@ -157,6 +166,11 @@ export async function generateIdea(
 
   if (!userId) {
     return "You need to authenticate first.";
+  }
+
+  const userCredits = await getUserCredits(userId);
+  if (userCredits <= 0) {
+    return "No enough credits.";
   }
 
   if (ingredients.length > 100) {

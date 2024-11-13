@@ -31,9 +31,20 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] Generate drink ideas
 - [x] User management
 - [x] Optmizations
-- [ ] Payment - Ask $5 to unlock more ideas - Stripe integration
+- [ ] Payment 
+    - Clicked in the generate button
+    - Check if logged in
+    - Check if have pending credits
+    - show stripe button
+    - listen to stripe events and keep track of credits
+    - deduct 1 credit for each successfull drink generated
+- [ ] Pagination
+- [ ] Filter by ingredients
 - [ ] sitemap - include all generated drinks
 - [ ] vercel function to send social media posts
-- [ ] https://vercel.com/docs/production-checklist
-- Pagination
+    - twitter
+    - facebook
+    - instagram
 - responsive layout
+- Only allow 1 vote per user
+- [ ] https://vercel.com/docs/production-checklist
