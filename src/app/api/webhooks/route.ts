@@ -20,15 +20,11 @@ export async function POST(req: Request) {
   let event;
 
   try {
-    // Convert the ReadableStream<Uint8Array> to a Buffer
-    const chunks = [];
-    const reader = req.body?.getReader();
-    while (reader) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
-    }
-    const rawBody = Buffer.concat(chunks);
+    const rawBody = await req.text();
+
+    console.log({ hasRawBody: rawBody != null });
+    console.log({ sig: sig != null });
+    console.log({ w: process.env.STRIPE_WEBHOOK_SIGNING_SECRET != null });
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-10-28.acacia",
