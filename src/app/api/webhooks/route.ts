@@ -33,6 +33,7 @@ export async function POST(req: Request) {
     const rawBody = await getRawBody(req);
     console.log(rawBody.toString());
     console.log({ sig });
+    console.log({ k: process.env.STRIPE_WEBHOOK_SIGNING_SECRET });
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-10-28.acacia",
