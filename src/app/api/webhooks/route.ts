@@ -1,12 +1,6 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
-export const config = {
-  api: {
-    bodyParser: false, // Disables body parsing, so we can handle the raw body manually
-  },
-};
-
 async function getRawBody(req: Request): Promise<Buffer> {
   const reader = req.body?.getReader();
   const chunks: Uint8Array[] = [];
@@ -37,12 +31,14 @@ export async function POST(req: Request) {
 
   try {
     const rawBody = await getRawBody(req);
+    console.log(rawBody.toString());
+    console.log({ sig });
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-10-28.acacia",
     });
     event = stripe.webhooks.constructEvent(
-      rawBody,
+      rawBody.toString(),
       sig,
       process.env.STRIPE_WEBHOOK_SIGNING_SECRET!,
     );
