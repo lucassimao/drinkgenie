@@ -1,6 +1,12 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
+export const config = {
+  api: {
+    bodyParser: false, // Disables body parsing, so we can handle the raw body manually
+  },
+};
+
 export async function POST(req: Request) {
   const headersList = await headers();
   const sig = headersList.get("stripe-signature");
