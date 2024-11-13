@@ -7,6 +7,14 @@ export const config = {
   },
 };
 
+async function buffer(readable: Readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
 export async function POST(req: Request) {
   const headersList = await headers();
   const sig = headersList.get("stripe-signature");
@@ -20,11 +28,8 @@ export async function POST(req: Request) {
   let event;
 
   try {
-    const rawBody = await req.text();
-
-    console.log({ hasRawBody: rawBody != null });
-    console.log({ sig: sig != null });
-    console.log({ w: process.env.STRIPE_WEBHOOK_SIGNING_SECRET != null });
+    const buf = await buffer(req);
+    const rawBody = buf.toString("utf8");
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-10-28.acacia",
