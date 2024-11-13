@@ -1,6 +1,5 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import type { Readable } from "node:stream";
 
 export const config = {
   api: {
@@ -8,11 +7,19 @@ export const config = {
   },
 };
 
-async function buffer(readable: Readable) {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+async function getRawBody(req: Request): Promise<Buffer> {
+  const reader = req.body?.getReader();
+  const chunks: Uint8Array[] = [];
+
+  if (!reader) {
+    throw new Error("Request body is empty or already consumed.");
   }
+
+  let done, value;
+  while ((({ done, value } = await reader.read()), !done)) {
+    if (value) chunks.push(value);
+  }
+
   return Buffer.concat(chunks);
 }
 
@@ -29,8 +36,7 @@ export async function POST(req: Request) {
   let event;
 
   try {
-    const buf = await buffer(req);
-    const rawBody = buf.toString("utf8");
+    const rawBody = await getRawBody(req);
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-10-28.acacia",
