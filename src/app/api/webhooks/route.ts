@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
+import type { Readable } from "node:stream";
 
 export const config = {
   api: {
