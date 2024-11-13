@@ -7,15 +7,45 @@ import { generateIdea } from "@/lib/drinks";
 import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { FaSpinner } from "react-icons/fa";
 
 export function Form() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [ingredients, setIngredients] = useState("");
+  const [ingredients, setIngredients] = useState<string>("");
   const router = useRouter();
   const { isSignedIn, user } = useUser();
+
+  const triggerAction = useCallback(
+    (ingredients: string) => {
+      if (!user) {
+        console.log("user not found in triggerAction");
+        return;
+      }
+
+      startTransition(async () => {
+        setError(null);
+        const result = await generateIdea(ingredients);
+        if (typeof result == "string") {
+          setError(result);
+        } else {
+          router.push(`/drink/${result.slug}`);
+        }
+      });
+    },
+    [router, user],
+  );
+
+  function onClickGenerateIdea() {
+    if (isSignedIn) {
+      triggerAction(ingredients);
+    } else {
+      localStorage.setItem("ingredients", ingredients);
+      router.push("/sign-up");
+      return;
+    }
+  }
 
   useEffect(() => {
     const ingredients = localStorage.getItem(`ingredients`);
@@ -23,35 +53,9 @@ export function Form() {
     if (user && ingredients) {
       setIngredients(ingredients);
       localStorage.removeItem("ingredients");
-      triggerAction();
+      triggerAction(ingredients);
     }
-  }, [user]);
-
-  function triggerAction() {
-    if (!user) return;
-
-    startTransition(async () => {
-      setError(null);
-
-      const userInfo = { id: user.id, imageUrl: user.imageUrl }; // can't pass the original user. clonning it
-      const result = await generateIdea(userInfo, ingredients);
-      if (typeof result == "string") {
-        setError(result);
-      } else {
-        router.push(`drink/${result.slug}`);
-      }
-    });
-  }
-
-  function onClickGenerateIdea() {
-    if (isSignedIn) {
-      triggerAction();
-    } else {
-      localStorage.setItem("ingredients", ingredients);
-      router.push("sign-up");
-      return;
-    }
-  }
+  }, [user, triggerAction]);
 
   return (
     <>

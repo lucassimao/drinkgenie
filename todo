@@ -30,10 +30,7 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] Vote up and down
 - [x] Generate drink ideas
 - [x] User management
-- [ ] Optmizations
-  - only vote if logged in
-  - only generate idea and move image generation to a vercel function 
-  - set up facebook, twitter for authenticatin in clerk
+- [x] Optmizations
 - [ ] Payment - Ask $5 to unlock more ideas - Stripe integration
 - [ ] sitemap - include all generated drinks
 - [ ] vercel function to send social media posts

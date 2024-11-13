@@ -1,11 +1,12 @@
 "use server";
-import { QueryResultRow, sql } from "@vercel/postgres";
-import OpenAI from "openai";
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
-import slugify from "slugify";
+import { QueryResultRow, sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
+import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+import slugify from "slugify";
+import { z } from "zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -35,8 +36,6 @@ const DrinkRecipeSchema = z.object({
 
 type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
 
-type User = { id: string; imageUrl: string };
-
 export async function getLatestDrinkIdeas(n: number): Promise<Drink[]> {
   const { rows } =
     await sql`SELECT * from DRINKS ORDER BY created_at DESC LIMIT ${n};`;
@@ -65,13 +64,18 @@ function serializeArray(arr: string[]): string {
 }
 
 async function saveDrink(
-  user: User,
   dto: Pick<
     Drink,
     "description" | "imageUrl" | "ingredients" | "name" | "preparationSteps"
   >,
 ): Promise<Drink> {
   const slug = slugify(dto.name.toLowerCase());
+
+  const user = await currentUser();
+
+  if (!user) {
+    throw new Error("You must be signed in to use this feature");
+  }
 
   const { rows } = await sql`
       WITH slug_check AS (
@@ -101,39 +105,60 @@ export async function getDrinkBySlug(slug: string): Promise<Drink | null> {
   return mapRowToDrink(rows[0]);
 }
 
-async function vote(drinkId: number, type: "up" | "down"): Promise<void> {
+async function vote(drinkId: number, type: "up" | "down"): Promise<number> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("You must be signed in to vote.");
+  }
+  if (!drinkId) {
+    throw new Error("No drink selected.");
+  }
+
+  let result;
   if (type == "up") {
-    await sql`UPDATE DRINKS SET thumbs_up = thumbs_up + 1  WHERE id = ${drinkId};`;
+    result =
+      await sql`UPDATE DRINKS SET thumbs_up = thumbs_up + 1  WHERE id = ${drinkId} RETURNING thumbs_up;`;
   } else {
-    await sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId};`;
+    result =
+      await sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId} RETURNING thumbs_down;`;
   }
+  console.log(result);
+  return type === "up" ? result.rows[0].thumbs_up : result.rows[0].thumbs_down;
 }
 
-export async function thumbsUp(previousState: number, formData: FormData) {
+export async function thumbsUp(
+  previousState: number,
+  formData: FormData,
+): Promise<number> {
   const drinkId = formData.get("drinkId");
   if (!drinkId) {
-    throw new Error("no drink");
+    throw new Error("No drink selected.");
   }
 
-  await vote(+drinkId, "up");
-  return previousState + 1;
+  return await vote(+drinkId, "up");
 }
 
-export async function thumbsDown(previousState: number, formData: FormData) {
+export async function thumbsDown(
+  previousState: number,
+  formData: FormData,
+): Promise<number> {
   const drinkId = formData.get("drinkId");
   if (!drinkId) {
-    throw new Error("no drink");
+    throw new Error("No drink selected.");
   }
 
-  await vote(+drinkId, "down");
-  // optmistically increasing by 1
-  return previousState + 1;
+  return await vote(+drinkId, "down");
 }
 
 export async function generateIdea(
-  user: User,
   ingredients: string,
 ): Promise<Drink | string> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return "You need to authenticate first.";
+  }
+
   if (ingredients.length > 100) {
     return "Too many ingredients!";
   }
@@ -142,14 +167,11 @@ export async function generateIdea(
     return "List at least 3 ingredients.";
   }
 
-  if (!user) {
-    return "You need to authenticate first.";
-  }
-
   try {
+    console.time("openai");
     const completion = await openai.beta.chat.completions.parse({
       model: "gpt-4o",
-      user: user.id,
+      user: userId,
       messages: [
         {
           role: "system",
@@ -196,6 +218,7 @@ export async function generateIdea(
       ],
       response_format: zodResponseFormat(DrinkRecipeSchema, "recipe"),
     });
+    console.timeEnd("openai");
 
     if (!completion?.choices?.[0]?.message) {
       return "Sorry, we ran out of ideas for now.";
@@ -212,19 +235,23 @@ export async function generateIdea(
       return "Sorry, we ran out of ideas for now.";
     }
 
+    console.time("recraft");
     const imageUrl = await generateImage(recipe.parsed);
+    console.timeEnd("recraft");
 
     if (!imageUrl) {
       return "Oops! Something went wrong. Please try again.";
     }
 
-    const drink = await saveDrink(user, {
+    console.time("saveDrink");
+    const drink = await saveDrink({
       name: recipe.parsed.name,
       preparationSteps: recipe.parsed.preparationSteps,
       description: recipe.parsed.description,
       imageUrl,
       ingredients: recipe.parsed.ingredients,
     });
+    console.timeEnd("saveDrink");
 
     revalidatePath("/");
 

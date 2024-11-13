@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -9,23 +10,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { thumbsDown, thumbsUp, type Drink } from "@/lib/drinks";
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useActionState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { HiOutlineHandThumbDown, HiOutlineHandThumbUp } from "react-icons/hi2";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
 
 type Props = { drink: Drink; displayPreparationSteps?: boolean };
 
 export function Drink({ drink, displayPreparationSteps = false }: Props) {
-  const [state, thumbsUpAction, isPending] = useActionState(
-    thumbsUp,
-    drink.thumbsUp || 0,
-  );
-  const [state2, thumbsDownAction, isPending2] = useActionState(
-    thumbsDown,
-    drink.thumbsDown || 0,
-  );
+  const { isSignedIn } = useUser();
+
+  const [thumbsUpState, thumbsUpAction, isThumbsUpActionPending] =
+    useActionState(thumbsUp, drink.thumbsUp || 0);
+
+  const [thumbsDownState, thumbsDownAction, isThumbsDownActionPending] =
+    useActionState(thumbsDown, drink.thumbsDown || 0);
+
+  const onButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isSignedIn) {
+      toast.error("You must be signed in to vote.");
+      event.preventDefault();
+    }
+    // Prevent event from reaching Link
+    event.stopPropagation();
+  };
 
   return (
     // transition-transform transform hover:scale-105 duration-300 ease-in-out
@@ -47,38 +57,37 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
       <div className="flex justify-between mx-4	 pb-4">
         <Avatar className="mt-0 w-[25px] h-[25px]">
           <AvatarImage src={drink.userProfileImageUrl} />
-          <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
         <div className="flex items-center flex-end">
           <form action={thumbsUpAction} className="mr-4">
             <input type="hidden" name="drinkId" value={drink.id} />
-            {isPending && (
+            {isThumbsUpActionPending && (
               <FaSpinner className="animate-spin text-blue-500 text-4xl" />
             )}
-            {!isPending && (
+            {!isThumbsUpActionPending && (
               <button
-                onClick={(event) => event.stopPropagation()} // Prevent event from reaching Link
+                onClick={onButtonClick}
                 className="flex items-center text-palette-yale_blue-700 focus:outline-none"
               >
                 <HiOutlineHandThumbUp className="text-2xl" />
-                <span className="text-lg font-bold">{state}</span>
+                <span className="text-lg font-bold">{thumbsUpState}</span>
               </button>
             )}
           </form>
           <form action={thumbsDownAction}>
             <input type="hidden" name="drinkId" value={drink.id} />
-            {isPending2 && (
+            {isThumbsDownActionPending && (
               <FaSpinner className="animate-spin text-palette-tomato text-4xl" />
             )}
 
-            {!isPending2 && (
+            {!isThumbsDownActionPending && (
               <button
-                onClick={(event) => event.stopPropagation()} // Prevent event from reaching Link
+                onClick={onButtonClick}
                 className="flex items-center text-palette-tomato focus:outline-none"
               >
                 <HiOutlineHandThumbDown className="text-2xl" />
-                <span className="text-lg font-bold">{state2}</span>
+                <span className="text-lg font-bold">{thumbsDownState}</span>
               </button>
             )}
           </form>

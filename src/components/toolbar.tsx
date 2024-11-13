@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUser } from "@clerk/nextjs";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HiArrowLongLeft } from "react-icons/hi2";
@@ -23,11 +23,17 @@ export function Toolbar() {
       )}
 
       <div className="flex items-center">
+        <SignedOut>
+          <Link href="/sign-in">Sign In</Link>
+        </SignedOut>
         <Avatar className="mr-2 w-[25px] h-[25px]">
           <AvatarImage src={user?.imageUrl} />
-          <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <span>{user?.fullName}</span>
+        <SignedIn>
+          <span className="mx-2">|</span>
+          <SignOutButton />
+        </SignedIn>
       </div>
     </div>
   );
