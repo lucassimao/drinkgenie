@@ -44,7 +44,10 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SIGNING_SECRET!,
     );
 
-    if (event.type != "checkout.session.completed") {
+    if (
+      event.type != "checkout.session.completed" ||
+      event.data.object.payment_status != "paid"
+    ) {
       return new Response("ok", {
         status: 200,
       });
