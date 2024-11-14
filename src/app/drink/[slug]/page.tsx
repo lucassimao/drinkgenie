@@ -13,7 +13,6 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
 
   if (!slug) {
     notFound();
-    return;
   }
 
   const drink = await getDrinkBySlug(slug);
@@ -24,7 +23,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
 
   return (
     <main className="m-5 mt-0">
-      <Drink displayPreparationSteps={true} drink={drink} />;
+      <Drink displayPreparationSteps={true} drink={drink} />
     </main>
   );
 }

@@ -31,7 +31,9 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] Generate drink ideas
 - [x] User management
 - [x] Optmizations
-- [x] Payment
+- [x] Handle success payment
+  - get the session param, fetch from stripe and thank user
+    /thanks?session={CHECKOUT_SESSION_ID}
 - [ ] Pagination
 - [ ] Filter by ingredients
 - [ ] sitemap - include all generated drinks
