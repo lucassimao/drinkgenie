@@ -149,7 +149,7 @@ export async function thumbsDown(
   return await vote(+drinkId, "down");
 }
 
-async function getUserCredits(userId: string): Promise<number> {
+export async function getUserCredits(userId: string): Promise<number> {
   const { rows } = await sql`
     SELECT 
       (SELECT count(*) FROM drinks WHERE user_id = ${userId}) AS drink_count,

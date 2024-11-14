@@ -8,8 +8,8 @@ import { Toaster } from "@/components/ui/sonner";
 const rubik = Rubik({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Drink Genie",
-  description: "",
+  title: "DrinkGenie",
+  description: `Your go-to for crafting the perfect cocktail! Whether you're a home mixologist, a professional bartender, or just someone who loves exploring new drinks, DrinkGenie is here to grant your cocktail wishes. Simply enter your preferred ingredients, flavors, or vibe, and let the Genie do the magic.`,
 };
 
 export default function RootLayout({
