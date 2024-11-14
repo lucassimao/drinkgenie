@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs/server";
 
-export default function TipPage() {
+export default async function TipPage() {
+  const user = await currentUser();
+
+  if (!user) {
+    return redirect(`/sign-up`);
+  }
+
   return (
     <main className="m-5">
       <h1 className="text-3xl font-bold text-center mb-6 text-primary">
@@ -37,7 +45,7 @@ export default function TipPage() {
       </div>
 
       <a
-        href="https://donate.stripe.com/dR66qdcridRo6bubIK"
+        href={`https://donate.stripe.com/dR66qdcridRo6bubIK?prefilled_email=${user.emailAddresses}`}
         target="_blank"
         rel="noopener noreferrer"
         className="w-full"
