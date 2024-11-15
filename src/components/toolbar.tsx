@@ -1,13 +1,13 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { getUserCredits } from "@/lib/drinks";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiArrowLongLeft } from "react-icons/hi2";
 import { BiDrink } from "react-icons/bi";
+import { getUserCredits } from "@/lib/user";
 
 export function Toolbar() {
   const { user } = useUser();

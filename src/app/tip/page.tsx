@@ -45,7 +45,7 @@ export default async function TipPage() {
       </div>
 
       <a
-        href={`https://donate.stripe.com/dR66qdcridRo6bubIK?prefilled_email=${user.emailAddresses}`}
+        href={`https://donate.stripe.com/dR66qdcridRo6bubIK?prefilled_email=${user?.emailAddresses?.[0]?.emailAddress}`}
         target="_blank"
         rel="noopener noreferrer"
         className="w-full"

@@ -32,15 +32,15 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] User management
 - [x] Optmizations
 - [x] Handle success payment
-  - get the session param, fetch from stripe and thank user
-    /thanks?session={CHECKOUT_SESSION_ID}
 - [ ] Pagination
 - [ ] Filter by ingredients
 - [ ] sitemap - include all generated drinks
+- responsive layout
+- Only allow 1 vote per user
+- static render drink pages
+  turn votes client component
+- [ ] https://vercel.com/docs/production-checklist
 - [ ] vercel function to send social media posts
   - twitter
   - facebook
   - instagram
-- responsive layout
-- Only allow 1 vote per user
-- [ ] https://vercel.com/docs/production-checklist

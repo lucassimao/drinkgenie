@@ -7,6 +7,7 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
+import { getUserCredits } from "./user";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -147,16 +148,6 @@ export async function thumbsDown(
   }
 
   return await vote(+drinkId, "down");
-}
-
-export async function getUserCredits(userId: string): Promise<number> {
-  const { rows } = await sql`
-    SELECT 
-      (SELECT count(*) FROM drinks WHERE user_id = ${userId}) AS drink_count,
-      (SELECT sum(total) FROM credits WHERE user_id = ${userId}) AS total_credits
-  `;
-
-  return rows[0].total_credits - rows[0].drink_count;
 }
 
 export async function generateIdea(
