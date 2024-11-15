@@ -14,11 +14,12 @@ import {
 
 type Props = {
   page: number;
+  ingredient?: string;
 };
-export async function LatestIdeasListing({ page }: Props) {
+export async function LatestIdeasListing({ page, ingredient }: Props) {
   const [latestDrinkIdeas, drinksTotal] = await Promise.all([
-    getLatestDrinkIdeas(10, +page || 1),
-    countDrinks(),
+    getLatestDrinkIdeas(10, +page || 1, ingredient),
+    countDrinks(ingredient),
   ]);
 
   const lastPage = Math.ceil(drinksTotal / 10);
@@ -42,14 +43,17 @@ export async function LatestIdeasListing({ page }: Props) {
           <PaginationItem>
             <PaginationLink href="#">{page}</PaginationLink>
           </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
 
           {page != lastPage && (
-            <PaginationItem>
-              <PaginationNext href={`/?page=${page + 1}`} />
-            </PaginationItem>
+            <>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+
+              <PaginationItem>
+                <PaginationNext href={`/?page=${page + 1}`} />
+              </PaginationItem>
+            </>
           )}
         </PaginationContent>
       </Pagination>

@@ -6,9 +6,11 @@ export const maxDuration = 60; // Applies to the actions
 export default async function Home(props: {
   searchParams?: Promise<{
     page?: string;
+    ingredient?: string;
   }>;
 }) {
   const page = +((await props.searchParams)?.page as string) || 1;
+  const ingredient = (await props.searchParams)?.ingredient as string;
 
   return (
     <main className="m-5 pt-[50px] h-screen rounded-lg flex flex-col items-center">
@@ -24,7 +26,7 @@ export default async function Home(props: {
         Thirsty for Inspiration ?
       </h2>
 
-      <LatestIdeasListing page={page} />
+      <LatestIdeasListing page={page} ingredient={ingredient} />
     </main>
   );
 }

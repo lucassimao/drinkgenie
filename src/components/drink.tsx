@@ -12,14 +12,17 @@ import {
 import { thumbsDown, thumbsUp, type Drink } from "@/lib/drinks";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { HiOutlineHandThumbDown, HiOutlineHandThumbUp } from "react-icons/hi2";
 import { toast } from "sonner";
-
 type Props = { drink: Drink; displayPreparationSteps?: boolean };
 
 export function Drink({ drink, displayPreparationSteps = false }: Props) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const { isSignedIn } = useUser();
 
   const [thumbsUpState, thumbsUpAction, isThumbsUpActionPending] =
@@ -36,6 +39,23 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
     // Prevent event from reaching Link
     event.stopPropagation();
   };
+
+  function onClickIngredient(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) {
+    // Prevent event from reaching Link
+    event.preventDefault();
+    const target = event.target as HTMLElement;
+
+    // Check if the target element has the desired data attribute
+    if (!target.dataset?.ingredient) {
+      throw new Error("No ingredient!");
+    }
+
+    const params = new URLSearchParams(searchParams);
+    params.set("ingredient", target.dataset?.ingredient);
+    router.push(`/?${params.toString()}`);
+  }
 
   return (
     // transition-transform transform hover:scale-105 duration-300 ease-in-out
@@ -109,11 +129,15 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
         </div>
       )}
 
-      <CardFooter className="flex flex-wrap justify-center p-4 bg-gradient-to-r from-beige to-naples-yellow rounded-b-lg">
+      <CardFooter
+        onClick={onClickIngredient}
+        className="flex flex-wrap justify-center p-4 bg-gradient-to-r from-beige to-naples-yellow rounded-b-lg"
+      >
         {drink.ingredients?.map((ingredient) => (
           <Badge
-            className="text-sm mr-2 mb-2 bg-palette-sandy_brown text-white px-3 py-1 rounded-full"
             key={ingredient}
+            data-ingredient={ingredient}
+            className="text-sm mr-2 mb-2 bg-palette-sandy_brown text-white px-3 py-1 rounded-full"
           >
             {ingredient}
           </Badge>

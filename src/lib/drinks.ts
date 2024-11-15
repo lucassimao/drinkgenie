@@ -40,14 +40,40 @@ type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
 export async function getLatestDrinkIdeas(
   n: number,
   page: number,
+  ingredient?: string,
 ): Promise<Drink[]> {
-  const { rows } =
-    await sql`SELECT * from DRINKS ORDER BY created_at DESC LIMIT ${n} OFFSET ${(page - 1) * n};`;
+  const offset = (page - 1) * n;
+
+  const query = ingredient
+    ? sql`
+        SELECT * 
+        FROM DRINKS
+        WHERE array_to_string(ingredients, ',') ILIKE ${"%" + ingredient + "%"}
+        ORDER BY created_at DESC
+        LIMIT ${n}
+        OFFSET ${offset};
+      `
+    : sql`
+        SELECT * 
+        FROM DRINKS
+        ORDER BY created_at DESC
+        LIMIT ${n}
+        OFFSET ${offset};
+      `;
+
+  const { rows } = await query;
   return rows.map(mapRowToDrink);
 }
 
-export async function countDrinks(): Promise<number> {
-  const { rows } = await sql`SELECT count(*) as count from DRINKS;`;
+export async function countDrinks(ingredient?: string): Promise<number> {
+  const query = ingredient
+    ? sql`
+        SELECT count(id) as count 
+        FROM DRINKS
+        WHERE array_to_string(ingredients, ',') ILIKE ${"%" + ingredient + "%"}
+      `
+    : sql`SELECT count(id) as count FROM DRINKS`;
+  const { rows } = await query;
   return +rows[0].count;
 }
 
