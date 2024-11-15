@@ -37,10 +37,18 @@ const DrinkRecipeSchema = z.object({
 
 type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
 
-export async function getLatestDrinkIdeas(n: number): Promise<Drink[]> {
+export async function getLatestDrinkIdeas(
+  n: number,
+  page: number,
+): Promise<Drink[]> {
   const { rows } =
-    await sql`SELECT * from DRINKS ORDER BY created_at DESC LIMIT ${n};`;
+    await sql`SELECT * from DRINKS ORDER BY created_at DESC LIMIT ${n} OFFSET ${(page - 1) * n};`;
   return rows.map(mapRowToDrink);
+}
+
+export async function countDrinks(): Promise<number> {
+  const { rows } = await sql`SELECT count(*) as count from DRINKS;`;
+  return +rows[0].count;
 }
 
 function mapRowToDrink(row: QueryResultRow): Drink {

@@ -3,13 +3,14 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiArrowLongLeft } from "react-icons/hi2";
 import { BiDrink } from "react-icons/bi";
 import { getUserCredits } from "@/lib/user";
 
 export function Toolbar() {
+  const router = useRouter();
   const { user } = useUser();
   const pathname = usePathname();
   const [credits, setCredits] = useState<number | null>(null);
@@ -24,10 +25,10 @@ export function Toolbar() {
   return (
     <div className="flex justify-between w-full text-sm p-4">
       {!isHomePage ? (
-        <Link href="/" className="flex items-center">
+        <div onClick={() => router.back()} className="flex items-center">
           <HiArrowLongLeft className="mr-4" />
-          Back to home
-        </Link>
+          Back home
+        </div>
       ) : (
         <div />
       )}

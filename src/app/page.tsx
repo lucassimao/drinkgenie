@@ -3,7 +3,13 @@ import { LatestIdeasListing } from "@/components/latestIdeasListing";
 
 export const maxDuration = 60; // Applies to the actions
 
-export default async function Home() {
+export default async function Home(props: {
+  searchParams?: Promise<{
+    page?: string;
+  }>;
+}) {
+  const page = +((await props.searchParams)?.page as string) || 1;
+
   return (
     <main className="m-5 pt-[50px] h-screen rounded-lg flex flex-col items-center">
       <div className="flex flex-col items-center mx-auto w-5/6">
@@ -18,7 +24,7 @@ export default async function Home() {
         Thirsty for Inspiration ?
       </h2>
 
-      <LatestIdeasListing />
+      <LatestIdeasListing page={page} />
     </main>
   );
 }
