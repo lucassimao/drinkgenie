@@ -140,6 +140,11 @@ export async function getDrinkBySlug(slug: string): Promise<Drink | null> {
   return mapRowToDrink(rows[0]);
 }
 
+export async function getAllDrinkSlugs(): Promise<string[]> {
+  const { rows } = await sql`SELECT slug from DRINKS;`;
+  return rows.map((row) => row.slug);
+}
+
 async function vote(drinkId: number, type: "up" | "down"): Promise<number> {
   const { userId } = await auth();
   if (!userId) {

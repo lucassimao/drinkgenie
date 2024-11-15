@@ -37,6 +37,7 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [ ] sitemap - include all generated drinks
 - responsive layout
 - Only allow 1 vote per user
+- when filtering by ingredients, diplay the ingredient name and page
 - static render drink pages
 turn votes client component
 - [ ] https://vercel.com/docs/production-checklist
