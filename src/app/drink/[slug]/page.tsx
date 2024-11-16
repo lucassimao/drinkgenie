@@ -5,6 +5,7 @@ import { getAllDrinkSlugs, getDrinkBySlug } from "@/lib/drinks";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Metadata, ResolvingMetadata } from "next";
 
 interface DrinkDetailProps {
   params: Promise<ParsedUrlQuery>;
@@ -16,6 +17,39 @@ export async function generateStaticParams() {
   return allDrinkSlugs.map((slug) => ({
     slug,
   }));
+}
+
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const slug = (await params).slug as string;
+
+  if (!slug) {
+    throw new Error("no slug");
+  }
+
+  const drink = await getDrinkBySlug(slug);
+
+  if (!drink) {
+    throw new Error("no drink " + slug);
+  }
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: drink.name,
+    description: drink.description,
+    openGraph: {
+      images: [drink.imageUrl, ...previousImages],
+    },
+  };
 }
 
 export default async function DrinkDetail({ params }: DrinkDetailProps) {

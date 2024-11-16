@@ -145,6 +145,11 @@ export async function getAllDrinkSlugs(): Promise<string[]> {
   return rows.map((row) => row.slug);
 }
 
+export async function getAllDrinks(): Promise<Drink[]> {
+  const { rows } = await sql`SELECT * from DRINKS;`;
+  return rows.map(mapRowToDrink);
+}
+
 async function vote(drinkId: number, type: "up" | "down"): Promise<number> {
   const { userId } = await auth();
   if (!userId) {
