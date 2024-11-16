@@ -26,6 +26,9 @@ dependencies:
   '@vercel/postgres':
     specifier: ^0.10.0
     version: 0.10.0
+  '@vercel/speed-insights':
+    specifier: ^1.1.0
+    version: 1.1.0(next@15.0.3)(react@19.0.0-rc-02c0e824-20241028)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -950,6 +953,34 @@ packages:
       ws: 8.18.0(bufferutil@4.0.8)
     transitivePeerDependencies:
       - utf-8-validate
+    dev: false
+
+  /@vercel/speed-insights@1.1.0(next@15.0.3)(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-rAXxuhhO4mlRGC9noa5F7HLMtGg8YF1zAN6Pjd1Ny4pII4cerhtwSG4vympbCl+pWkH7nBS9kVXRD4FAn54dlg==}
+    requiresBuild: true
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      next: 15.0.3(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+      react: 19.0.0-rc-02c0e824-20241028
     dev: false
 
   /abort-controller@3.0.0:

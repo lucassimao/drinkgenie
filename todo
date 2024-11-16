@@ -34,15 +34,15 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] Handle success payment
 - [x] Pagination
 - [x] Filter by ingredients
-- [ ] sitemap - include all generated drinks
+- [x] sitemap - include all generated drinks
 - [ ] responsive layout
 - [ ] Only allow 1 vote per user
 - [ ] revalidatePath after voting
 - [ ] when filtering by ingredients, diplay the ingredient name and page
-  [x] static render drink pages
-  [x] turn votes client component
+[x] static render drink pages
+[x] turn votes client component
 - [ ] https://vercel.com/docs/production-checklist
 - [ ] vercel function to send social media posts
-- twitter
-- facebook
-- instagram
+  twitter
+  facebook
+  instagram
