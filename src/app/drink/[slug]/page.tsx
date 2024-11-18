@@ -69,7 +69,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
 
   return (
     <main className="m-5 mt-0">
-      <div className="w-[768px] container mx-auto">
+      <div className="w-full max-w-screen-md container mx-auto">
         <Suspense
           fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}
         >

@@ -24,22 +24,22 @@ export function SocialShare({ drink }: Props) {
   const url = `https://drinkgenie.app/drink/${drink.slug}`;
 
   return (
-    <div>
+    <div className="flex flex-row">
       <FacebookShareButton url={url} hashtag="#dringenie" content={drink.name}>
-        <FacebookIcon />
+        <FacebookIcon className="w-[30px] ml-2 md:w-[50px]" />
       </FacebookShareButton>
       <PinterestShareButton
         media={drink.imageUrl}
         url={url}
         description={drink.name}
       >
-        <PinterestIcon />
+        <PinterestIcon className="w-[30px] ml-2 md:w-[50px]" />
       </PinterestShareButton>
       <RedditShareButton title={drink.name} url={url}>
-        <RedditIcon />
+        <RedditIcon className="w-[30px] ml-2 md:w-[50px]" />
       </RedditShareButton>
       <TelegramShareButton title={drink.name} url={url}>
-        <TelegramIcon />
+        <TelegramIcon className="w-[30px] ml-2 md:w-[50px]" />
       </TelegramShareButton>
       <TumblrShareButton
         caption={drink.description}
@@ -47,18 +47,18 @@ export function SocialShare({ drink }: Props) {
         url={url}
         title={drink.name}
       >
-        <TumblrIcon />
+        <TumblrIcon className="w-[30px] ml-2 md:w-[50px]" />
       </TumblrShareButton>
       <TwitterShareButton
         title={drink.name}
         hashtags={[`drink`, `drinkgenie`]}
         url={url}
       >
-        <TwitterIcon />
+        <TwitterIcon className="w-[30px] ml-2 md:w-[50px]" />
       </TwitterShareButton>
 
       <WhatsappShareButton title={drink.name} url={url}>
-        <WhatsappIcon />
+        <WhatsappIcon className="w-[30px] ml-2 md:w-[50px]" />
       </WhatsappShareButton>
     </div>
   );

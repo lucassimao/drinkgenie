@@ -29,8 +29,6 @@ export function IngredientBadges({ drink, allIngredients }: Props) {
 
   if (!drink.ingredients?.length) return null;
 
-  console.log({ allIngredients });
-
   const ingredients = allIngredients
     ? drink.ingredients
     : drink.ingredients.slice(0, 4);
