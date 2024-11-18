@@ -15,17 +15,10 @@ import { SocialShare } from "./socialShare";
 
 type Props = {
   drink: Drink;
-  displayPreparationSteps?: boolean;
-  allIngredients?: boolean;
-  displayShareButtons?: boolean;
+  fullPageMode?: boolean;
 };
 
-export function Drink({
-  drink,
-  displayPreparationSteps = false,
-  allIngredients,
-  displayShareButtons,
-}: Props) {
+export function Drink({ drink, fullPageMode }: Props) {
   return (
     // transition-transform transform hover:scale-105 duration-300 ease-in-out
     <Card className="mb-6 p-5 w-full h-full pb-0 bg-white rounded-lg shadow-lg hover:shadow-2xl text-gray-700">
@@ -44,22 +37,26 @@ export function Drink({
         />
       </CardContent>
       <div className="flex justify-between items-center mx-0 mt-2	 pb-4">
-        <Avatar className="mt-0 w-[25px] h-[25px] md:w-[50px] md:h-[50px]">
+        <Avatar
+          className={clsx("mt-0 w-[25px] h-[25px]", {
+            "md:w-[50px] md:h-[50px]": fullPageMode,
+          })}
+        >
           <AvatarImage src={drink.userProfileImageUrl} />
         </Avatar>
-        {displayShareButtons && <SocialShare drink={drink} />}
+        {fullPageMode && <SocialShare drink={drink} />}
 
         <Vote drink={drink} />
       </div>
       <p
         className={clsx("text-justify indent-8", {
-          "md:line-clamp-5": !displayPreparationSteps,
+          "md:line-clamp-5": !fullPageMode,
         })}
       >
         {drink.description}
       </p>
 
-      {displayPreparationSteps && (
+      {fullPageMode && (
         <div className="border-t-2 text-gray-700 pt-4">
           <h3 className="text-xl font-extrabold text-center mb-4">
             Preparation steps
@@ -73,7 +70,7 @@ export function Drink({
       )}
 
       <CardFooter className="p-0 m-0">
-        <IngredientBadges allIngredients={allIngredients} drink={drink} />
+        <IngredientBadges allIngredients={fullPageMode} drink={drink} />
       </CardFooter>
     </Card>
   );
