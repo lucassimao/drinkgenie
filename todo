@@ -37,16 +37,14 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] sitemap - include all generated drinks
 - [x] Only allow 1 vote per user
 - [x] when filtering by ingredients, diplay the ingredient name and page
-- [ ] social share buttons
 - [ ] responsive layout
+- [ ] social share buttons
 - [ ] genie image on home page
+- [ ] TOAST COLORS ARE WEIRD
 - [x] static render drink pages
 - [x] turn votes client component
-- [ ] TOAST COLORS ARE WEIRD
-- [ ] check if /tip, /thanks, /sign-in and /singup pages can be SSG'd
 - [x] next button (pagination) when clicked turns white
 - [ ] vercel function to send social media posts
       twitter
       facebook
-      instagram
 - [ ] https://vercel.com/docs/production-checklist

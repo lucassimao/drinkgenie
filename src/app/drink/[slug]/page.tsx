@@ -48,6 +48,8 @@ export async function generateMetadata(
     description: drink.description,
     openGraph: {
       images: [drink.imageUrl, ...previousImages],
+      siteName: "DrinkGenie",
+      url: `https://drinkgenie.app/drinks/${slug}`,
     },
   };
 }
