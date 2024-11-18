@@ -37,8 +37,8 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] sitemap - include all generated drinks
 - [x] Only allow 1 vote per user
 - [x] when filtering by ingredients, diplay the ingredient name and page
-- [ ] responsive layout
-- [ ] social share buttons
+- [x] responsive layout
+- [x] social share buttons
 - [ ] genie image on home page
 - [ ] TOAST COLORS ARE WEIRD
 - [x] static render drink pages

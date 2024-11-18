@@ -11,17 +11,20 @@ import Image from "next/image";
 import { IngredientBadges } from "./ingredientBadges";
 import { Vote } from "./vote";
 import clsx from "clsx";
+import { SocialShare } from "./socialShare";
 
 type Props = {
   drink: Drink;
   displayPreparationSteps?: boolean;
   allIngredients?: boolean;
+  displayShareButtons?: boolean;
 };
 
 export function Drink({
   drink,
   displayPreparationSteps = false,
   allIngredients,
+  displayShareButtons,
 }: Props) {
   return (
     // transition-transform transform hover:scale-105 duration-300 ease-in-out
@@ -40,10 +43,12 @@ export function Drink({
           alt={drink.description}
         />
       </CardContent>
-      <div className="flex justify-between mx-0 mt-2	 pb-4">
-        <Avatar className="mt-0 w-[25px] h-[25px]">
+      <div className="flex justify-between items-center mx-0 mt-2	 pb-4">
+        <Avatar className="mt-0 w-[25px] h-[25px] md:w-[50px] md:h-[50px]">
           <AvatarImage src={drink.userProfileImageUrl} />
         </Avatar>
+        {displayShareButtons && <SocialShare drink={drink} />}
+
         <Vote drink={drink} />
       </div>
       <p

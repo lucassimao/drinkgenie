@@ -73,7 +73,12 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
         <Suspense
           fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}
         >
-          <Drink displayPreparationSteps={true} allIngredients drink={drink} />
+          <Drink
+            displayShareButtons
+            displayPreparationSteps={true}
+            allIngredients
+            drink={drink}
+          />
         </Suspense>
       </div>
     </main>
