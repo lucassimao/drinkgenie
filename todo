@@ -39,11 +39,11 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] when filtering by ingredients, diplay the ingredient name and page
 - [x] responsive layout
 - [x] social share buttons
-- [ ] genie image on home page
-- [ ] TOAST COLORS ARE WEIRD
 - [x] static render drink pages
 - [x] turn votes client component
 - [x] next button (pagination) when clicked turns white
+- [ ] genie image on home page
+- [ ] TOAST COLORS ARE WEIRD
 - [ ] vercel function to send social media posts
       twitter
       facebook

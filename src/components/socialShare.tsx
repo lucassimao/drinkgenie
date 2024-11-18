@@ -10,8 +10,6 @@ import {
   RedditShareButton,
   TelegramIcon,
   TelegramShareButton,
-  TumblrIcon,
-  TumblrShareButton,
   TwitterIcon,
   TwitterShareButton,
   WhatsappIcon,
@@ -41,14 +39,7 @@ export function SocialShare({ drink }: Props) {
       <TelegramShareButton title={drink.name} url={url}>
         <TelegramIcon className="w-[30px] ml-2 md:w-[50px]" />
       </TelegramShareButton>
-      <TumblrShareButton
-        caption={drink.description}
-        tags={[`drinkgenie`, `drink`]}
-        url={url}
-        title={drink.name}
-      >
-        <TumblrIcon className="w-[30px] ml-2 md:w-[50px]" />
-      </TumblrShareButton>
+
       <TwitterShareButton
         title={drink.name}
         hashtags={[`drink`, `drinkgenie`]}
