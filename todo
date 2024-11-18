@@ -35,13 +35,16 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] Pagination
 - [x] Filter by ingredients
 - [x] sitemap - include all generated drinks
-- [ ] Only allow 1 vote per user
-- [ ] revalidatePath after voting
-- [ ] when filtering by ingredients, diplay the ingredient name and page
+- [x] Only allow 1 vote per user
+- [x] when filtering by ingredients, diplay the ingredient name and page
 - [ ] social share buttons
 - [ ] responsive layout
-      [x] static render drink pages
-      [x] turn votes client component
+- [ ] genie image on home page
+- [x] static render drink pages
+- [x] turn votes client component
+- [ ] TOAST COLORS ARE WEIRD
+- [ ] check if /tip, /thanks, /sign-in and /singup pages can be SSG'd
+- [x] next button (pagination) when clicked turns white
 - [ ] vercel function to send social media posts
       twitter
       facebook

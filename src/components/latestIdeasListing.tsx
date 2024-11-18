@@ -35,7 +35,7 @@ export async function LatestIdeasListing({ page, ingredient }: Props) {
         </Link>
       ))}
 
-      <Pagination>
+      <Pagination className="mb-5">
         <PaginationContent>
           {page > 1 && (
             <PaginationItem>

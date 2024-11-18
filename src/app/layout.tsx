@@ -5,6 +5,7 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Suspense } from "react";
 const rubik = Rubik({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,7 +23,9 @@ export default function RootLayout({
       <SpeedInsights />
       <ClerkProvider>
         <body className={rubik.className}>
-          <Toolbar />
+          <Suspense>
+            <Toolbar />
+          </Suspense>
           {children}
           <Toaster richColors />
         </body>

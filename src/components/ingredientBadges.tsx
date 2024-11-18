@@ -24,7 +24,7 @@ export function IngredientBadges({ drink }: Props) {
 
     const params = new URLSearchParams(searchParams);
     params.set("ingredient", target.dataset?.ingredient);
-    router.push(`/?${params.toString()}`);
+    router.push(`/?${params.toString()}`, { scroll: true });
   }
 
   return (

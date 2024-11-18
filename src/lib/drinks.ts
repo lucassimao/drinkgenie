@@ -225,10 +225,9 @@ export async function vote(
 
     return result.rows[0] as VoteResult;
   } catch (error) {
-    await client.sql`ROLLBACK`;
-
     console.log(error, "failed to save vote");
 
+    await client.sql`ROLLBACK`;
     return {
       error: "Oopsie daisy! Something went wrong. Blame the internet gremlins!",
     };
