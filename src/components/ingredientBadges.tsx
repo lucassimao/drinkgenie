@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { type Drink } from "@/lib/drinks";
 import { useRouter, useSearchParams } from "next/navigation";
 
-type Props = { drink: Drink };
+type Props = { drink: Drink; allIngredients?: boolean };
 
-export function IngredientBadges({ drink }: Props) {
+export function IngredientBadges({ drink, allIngredients }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -27,12 +27,20 @@ export function IngredientBadges({ drink }: Props) {
     router.push(`/?${params.toString()}`, { scroll: true });
   }
 
+  if (!drink.ingredients?.length) return null;
+
+  console.log({ allIngredients });
+
+  const ingredients = allIngredients
+    ? drink.ingredients
+    : drink.ingredients.slice(0, 4);
+
   return (
     <div
-      className="flex flex-wrap justify-center p-4 bg-gradient-to-r from-beige to-naples-yellow rounded-b-lg"
+      className="flex flex-wrap overflow-hidden justify-center mt-4 bg-gradient-to-r from-beige to-naples-yellow rounded-b-lg"
       onClick={onClickIngredient}
     >
-      {drink.ingredients?.map((ingredient) => (
+      {ingredients.map((ingredient) => (
         <Badge
           key={ingredient}
           data-ingredient={ingredient}

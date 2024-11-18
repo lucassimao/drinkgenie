@@ -9,6 +9,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        // md: "640px", // instead of 768
+      },
+
       colors: {
         palette: {
           yale_blue: {
@@ -73,7 +77,6 @@ const config: Config = {
           },
         },
 
-
         background: "var(--naples-yellow)",
         foreground: "hsl(var(--foreground))",
 
@@ -124,6 +127,6 @@ const config: Config = {
     },
   },
   // eslint-disable-next-line
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/line-clamp")],
 };
 export default config;

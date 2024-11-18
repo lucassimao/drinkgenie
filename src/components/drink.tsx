@@ -10,13 +10,22 @@ import { type Drink } from "@/lib/drinks";
 import Image from "next/image";
 import { IngredientBadges } from "./ingredientBadges";
 import { Vote } from "./vote";
+import clsx from "clsx";
 
-type Props = { drink: Drink; displayPreparationSteps?: boolean };
+type Props = {
+  drink: Drink;
+  displayPreparationSteps?: boolean;
+  allIngredients?: boolean;
+};
 
-export function Drink({ drink, displayPreparationSteps = false }: Props) {
+export function Drink({
+  drink,
+  displayPreparationSteps = false,
+  allIngredients,
+}: Props) {
   return (
     // transition-transform transform hover:scale-105 duration-300 ease-in-out
-    <Card className="mb-6 p-5 w-full bg-white rounded-lg shadow-lg hover:shadow-2xl text-gray-700">
+    <Card className="mb-6 p-5 w-full h-full pb-0 bg-white rounded-lg shadow-lg hover:shadow-2xl text-gray-700">
       <CardHeader>
         <CardTitle className="text-xl font-extrabold text-palette-yale_blue text-center mb-2">
           {drink.name}
@@ -25,8 +34,8 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
       <CardContent className="p-0">
         <Image
           className="w-full h-auto rounded-lg object-cover"
-          width={300}
-          height={300}
+          width={350}
+          height={350}
           src={drink.imageUrl}
           alt={drink.description}
         />
@@ -37,8 +46,13 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
         </Avatar>
         <Vote drink={drink} />
       </div>
-
-      <p className="text-justify indent-8 pb-4">{drink.description}</p>
+      <p
+        className={clsx("text-justify indent-8", {
+          "md:line-clamp-5": !displayPreparationSteps,
+        })}
+      >
+        {drink.description}
+      </p>
 
       {displayPreparationSteps && (
         <div className="border-t-2 text-gray-700 pt-4">
@@ -53,8 +67,8 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
         </div>
       )}
 
-      <CardFooter>
-        <IngredientBadges drink={drink} />
+      <CardFooter className="p-0 m-0">
+        <IngredientBadges allIngredients={allIngredients} drink={drink} />
       </CardFooter>
     </Card>
   );

@@ -14,9 +14,9 @@ export default async function Home(props: {
   const isHomePage = page == 1 && !ingredient;
 
   return (
-    <main className="m-5  h-screen rounded-lg flex flex-col items-center">
+    <main className="m-5  h-screen rounded-lg flex flex-col items-center pb-15">
       {isHomePage && (
-        <div className="flex flex-col items-center mx-auto w-5/6 mb-5 pt-[50px]">
+        <div className="flex flex-col items-center mx-auto w-5/6 mb-5 pt-[50px] max-w-7xl">
           <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-6xl text-center">
             What&lsquo;s in Your Kitchen?
           </h1>

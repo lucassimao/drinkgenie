@@ -69,11 +69,13 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
 
   return (
     <main className="m-5 mt-0">
-      <Suspense
-        fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}
-      >
-        <Drink displayPreparationSteps={true} drink={drink} />
-      </Suspense>
+      <div className="w-[768px] container mx-auto">
+        <Suspense
+          fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}
+        >
+          <Drink displayPreparationSteps={true} allIngredients drink={drink} />
+        </Suspense>
+      </div>
     </main>
   );
 }

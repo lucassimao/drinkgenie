@@ -28,14 +28,17 @@ export async function LatestIdeasListing({ page, ingredient }: Props) {
   const lastPage = Math.ceil(drinksTotal / 10);
 
   return (
-    <div className="flex flex-wrap justify-between">
-      {latestDrinkIdeas.map((drink) => (
-        <Link key={drink.id} href={`/drink/${drink.slug}`}>
-          <Drink drink={drink} />
-        </Link>
-      ))}
-
-      <Pagination className="mb-5">
+    <>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 max-w-7xl">
+        {latestDrinkIdeas.map((drink) => (
+          <div className="h-[700px] " key={drink.id}>
+            <Link href={`/drink/${drink.slug}`}>
+              <Drink drink={drink} />
+            </Link>
+          </div>
+        ))}
+      </div>
+      <Pagination>
         <PaginationContent>
           {page > 1 && (
             <PaginationItem>
@@ -60,6 +63,6 @@ export async function LatestIdeasListing({ page, ingredient }: Props) {
           )}
         </PaginationContent>
       </Pagination>
-    </div>
+    </>
   );
 }

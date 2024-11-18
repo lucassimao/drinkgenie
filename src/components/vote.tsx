@@ -48,7 +48,7 @@ export function Vote({ drink }: Props) {
             evt.preventDefault();
             onClickVote("up");
           }}
-          className="flex items-center text-palette-yale_blue-700 focus:outline-none"
+          className="flex items-center text-palette-yale_blue-700 focus:outline-none cursor-pointer"
         >
           <ThumbUpIcon className="text-2xl" />
           <span className="ml-1 text-lg font-bold">{thumbsUpCount}</span>
@@ -65,7 +65,7 @@ export function Vote({ drink }: Props) {
             evt.preventDefault();
             onClickVote("down");
           }}
-          className="flex items-center text-palette-tomato focus:outline-none ml-4"
+          className="flex items-center text-palette-tomato focus:outline-none ml-4 cursor-pointer"
         >
           <ThumbDownIcon className="text-2xl" />
           <span className="ml-1 text-lg font-bold">{thumbsDownCount}</span>

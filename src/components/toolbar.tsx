@@ -28,9 +28,12 @@ export function Toolbar() {
   }, [user, pathname]);
 
   return (
-    <div className="flex justify-between w-full text-sm p-4">
+    <div className="flex justify-between w-full text-sm p-4 ">
       {!isHomePage ? (
-        <div onClick={() => router.back()} className="flex items-center">
+        <div
+          onClick={() => router.back()}
+          className="flex items-center cursor-pointer"
+        >
           <HiArrowLeft className="mr-2" />
           Go back
         </div>
