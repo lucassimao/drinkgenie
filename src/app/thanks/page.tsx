@@ -32,7 +32,6 @@ const SuccesfulContent = () => (
 
 const ErrorContent = async () => {
   const user = await currentUser();
-  console.log(user);
 
   return (
     <div>

@@ -22,7 +22,7 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
           {drink.name}
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <Image
           className="w-full h-auto rounded-lg object-cover"
           width={300}
@@ -31,15 +31,11 @@ export function Drink({ drink, displayPreparationSteps = false }: Props) {
           alt={drink.description}
         />
       </CardContent>
-      <div className="flex justify-between mx-4	 pb-4">
+      <div className="flex justify-between mx-0 mt-2	 pb-4">
         <Avatar className="mt-0 w-[25px] h-[25px]">
           <AvatarImage src={drink.userProfileImageUrl} />
         </Avatar>
-
-        <div className="flex items-center flex-end">
-          <Vote kind="up" drink={drink} />
-          <Vote kind="down" drink={drink} />
-        </div>
+        <Vote drink={drink} />
       </div>
 
       <p className="text-justify indent-8 pb-4">{drink.description}</p>

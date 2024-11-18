@@ -1,69 +1,75 @@
 "use client";
 
-import { thumbsDown, thumbsUp, type Drink } from "@/lib/drinks";
-import { useUser } from "@clerk/nextjs";
-import { useActionState } from "react";
+import { vote, type Drink } from "@/lib/drinks";
+import { useState, useTransition } from "react";
 import { FaSpinner } from "react-icons/fa";
-import { HiOutlineHandThumbDown, HiOutlineHandThumbUp } from "react-icons/hi2";
+import {
+  HiHandThumbDown,
+  HiHandThumbUp,
+  HiOutlineHandThumbDown,
+  HiOutlineHandThumbUp,
+} from "react-icons/hi2";
 import { toast } from "sonner";
 
-type Props = { drink: Drink; kind: "up" | "down" };
+type Props = { drink: Drink };
 
-export function Vote({ drink, kind }: Props) {
-  const { isSignedIn } = useUser();
+export function Vote({ drink }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const [latestVote, setLatestVote] = useState(drink.vote);
+  const [thumbsUpCount, setThumbsUpCount] = useState(drink.thumbsUp);
+  const [thumbsDownCount, setThumbsDownCount] = useState(drink.thumbsDown);
 
-  const [thumbsUpState, thumbsUpAction, isThumbsUpActionPending] =
-    useActionState(thumbsUp, drink.thumbsUp || 0);
+  const onClickVote = (choice: "up" | "down") => {
+    startTransition(async () => {
+      const result = await vote(drink.id, choice);
 
-  const [thumbsDownState, thumbsDownAction, isThumbsDownActionPending] =
-    useActionState(thumbsDown, drink.thumbsDown || 0);
-
-  const onButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!isSignedIn) {
-      toast.error("You must be signed in to vote.");
-      event.preventDefault();
-    }
-    // Prevent event from reaching Link
-    event.stopPropagation();
+      if ("error" in result) {
+        toast.error(result.error);
+      } else {
+        setLatestVote((value) => (choice != value ? choice : undefined));
+        setThumbsUpCount(result.thumbs_up);
+        setThumbsDownCount(result.thumbs_down);
+      }
+    });
   };
+
+  const ThumbUpIcon = latestVote == "up" ? HiHandThumbUp : HiOutlineHandThumbUp;
+  const ThumbDownIcon =
+    latestVote == "down" ? HiHandThumbDown : HiOutlineHandThumbDown;
 
   return (
     <div className="flex items-center flex-end">
-      {kind == "up" && (
-        <form action={thumbsUpAction} className="mr-4">
-          <input type="hidden" name="drinkId" value={drink.id} />
-          {isThumbsUpActionPending && (
-            <FaSpinner className="animate-spin text-blue-500 text-4xl" />
-          )}
-          {!isThumbsUpActionPending && (
-            <button
-              onClick={onButtonClick}
-              className="flex items-center text-palette-yale_blue-700 focus:outline-none"
-            >
-              <HiOutlineHandThumbUp className="text-2xl" />
-              <span className="text-lg font-bold">{thumbsUpState}</span>
-            </button>
-          )}
-        </form>
+      {isPending && (
+        <FaSpinner className="animate-spin text-blue-500 text-4xl" />
+      )}
+      {!isPending && (
+        <div
+          onClick={(evt) => {
+            evt.preventDefault();
+            onClickVote("up");
+          }}
+          className="flex items-center text-palette-yale_blue-700 focus:outline-none"
+        >
+          <ThumbUpIcon className="text-2xl" />
+          <span className="ml-1 text-lg font-bold">{thumbsUpCount}</span>
+        </div>
       )}
 
-      {kind == "down" && (
-        <form action={thumbsDownAction}>
-          <input type="hidden" name="drinkId" value={drink.id} />
-          {isThumbsDownActionPending && (
-            <FaSpinner className="animate-spin text-palette-tomato text-4xl" />
-          )}
+      {isPending && (
+        <FaSpinner className="animate-spin text-palette-tomato text-4xl" />
+      )}
 
-          {!isThumbsDownActionPending && (
-            <button
-              onClick={onButtonClick}
-              className="flex items-center text-palette-tomato focus:outline-none"
-            >
-              <HiOutlineHandThumbDown className="text-2xl" />
-              <span className="text-lg font-bold">{thumbsDownState}</span>
-            </button>
-          )}
-        </form>
+      {!isPending && (
+        <div
+          onClick={(evt) => {
+            evt.preventDefault();
+            onClickVote("down");
+          }}
+          className="flex items-center text-palette-tomato focus:outline-none ml-4"
+        >
+          <ThumbDownIcon className="text-2xl" />
+          <span className="ml-1 text-lg font-bold">{thumbsDownCount}</span>
+        </div>
       )}
     </div>
   );

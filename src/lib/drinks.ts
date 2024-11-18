@@ -1,4 +1,5 @@
 "use server";
+
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { QueryResultRow, sql } from "@vercel/postgres";
@@ -8,10 +9,8 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
 import { getUserCredits } from "./user";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { db } from "@vercel/postgres";
+import knex from "./knex";
 
 export type Drink = {
   id: number;
@@ -26,7 +25,12 @@ export type Drink = {
   slug: string;
   userId: string;
   userProfileImageUrl: string;
+  vote?: "up" | "down"; // if the logged in user voted for this drink
 };
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const DrinkRecipeSchema = z.object({
   name: z.string(),
@@ -41,27 +45,37 @@ export async function getLatestDrinkIdeas(
   n: number,
   page: number,
   ingredient?: string,
+  loggedInUserId?: string | null, // logged in requesting drinks
 ): Promise<Drink[]> {
   const offset = (page - 1) * n;
 
-  const query = ingredient
-    ? sql`
-        SELECT * 
-        FROM DRINKS
-        WHERE array_to_string(ingredients, ',') ILIKE ${"%" + ingredient + "%"}
-        ORDER BY created_at DESC
-        LIMIT ${n}
-        OFFSET ${offset};
-      `
-    : sql`
-        SELECT * 
-        FROM DRINKS
-        ORDER BY created_at DESC
-        LIMIT ${n}
-        OFFSET ${offset};
-      `;
+  const queryBuilder = knex("drinks as d").select("d.*");
 
-  const { rows } = await query;
+  if (ingredient) {
+    queryBuilder.whereRaw(`array_to_string(d.ingredients, ',') ILIKE ?`, [
+      `%${ingredient}%`,
+    ]);
+  }
+
+  // fetching votes made by the current user
+  if (loggedInUserId) {
+    queryBuilder
+      .leftJoin("user_vote as uv", function () {
+        this.on("d.id", "=", "uv.drink_id").andOn(
+          knex.raw("uv.user_id = ?", loggedInUserId),
+        );
+      })
+      .select("uv.vote");
+  }
+
+  queryBuilder.orderBy("d.created_at", "desc").limit(n).offset(offset);
+
+  const { sql, bindings } = queryBuilder.toSQL().toNative();
+
+  const client = await db.connect();
+
+  // eslint-disable-next-line
+  const { rows } = await client.query(sql, bindings as any);
   return rows.map(mapRowToDrink);
 }
 
@@ -91,6 +105,7 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     slug: row.slug,
     userId: row.user_id,
     userProfileImageUrl: row.user_profile_image_url,
+    vote: row.vote,
   };
 }
 
@@ -128,13 +143,6 @@ async function saveDrink(
   return mapRowToDrink(rows[0]);
 }
 
-export async function getBestIdeasListing(n: number): Promise<Drink[]> {
-  const { rows } =
-    await sql`SELECT * from DRINKS ORDER BY thumbs_up DESC, created_at DESC LIMIT ${n};`;
-
-  return rows.map(mapRowToDrink);
-}
-
 export async function getDrinkBySlug(slug: string): Promise<Drink | null> {
   const { rows } = await sql`SELECT * from DRINKS where slug=${slug} LIMIT 1;`;
   return mapRowToDrink(rows[0]);
@@ -150,48 +158,81 @@ export async function getAllDrinks(): Promise<Drink[]> {
   return rows.map(mapRowToDrink);
 }
 
-async function vote(drinkId: number, type: "up" | "down"): Promise<number> {
+type ActionResult<T> = T | { error: string };
+
+type VoteResult = {
+  thumbs_up: number;
+  thumbs_down: number;
+};
+export async function vote(
+  drinkId: number,
+  vote: "up" | "down",
+): Promise<ActionResult<VoteResult>> {
   const { userId } = await auth();
+
   if (!userId) {
-    throw new Error("You must be signed in to vote.");
-  }
-  if (!drinkId) {
-    throw new Error("No drink selected.");
+    return { error: "You must be signed in to vote." };
   }
 
-  let result;
-  if (type == "up") {
-    result =
-      await sql`UPDATE DRINKS SET thumbs_up = thumbs_up + 1  WHERE id = ${drinkId} RETURNING thumbs_up;`;
-  } else {
-    result =
-      await sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId} RETURNING thumbs_down;`;
+  // Can use LIMIT cuz the UNIQUE user_vote_idx ensures user can only vote once per drink
+  const userVoteResult =
+    await sql`SELECT * FROM user_vote WHERE user_id=${userId} AND drink_id=${drinkId} LIMIT 1`;
+
+  const existingVote = userVoteResult.rows[0];
+
+  const client = await db.connect();
+
+  try {
+    await client.sql`BEGIN`;
+    let result;
+
+    if (existingVote) {
+      // removing vote
+      if (existingVote.vote == vote) {
+        await client.sql`DELETE from user_vote WHERE id=${existingVote.id};`;
+
+        if (vote == "up") {
+          result =
+            await client.sql`UPDATE DRINKS SET thumbs_up = thumbs_up - 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
+        } else {
+          result =
+            await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down - 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
+        }
+      } else {
+        await client.sql`UPDATE user_vote SET vote=${vote} WHERE id=${existingVote.id};`;
+
+        if (vote == "up") {
+          result =
+            await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down - 1, thumbs_up = thumbs_up + 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
+        } else {
+          result =
+            await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1, thumbs_up = thumbs_up - 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
+        }
+      }
+    } else {
+      await client.sql`INSERT INTO user_vote(user_id,vote,drink_id) values(${userId}, ${vote},${drinkId});`;
+
+      if (vote == "up") {
+        result =
+          await client.sql`UPDATE DRINKS SET thumbs_up = thumbs_up + 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
+      } else {
+        result =
+          await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
+      }
+    }
+
+    await client.sql`COMMIT`;
+
+    return result.rows[0] as VoteResult;
+  } catch (error) {
+    await client.sql`ROLLBACK`;
+
+    console.log(error, "failed to save vote");
+
+    return {
+      error: "Oopsie daisy! Something went wrong. Blame the internet gremlins!",
+    };
   }
-  return type === "up" ? result.rows[0].thumbs_up : result.rows[0].thumbs_down;
-}
-
-export async function thumbsUp(
-  previousState: number,
-  formData: FormData,
-): Promise<number> {
-  const drinkId = formData.get("drinkId");
-  if (!drinkId) {
-    throw new Error("No drink selected.");
-  }
-
-  return await vote(+drinkId, "up");
-}
-
-export async function thumbsDown(
-  previousState: number,
-  formData: FormData,
-): Promise<number> {
-  const drinkId = formData.get("drinkId");
-  if (!drinkId) {
-    throw new Error("No drink selected.");
-  }
-
-  return await vote(+drinkId, "down");
 }
 
 export async function generateIdea(

@@ -1,7 +1,8 @@
 import { countDrinks, getLatestDrinkIdeas } from "@/lib/drinks";
 
-import { Drink } from "./drink";
+import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { Drink } from "./drink";
 import {
   Pagination,
   PaginationContent,
@@ -17,8 +18,10 @@ type Props = {
   ingredient?: string;
 };
 export async function LatestIdeasListing({ page, ingredient }: Props) {
+  const user = await currentUser();
+
   const [latestDrinkIdeas, drinksTotal] = await Promise.all([
-    getLatestDrinkIdeas(10, +page || 1, ingredient),
+    getLatestDrinkIdeas(10, +page || 1, ingredient, user?.id),
     countDrinks(ingredient),
   ]);
 
