@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const rawBody = await getRawBody(req);
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: "2024-10-28.acacia",
+      apiVersion: "2024-11-20.acacia",
     });
 
     const event = stripe.webhooks.constructEvent(
