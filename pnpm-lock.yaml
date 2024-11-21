@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@clerk/nextjs':
-    specifier: ^6.4.0
-    version: 6.4.0(next@15.0.3)(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+    specifier: ^6.4.1
+    version: 6.4.1(next@15.0.3)(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
   '@radix-ui/react-avatar':
     specifier: ^1.1.1
     version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
@@ -51,8 +51,8 @@ dependencies:
     specifier: ^0.4.3
     version: 0.4.3(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
   openai:
-    specifier: ^4.72.0
-    version: 4.72.0(zod@3.23.8)
+    specifier: ^4.73.0
+    version: 4.73.0(zod@3.23.8)
   pg:
     specifier: ^8.13.1
     version: 8.13.1
@@ -75,8 +75,8 @@ dependencies:
     specifier: ^1.7.0
     version: 1.7.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
   stripe:
-    specifier: ^17.3.1
-    version: 17.3.1
+    specifier: ^17.4.0
+    version: 17.4.0
   tailwind-merge:
     specifier: ^2.5.4
     version: 2.5.4
@@ -89,8 +89,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: ^22.9.0
-    version: 22.9.0
+    specifier: ^22.9.1
+    version: 22.9.1
   '@types/react':
     specifier: ^18.3.12
     version: 18.3.12
@@ -131,12 +131,12 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  /@clerk/backend@1.17.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
-    resolution: {integrity: sha512-rqeyF217p4GiUKmi+9/wIlWcW2ybaskcwohtSHuuuMmH+kW46ITGSymjka+1bcni/2mHNqxl6RmpQEGK2ncmtQ==}
+  /@clerk/backend@1.17.1(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-gfjdLILCVdt0wOuFlv0QwYcdNR1dR7VkwhzZV8y4zhcF95AalzIQaBH3vUsOzlOxieBsuuB+dS1ZauHAwGFdgg==}
     engines: {node: '>=18.17.0'}
     dependencies:
-      '@clerk/shared': 2.15.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
-      '@clerk/types': 4.34.0
+      '@clerk/shared': 2.16.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+      '@clerk/types': 4.34.1
       cookie: 0.7.0
       snakecase-keys: 5.4.4
       tslib: 2.4.1
@@ -145,32 +145,32 @@ packages:
       - react-dom
     dev: false
 
-  /@clerk/clerk-react@5.16.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
-    resolution: {integrity: sha512-u2RocKKBDjygFv0v/qo8JMEsINKpHoDa1cA9ldAnXJHNlQFO66hH0Ax1gPKtafttthzVug237jiX7lGKifMoDw==}
+  /@clerk/clerk-react@5.16.1(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-CTXn4RlNLxZxrohtbmkpsZFwmE51J10ErcLXCnwNjyN0gBz0xX9fJapysGhSR3osrZASaIzmrP8/bCTnNvs7Sg==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       react: ^18 || ^19.0.0-0
       react-dom: ^18 || ^19.0.0-0
     dependencies:
-      '@clerk/shared': 2.15.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
-      '@clerk/types': 4.34.0
+      '@clerk/shared': 2.16.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+      '@clerk/types': 4.34.1
       react: 19.0.0-rc-02c0e824-20241028
       react-dom: 19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028)
       tslib: 2.4.1
     dev: false
 
-  /@clerk/nextjs@6.4.0(next@15.0.3)(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
-    resolution: {integrity: sha512-M79Zjhf/QXQh8hFcsFDbzOqXnA3+YwCx/97YjDj+PwPE7uuqzGgPfnqRAwwcher7A2bWi6x+Bb7O/y6VjAkNCQ==}
+  /@clerk/nextjs@6.4.1(next@15.0.3)(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-dmHCQMlqrdVLIKG0xO5oRsAbwjETRM5eW7wUlhTJEp3XUZYJUggR838Vupj/1sLaCJxcFWNDobgKw/MdEKT5Ng==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       next: ^13.5.4 || ^14.0.3 || ^15.0.0
       react: ^18 || ^19.0.0-0
       react-dom: ^18 || ^19.0.0-0
     dependencies:
-      '@clerk/backend': 1.17.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
-      '@clerk/clerk-react': 5.16.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
-      '@clerk/shared': 2.15.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
-      '@clerk/types': 4.34.0
+      '@clerk/backend': 1.17.1(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+      '@clerk/clerk-react': 5.16.1(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+      '@clerk/shared': 2.16.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
+      '@clerk/types': 4.34.1
       crypto-js: 4.2.0
       ezheaders: 0.1.0(next@15.0.3)
       next: 15.0.3(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028)
@@ -180,8 +180,8 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/shared@2.15.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
-    resolution: {integrity: sha512-aO1l9mYiz9ZVU8hOJKg5fTeyVVm2NLdGlwSROhOgWVzJ/0FcfmQfuMkiMC7ZwRUQb9jqdGj5Kdb4QxUFJNCkyA==}
+  /@clerk/shared@2.16.0(react-dom@19.0.0-rc-02c0e824-20241028)(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-JM5GZcrnvppV+06v5ebsjTI5vGQFGI6TlrLiAHAfcOo/numCDR3EN5MWQW27kD09bsrRtgBNsPiejTpMqXGWjA==}
     engines: {node: '>=18.17.0'}
     requiresBuild: true
     peerDependencies:
@@ -193,7 +193,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@clerk/types': 4.34.0
+      '@clerk/types': 4.34.1
       dequal: 2.0.3
       glob-to-regexp: 0.4.1
       js-cookie: 3.0.5
@@ -203,8 +203,8 @@ packages:
       swr: 2.2.5(react@19.0.0-rc-02c0e824-20241028)
     dev: false
 
-  /@clerk/types@4.34.0:
-    resolution: {integrity: sha512-4ghDvf80/sFlpx5HnmIl3vW7SOqEaTDwyKAw64H/E2ahgGUMk+qLVpxnBumTpowq+bGjfMVwbneDQOhtmYidoQ==}
+  /@clerk/types@4.34.1:
+    resolution: {integrity: sha512-FaeHmmoZkIrPrU6AOJ8FUke+LM8ZH072w0Aog6kbQGL3bCBZgUGFy7faTzozxbd+TWTbzVDoTAbDeZCq21UOFg==}
     engines: {node: '>=18.17.0'}
     dependencies:
       csstype: 3.1.1
@@ -785,7 +785,7 @@ packages:
   /@types/node-fetch@2.6.12:
     resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
     dependencies:
-      '@types/node': 22.9.0
+      '@types/node': 22.9.1
       form-data: 4.0.1
     dev: false
 
@@ -795,15 +795,15 @@ packages:
       undici-types: 5.26.5
     dev: false
 
-  /@types/node@22.9.0:
-    resolution: {integrity: sha512-vuyHg81vvWA1Z1ELfvLko2c8f34gyA0zaic0+Rllc5lbCnbSyuvb2Oxpm6TAUAC/2xZN3QGqxBNggD1nNR2AfQ==}
+  /@types/node@22.9.1:
+    resolution: {integrity: sha512-p8Yy/8sw1caA8CdRIQBG5tiLHmxtQKObCijiAa9Ez+d4+PRffM4054xbju0msf+cvhJpnFEeNjxmVT/0ipktrg==}
     dependencies:
       undici-types: 6.19.8
 
   /@types/pg@8.11.6:
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
     dependencies:
-      '@types/node': 22.9.0
+      '@types/node': 22.9.1
       pg-protocol: 1.7.0
       pg-types: 4.0.2
     dev: false
@@ -3128,8 +3128,8 @@ packages:
       mimic-function: 5.0.1
     dev: true
 
-  /openai@4.72.0(zod@3.23.8):
-    resolution: {integrity: sha512-hFqG9BWCs7L7ifrhJXw7mJXmUBr7d9N6If3J9563o0jfwVA4wFANFDDaOIWFdgDdwgCXg5emf0Q+LoLCGszQYA==}
+  /openai@4.73.0(zod@3.23.8):
+    resolution: {integrity: sha512-NZstV77w3CEol9KQTRBRQ15+Sw6nxVTicAULSjYO4wn9E5gw72Mtp3fAVaBFXyyVPws4241YmFG6ya4L8v03tA==}
     hasBin: true
     peerDependencies:
       zod: ^3.23.8
@@ -3925,11 +3925,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@17.3.1:
-    resolution: {integrity: sha512-E9/u+GFBPkYnTmfFCoKX3+gP4R3SkZoGunHe4cw9J+sqkj5uxpLFf1LscuI9BuEyIQ0PFAgPTHavgQwRtOvnag==}
+  /stripe@17.4.0:
+    resolution: {integrity: sha512-sQQGZguPxe7/QYXJKtDpfzT2OAH9F8nyE2SOsVdTU793iiU33/dpaKgWaJEGJm8396Yy/6NvTLblgdHlueGLhA==}
     engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 22.9.0
+      '@types/node': 22.9.1
       qs: 6.13.0
     dev: false
 

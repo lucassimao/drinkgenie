@@ -62,7 +62,7 @@ export function Form() {
   return (
     <>
       <Textarea
-        placeholder="Tell us what you have, and we'll mix up some magic!"
+        placeholder="Tell us what you have ! e.g Cachaça, Lemon, Sugar ...  "
         className="bg-white mt-5 mb-3 h-auto min-h-[150px] max-h-[500px]"
         required
         name="ingredients"

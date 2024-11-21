@@ -1,30 +1,3 @@
-Captions para o button gerar drink
-
-"Shake Up My Drink!" 🍹
-"Surprise Me!" 🎉
-"What Should I Sip?" 🍸
-"Hit Me with a Drink!" 🥂
-"Pour Me Some Ideas!" 🍾
-"Cheers to New Ideas!" 🥤
-"Let’s Get Mixing!" 🍹
-
-- Somente 3 pedidos free. Depois disso, tem que pagar
-
-Secao dos mais votados
-"The Crowd’s Favorites 🍹"
-Sip on the drinks everyone’s raving about! These top picks are sure to impress.
-
-"Cheers to the Best! 🏆"
-Discover the most-loved drinks—highly rated and ready to pour!
-
-"Top Shelf Picks 🥂"
-Our community’s all-time favorites, voted and celebrated by fellow drink lovers!
-q
-"Fan Favorites 🍸"
-These drinks stole the spotlight—explore the sips everyone’s talking about!
-
-"Sip-Worthy Hits! 🌟"
-
 - [x] List inspirations
 - [x] List best drinks
 - [x] Vote up and down
@@ -43,8 +16,8 @@ These drinks stole the spotlight—explore the sips everyone’s talking about!
 - [x] turn votes client component
 - [x] next button (pagination) when clicked turns white
 - [ ] genie image on home page
-- [ ] TOAST COLORS ARE WEIRD
 - [ ] vercel function to send social media posts
       twitter
       facebook
 - [ ] https://vercel.com/docs/production-checklist
+- [ ] TOAST COLORS ARE WEIRD

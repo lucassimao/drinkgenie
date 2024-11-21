@@ -1,5 +1,6 @@
 import { Form } from "@/components/form";
 import { LatestIdeasListing } from "@/components/latestIdeasListing";
+import Image from "next/image";
 
 export const maxDuration = 60; // Applies to the actions
 
@@ -16,7 +17,16 @@ export default async function Home(props: {
   return (
     <main className="m-5  h-screen rounded-lg flex flex-col items-center pb-15">
       {isHomePage && (
-        <div className="flex flex-col items-center mx-auto w-5/6 mb-5 pt-[50px] max-w-7xl">
+        <div className="flex flex-col items-center mx-auto w-5/6 mb-5 max-w-7xl">
+          <Image
+            className="mb-2 w-[33vw] md:w-[250px]"
+            width={1024}
+            height={1024}
+            src="/cheerful-genie.png"
+            alt="cheerful genie siping a cockatail"
+            sizes="(max-width: 768px) 33vw, (max-width: 1200px) 50vw"
+          />
+
           <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-6xl text-center">
             What&lsquo;s in Your Kitchen?
           </h1>

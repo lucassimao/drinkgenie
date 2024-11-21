@@ -50,7 +50,7 @@ export function Drink({ drink, fullPageMode }: Props) {
       </div>
       <p
         className={clsx("text-justify indent-8", {
-          "md:line-clamp-5": !fullPageMode,
+          "line-clamp-5": !fullPageMode,
         })}
       >
         {drink.description}
