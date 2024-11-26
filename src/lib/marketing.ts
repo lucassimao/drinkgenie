@@ -14,13 +14,15 @@ async function downloadMedia(url: string): Promise<Buffer> {
 
 export async function postTweet() {
   console.log("Preparing tweet");
-
+  console.time(`postTweet`);
   const drink = await getNextDrinkToShare("twitter");
 
   if (!drink) {
     console.log("no drink to tweet. Skipping");
     return;
   }
+
+  console.log(`Drink to tweet: ${drink.slug}`);
 
   const buffer = await downloadMedia(drink.imageUrl);
 
@@ -46,19 +48,40 @@ export async function postTweet() {
   });
 
   console.log("metadata added");
+  try {
+    const parts = [
+      drink.name,
+      ":",
+      `https://www.drinkgenie.app/drink/${drink.slug}`,
+    ];
+    const cappedDescription = drink.description.slice(
+      0,
+      280 - parts.join(" ").length + 2, // +2 to afford a white space before and after cappedDescription
+    );
+    // 2 is the index of the colon in the parts array + 1
+    parts.splice(2, 0, cappedDescription);
+    const text = parts.join(" ");
 
-  await client.v2.tweet(
-    `${drink.description} https://drinkgenie.app/drink/${drink.slug}`,
-    {
+    await client.v2.tweet(text, {
       media: {
         media_ids: [mediaId],
       },
-    },
-  );
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      // eslint-disable-next-line
+      const { data, rateLimite } = error as any;
+      const details = JSON.stringify({ data, rateLimite });
+      console.error(`failed to tweet ${drink.slug}: ${details}`);
+    }
+    throw error;
+  }
 
   console.log("Tweet successfully posted");
 
   await sql`UPDATE drinks SET tweet_posted_at = NOW() WHERE ID=${drink.id}`;
+
+  console.timeEnd(`postTweet`);
 }
 
 export async function postToFacebook() {
