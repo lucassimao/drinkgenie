@@ -46,6 +46,14 @@ export async function generateMetadata(
   return {
     title: drink.name,
     description: drink.description,
+    twitter: {
+      card: "summary_large_image",
+      site: "@DrinkGenieApp",
+      title: drink.name,
+      description: drink.description,
+      images: [drink.imageUrl],
+      creator: "DrinkGenie",
+    },
     openGraph: {
       images: [drink.imageUrl, ...previousImages],
       siteName: "DrinkGenie",

@@ -15,9 +15,13 @@
 - [x] static render drink pages
 - [x] turn votes client component
 - [x] next button (pagination) when clicked turns white
-- [ ] genie image on home page
+- [x] genie image on home page
 - [ ] vercel function to send social media posts
       twitter
       facebook
 - [ ] https://vercel.com/docs/production-checklist
 - [ ] TOAST COLORS ARE WEIRD
+- [ ] Telegram notifications
+
+Phase 2
+- new design

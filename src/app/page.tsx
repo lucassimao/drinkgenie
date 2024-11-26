@@ -1,6 +1,7 @@
 import { Form } from "@/components/form";
 import { LatestIdeasListing } from "@/components/latestIdeasListing";
 import Image from "next/image";
+import cheerfulGenie from "../../public/cheerful-genie.png";
 
 export const maxDuration = 60; // Applies to the actions
 
@@ -20,11 +21,10 @@ export default async function Home(props: {
         <div className="flex flex-col items-center mx-auto w-5/6 mb-5 max-w-7xl">
           <Image
             className="mb-2 w-[33vw] md:w-[250px]"
-            width={1024}
-            height={1024}
-            src="/cheerful-genie.png"
-            alt="cheerful genie siping a cockatail"
-            sizes="(max-width: 768px) 33vw, (max-width: 1200px) 50vw"
+            src={cheerfulGenie}
+            alt="cheerful genie sipping a cockatail"
+            priority
+            sizes="(max-width: 768px) 33vw, (max-width: 1200px) 50vw, 100vw"
           />
 
           <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-6xl text-center">

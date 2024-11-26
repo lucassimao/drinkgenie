@@ -402,3 +402,23 @@ async function generateImage(drink: DrinkRecipe): Promise<string | null> {
 
   return putResult.url;
 }
+
+export async function getNextDrinkToShare(
+  network: "twitter" | "facebook",
+): Promise<Drink | null> {
+  let result = null;
+
+  if (network == "twitter") {
+    result =
+      await sql`SELECT * FROM drinks WHERE tweet_posted_at IS NULL ORDER BY ID DESC LIMIT 1`;
+  } else if (network == "facebook") {
+    result =
+      await sql`SELECT * FROM drinks WHERE facebook_posted_at IS NULL ORDER BY ID DESC LIMIT 1`;
+  } else {
+    throw new Error("Invalid network: " + network);
+  }
+
+  if (result.rowCount == 0) return null;
+
+  return mapRowToDrink(result.rows[0]);
+}

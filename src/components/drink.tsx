@@ -33,7 +33,9 @@ export function Drink({ drink, fullPageMode }: Props) {
           width={350}
           height={350}
           src={drink.imageUrl}
+          loading={fullPageMode ? "eager" : "lazy"}
           alt={drink.description}
+          sizes="(max-width: 768px) 50vw, 100vw"
         />
       </CardContent>
       <div className="flex justify-between items-center mx-0 mt-2	 pb-4">

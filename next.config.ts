@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  serverExternalPackages: ["knex"],
+  serverExternalPackages: ["knex", "twitter-api-v2"],
 };
 
 export default nextConfig;
