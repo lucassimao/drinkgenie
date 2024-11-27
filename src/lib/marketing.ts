@@ -49,18 +49,7 @@ export async function postTweet() {
 
   console.log("metadata added");
   try {
-    const parts = [
-      drink.name,
-      ":",
-      `https://www.drinkgenie.app/drink/${drink.slug}`,
-    ];
-    const cappedDescription = drink.description.slice(
-      0,
-      280 - parts.join(" ").length + 2, // +2 to afford a white space before and after cappedDescription
-    );
-    // 2 is the index of the colon in the parts array + 1
-    parts.splice(2, 0, cappedDescription);
-    const text = parts.join(" ");
+    const text = `${drink.name} https://www.drinkgenie.app/drink/${drink.slug}`;
 
     await client.v2.tweet(text, {
       media: {
