@@ -22,10 +22,10 @@
     "@vercel/blob": "^0.26.0",
     "@vercel/postgres": "^0.10.0",
     "@vercel/speed-insights": "^1.1.0",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "knex": "^3.1.0",
-    "lucide-react": "^0.460.0",
+    "lucide-react": "^0.462.0",
     "next": "15.0.3",
     "next-themes": "^0.4.3",
     "openai": "^4.73.1",
@@ -43,18 +43,18 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^22.9.1",
+    "@types/node": "^22.10.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.0.3",
     "eslint-config-prettier": "^9.1.0",
-    "husky": "^9.1.6",
+    "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "postcss": "^8.4.49",
-    "prettier": "3.3.3",
+    "prettier": "3.4.1",
     "tailwindcss": "^3.4.15",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
