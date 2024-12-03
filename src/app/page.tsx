@@ -1,7 +1,10 @@
-import { Form } from "@/components/form";
-import { LatestIdeasListing } from "@/components/latestIdeasListing";
-import Image from "next/image";
-import cheerfulGenie from "../../public/cheerful-genie.png";
+import { CocktailList } from "@/components/DrinkList";
+import { IngredientForm } from "@/components/IngredientForm";
+import { Pagination } from "@/components/Pagination";
+import { SectionDivider } from "@/components/SectionDivider";
+import { Testimonials } from "@/components/Testimonials";
+import { VideoTutorials } from "@/components/VideoTutorials";
+import { getLatestDrinkIdeas } from "@/lib/drinks";
 
 export const maxDuration = 60; // Applies to the actions
 
@@ -14,34 +17,40 @@ export default async function Home(props: {
   const page = +((await props.searchParams)?.page as string) || 1;
   const ingredient = (await props.searchParams)?.ingredient as string;
   const isHomePage = page == 1 && !ingredient;
+  const cocktails = await getLatestDrinkIdeas(12, page);
 
   return (
-    <main className="m-5  h-screen rounded-lg flex flex-col items-center pb-15">
-      {isHomePage && (
-        <div className="flex flex-col items-center mx-auto w-5/6 mb-5 max-w-7xl">
-          <Image
-            className="mb-2 w-[33vw] md:w-[250px]"
-            src={cheerfulGenie}
-            alt="cheerful genie sipping a cockatail"
-            priority
-            sizes="(max-width: 768px) 33vw, (max-width: 1200px) 50vw, 100vw"
+    <main>
+      <div className="py-12 max-w-2xl mx-auto">
+        <IngredientForm />
+      </div>
+
+      <SectionDivider
+        title="Magical Suggestions"
+        subtitle="Discover cocktails crafted just for you"
+      />
+
+      <div className="mb-16">
+        <CocktailList
+          currentPage={page}
+          itemsPerPage={12}
+          cocktails={cocktails}
+        />
+        {/* {totalPages > 1 && ( */}
+        <div className="mt-8">
+          <Pagination
+            currentPage={page}
+            totalPages={100}
+            // onPageChange={(page) => console.log(page)}
           />
-
-          <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-6xl text-center">
-            What&lsquo;s in Your Kitchen?
-          </h1>
-
-          <Form />
         </div>
-      )}
+        {/* )} */}
+      </div>
 
-      <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
-        {ingredient
-          ? `Drinks starring ${ingredient}`
-          : "Thirsty for Inspiration ?"}
-      </h2>
-
-      <LatestIdeasListing page={page} ingredient={ingredient} />
+      <div className="space-y-16 mb-16">
+        <VideoTutorials />
+        <Testimonials />
+      </div>
     </main>
   );
 }

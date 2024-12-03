@@ -1,12 +1,18 @@
-import { Toolbar } from "@/components/toolbar";
-import { ClerkProvider } from "@clerk/nextjs";
-import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
-import "./globals.css";
+import { Footer } from "@/components/Footer";
+import { TopBar } from "@/components/TopBar";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Suspense } from "react";
-const rubik = Rubik({ weight: "400", subsets: ["latin"] });
+import clsx from "clsx";
+import type { Metadata } from "next";
+import { Pacifico, Poppins } from "next/font/google";
+import "./globals.css";
+
+const pacifico = Pacifico({ display: "swap", weight: "400" });
+const poppins = Poppins({
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "DrinkGenie",
@@ -22,11 +28,16 @@ export default function RootLayout({
     <html lang="en">
       <SpeedInsights />
       <ClerkProvider>
-        <body className={rubik.className}>
-          <Suspense>
-            <Toolbar />
-          </Suspense>
-          {children}
+        <body
+          className={clsx(
+            pacifico.className,
+            poppins.className,
+            "min-h-screen bg-background",
+          )}
+        >
+          <TopBar />
+          <div className="max-w-7xl mx-auto px-4">{children}</div>
+          <Footer />
           <Toaster richColors />
         </body>
       </ClerkProvider>

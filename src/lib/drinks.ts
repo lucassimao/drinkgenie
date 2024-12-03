@@ -26,6 +26,17 @@ export type Drink = {
   userId: string;
   userProfileImageUrl: string;
   vote?: "up" | "down"; // if the logged in user voted for this drink
+
+  //TODO support in the database and prompt
+  isGeneratingImage?: boolean;
+  creator?: {
+    name: string;
+    avatarUrl: string;
+  };
+  preparationTime?: string;
+  difficulty?: "Easy" | "Medium" | "Hard";
+  glassType?: string;
+  garnish?: string;
 };
 
 const openai = new OpenAI({
@@ -235,7 +246,7 @@ export async function vote(
 }
 
 export async function generateIdea(
-  ingredients: string,
+  ingredients: string[],
 ): Promise<Drink | string> {
   const { userId } = await auth();
 
@@ -248,12 +259,12 @@ export async function generateIdea(
     return "No enough credits.";
   }
 
-  if (ingredients.length > 100) {
-    return "Too many ingredients!";
+  if (!Array.isArray(ingredients) || ingredients.length < 3) {
+    return "List at least 3 ingredients.";
   }
 
-  if (typeof ingredients != "string" || ingredients.split(",").length < 3) {
-    return "List at least 3 ingredients.";
+  if (ingredients.length > 6 || ingredients.join("").length > 100) {
+    return "Too many ingredients!";
   }
 
   try {
@@ -300,7 +311,7 @@ export async function generateIdea(
           content: [
             {
               type: "text",
-              text: `I have the following ingredients at home: ${ingredients}. Give me a suggestion of a cocktail that I can prepare.`,
+              text: `I have the following ingredients at home: ${ingredients.join(",")}. Give me a suggestion of a cocktail that I can prepare.`,
             },
           ],
         },

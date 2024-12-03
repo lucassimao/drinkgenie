@@ -17,6 +17,7 @@ type Props = {
   page: number;
   ingredient?: string;
 };
+//TODO remove
 export async function LatestIdeasListing({ page, ingredient }: Props) {
   const user = await currentUser();
 
