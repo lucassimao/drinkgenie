@@ -1,6 +1,6 @@
 import { Footer } from "@/components/Footer";
+import { ToastContainer } from "@/components/toast/ToastContainer";
 import { TopBar } from "@/components/TopBar";
-import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import clsx from "clsx";
@@ -38,7 +38,7 @@ export default function RootLayout({
           <TopBar />
           <div className="max-w-7xl mx-auto px-4">{children}</div>
           <Footer />
-          <Toaster richColors />
+          <ToastContainer />
         </body>
       </ClerkProvider>
     </html>

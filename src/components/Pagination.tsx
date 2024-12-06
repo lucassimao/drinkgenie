@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface PaginationProps {
   currentPage: number;
@@ -9,8 +10,13 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, totalPages }: PaginationProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const onPageChange = (page: number) => {
-    console.log({ page });
+    const params = new URLSearchParams(searchParams);
+    params.set("page", String(page));
+    router.push(`/?${params.toString()}`, { scroll: true });
   };
   const getPageNumbers = () => {
     const pages = [];

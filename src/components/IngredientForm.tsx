@@ -1,16 +1,11 @@
 "use client";
 
+import { useToast } from "@/hooks/useToast";
 import { generateIdea } from "@/lib/drinks";
 import { useUser } from "@clerk/nextjs";
 import { Martini, Plus, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 const SUGGESTED_INGREDIENTS = [
   "Vodka",
@@ -23,15 +18,17 @@ const SUGGESTED_INGREDIENTS = [
   "Cranberry Juice",
 ];
 
+//TODO review
 export function IngredientForm() {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const { user } = useUser();
-  const [error, setError] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<string[]>([""]);
   const [activeInput, setActiveInput] = useState<number | null>(null);
   const suggestionsDropdownRef = useRef<HTMLDivElement>(null);
+  const toast = useToast();
 
+  // closes the ingredient dropdown if you click outide of it or hit ESC key
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -57,27 +54,38 @@ export function IngredientForm() {
     };
   }, []);
 
-  const triggerAction = useCallback(
-    (ingredients: string[]) => {
-      if (!user) {
-        console.log("user not found in triggerAction");
-        return;
-      }
+  const triggerAction = () => {
+    if (!user) {
+      toast.warning("Sign in to unlock a world of cocktail creativity!");
+      return;
+    }
 
-      startTransition(async () => {
-        setError(null);
-        const result = await generateIdea(ingredients);
-        if (typeof result == "string") {
-          if (result == "No enough credits.") {
-            router.push(`/tip`);
-          } else setError(result);
+    const filteredIngredients = ingredients.filter((ing) => ing.trim() !== "");
+
+    if (filteredIngredients.length == 0) {
+      toast.error(
+        "Add up to 4 ingredients, and we'll shake things up for you.",
+        "Not enough to work with!",
+      );
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await generateIdea(filteredIngredients);
+      if (typeof result == "string") {
+        if (result == "No enough credits.") {
+          router.push(`/tip`);
         } else {
-          router.push(`/drink/${result.slug}`);
+          console.error(result);
+          toast.error("Somethign went wrong!", "Ooops...");
         }
-      });
-    },
-    [router, user],
-  );
+      } else {
+        setIngredients([""]);
+        setActiveInput(null);
+        router.push(`/drink/${result.slug}`);
+      }
+    });
+  };
 
   const handleAddIngredient = () => {
     if (ingredients.length < 4) {
@@ -89,16 +97,6 @@ export function IngredientForm() {
   const handleRemoveIngredient = (index: number) => {
     setIngredients(ingredients.filter((_, i) => i !== index));
     setActiveInput(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const filteredIngredients = ingredients.filter((ing) => ing.trim() !== "");
-    if (filteredIngredients.length > 0) {
-      triggerAction(filteredIngredients);
-      setIngredients([""]);
-      setActiveInput(null);
-    }
   };
 
   const addSuggestedIngredient = (ingredient: string) => {
@@ -128,8 +126,7 @@ export function IngredientForm() {
           </p>
         </div>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="space-y-8">
         <div className="grid gap-5">
           {ingredients.map((ingredient, index) => (
             <div key={index} className="relative">
@@ -204,7 +201,7 @@ export function IngredientForm() {
             </button>
           )}
           <button
-            type="submit"
+            onClick={triggerAction}
             className="flex-1 sm:flex-none relative overflow-hidden px-8 py-4 bg-gradient-to-r 
                      from-accent to-warning text-white rounded-xl font-medium group
                      transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
@@ -217,7 +214,7 @@ export function IngredientForm() {
             </div>
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

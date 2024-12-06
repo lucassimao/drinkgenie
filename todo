@@ -16,12 +16,34 @@
 - [x] turn votes client component
 - [x] next button (pagination) when clicked turns white
 - [x] genie image on home page
+- [ ] new design
+      ok update deps
+      ok update openai prompt to include new fields
+      ok generate image
+      ok Drink cards
+      - fix pagination
+      ok hide "Master the Art of Mixology" section for now
+      ok hide "What Our Users Say" for now
+      - Footer
+            - hide our story
+            - update meet the team and sitemap
+            - link Business Inquiries to open email
+            - Update Connect with us
+            - Hide Stay Updated
+            - Remove Privacy Policy, Terms of Service, Cookie Policy
+            - Center © 2024 DrinkGenie. All rights reserved.
+            - hide Featured in:
+      - Pricing page
+      - Drink detail page
+            - async generate image
+      - Sign up / Sign in
+      
 - [ ] vercel function to send social media posts
-      twitter
-      facebook
+      ok twitter
+      - facebook
 - [ ] https://vercel.com/docs/production-checklist
-- [ ] TOAST COLORS ARE WEIRD
 - [ ] Telegram notifications
 
-Phase 2
-- new design
+V2
+ - video tutorials using AI
+ - TikTok publicity
