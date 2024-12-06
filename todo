@@ -17,33 +17,35 @@
 - [x] next button (pagination) when clicked turns white
 - [x] genie image on home page
 - [ ] new design
-      ok update deps
-      ok update openai prompt to include new fields
-      ok generate image
-      ok Drink cards
-      - fix pagination
-      ok hide "Master the Art of Mixology" section for now
-      ok hide "What Our Users Say" for now
-      - Footer
-            - hide our story
-            - update meet the team and sitemap
-            - link Business Inquiries to open email
-            - Update Connect with us
-            - Hide Stay Updated
-            - Remove Privacy Policy, Terms of Service, Cookie Policy
-            - Center © 2024 DrinkGenie. All rights reserved.
-            - hide Featured in:
-      - Pricing page
-      - Drink detail page
-            - async generate image
-      - Sign up / Sign in
-      
+      [X] update deps
+      [X] update openai prompt to include new fields
+      [X] generate image
+      [X] Drink cards
+      [X] fix pagination
+      [X] hide "Master the Art of Mixology" section for now
+      [X] hide "What Our Users Say" for now - Footer
+      [X] hide our story
+      [X] update meet the team and sitemap
+      [X] link Business Inquiries to open email
+      [X] Update Connect with us
+      [x] Remove Privacy Policy, Terms of Service, Cookie Policy
+      [x] Center © 2024 DrinkGenie. All rights reserved.
+      [x] hide Featured in:
+      [ ] Pricing page
+      [ ] Drink detail page
+      [ ] async generate image
+      [ ] Sign up / Sign in
 - [ ] vercel function to send social media posts
-      ok twitter
-      - facebook
+      ok twitter - facebook
 - [ ] https://vercel.com/docs/production-checklist
 - [ ] Telegram notifications
 
 V2
- - video tutorials using AI
- - TikTok publicity
+
+- Update Connect with us
+- video tutorials using AI
+- share with pinterest
+- share with instagram
+- share with TikTok
+- share with youtube
+- display Featured section in the Footer

@@ -1,11 +1,11 @@
-import React from "react";
-import { SocialLinks } from "./footer/SocialLinks";
+import { BackToTop } from "./footer/BackToTop";
 import { NewsletterSignup } from "./footer/NewsletterSignup";
 import { QuickLinks } from "./footer/QuickLinks";
-import { BackToTop } from "./footer/BackToTop";
-import Link from "next/link";
+import { SocialLinks } from "./footer/SocialLinks";
 
 export function Footer() {
+  const displayFeaturedIn = false;
+
   return (
     <footer className="relative bg-primary mt-12">
       <div className="absolute inset-0 bg-gradient-to-b from-primary-dark to-primary opacity-50" />
@@ -23,19 +23,21 @@ export function Footer() {
               cocktails. We blend AI technology with mixology expertise to help
               you craft the perfect drink.
             </p>
-            <div className="pt-4">
-              <span className="text-white/40 text-sm">Featured in:</span>
-              <div className="flex gap-4 mt-2">
-                {["forbes.svg", "techcrunch.svg", "wired.svg"].map((logo) => (
-                  <img
-                    key={logo}
-                    src={`/icons/press/${logo}`}
-                    alt=""
-                    className="h-6 opacity-50"
-                  />
-                ))}
+            {displayFeaturedIn && (
+              <div className="pt-4">
+                <span className="text-white/40 text-sm">Featured in:</span>
+                <div className="flex gap-4 mt-2">
+                  {["forbes.svg", "techcrunch.svg", "wired.svg"].map((logo) => (
+                    <img
+                      key={logo}
+                      src={`/icons/press/${logo}`}
+                      alt=""
+                      className="h-6 opacity-50"
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Quick Links */}
@@ -50,8 +52,9 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-white/40">
+          {/* Replace justify-center with justify-between and uncoment the privacy, terms etc links... */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+            {/* <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-white/40">
               <Link
                 href="/privacy"
                 className="hover:text-white/60 transition-colors"
@@ -70,7 +73,7 @@ export function Footer() {
               >
                 Cookie Policy
               </Link>
-            </div>
+            </div> */}
             <p className="text-sm text-white/40">
               © {new Date().getFullYear()} DrinkGenie. All rights reserved.
             </p>

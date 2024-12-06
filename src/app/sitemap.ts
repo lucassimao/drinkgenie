@@ -1,15 +1,15 @@
-import { getAllDrinks } from "@/lib/drinks";
+import { findBy } from "@/lib/drinks";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const drinks = await getAllDrinks();
+  const drinks = await findBy();
 
   const items: MetadataRoute.Sitemap = drinks.map((drink) => ({
     url: `https://drinkgenie.app/drink/${drink.slug}`,
     lastModified: drink.createdAt,
     changeFrequency: "daily",
     priority: 0.7,
-    images: [drink.imageUrl],
+    images: drink.imageUrl ? [drink.imageUrl] : [],
   }));
 
   items.push({

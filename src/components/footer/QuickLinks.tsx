@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { BookOpen, Users, Briefcase, Map } from "lucide-react";
+// import { BookOpen, Users, Briefcase, Map } from "lucide-react";
+import { Briefcase, Map } from "lucide-react";
 
 interface QuickLink {
   name: string;
@@ -9,24 +10,24 @@ interface QuickLink {
 }
 
 const QUICK_LINKS: QuickLink[] = [
-  {
-    name: "Our Story",
-    path: "/about",
-    icon: <BookOpen className="w-4 h-4" />,
-  },
-  {
-    name: "Meet the Team",
-    path: "/team",
-    icon: <Users className="w-4 h-4" />,
-  },
+  // {
+  //   name: "Our Story",
+  //   path: "/about",
+  //   icon: <BookOpen className="w-4 h-4" />,
+  // },
+  // {
+  //   name: "Meet the Team",
+  //   path: "/team",
+  //   icon: <Users className="w-4 h-4" />,
+  // },
   {
     name: "Business Inquiries",
-    path: "/business",
+    path: "mailto:lucas@drinkgenie.com",
     icon: <Briefcase className="w-4 h-4" />,
   },
   {
     name: "Sitemap",
-    path: "/sitemap",
+    path: "/sitemap.xml",
     icon: <Map className="w-4 h-4" />,
   },
 ];

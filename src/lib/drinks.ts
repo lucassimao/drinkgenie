@@ -176,6 +176,7 @@ type FindByArgs = {
   slug?: number;
 };
 
+export async function findBy(): Promise<Drink[]>;
 export async function findBy(
   args: FindByArgs & { id: number },
 ): Promise<Drink | null>;
@@ -183,15 +184,15 @@ export async function findBy(
   args: FindByArgs & { slug: number },
 ): Promise<Drink | null>;
 export async function findBy(
-  args: FindByArgs,
+  args?: FindByArgs,
 ): Promise<Drink | null | Drink[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
 
-  if (args.id) {
+  if (args?.id) {
     queryBuilder.where("id", args.id).first();
   }
 
-  if (args.slug) {
+  if (args?.slug) {
     queryBuilder.where("slug", args.slug).first();
   }
 
@@ -203,7 +204,7 @@ export async function findBy(
   const { rows } = await client.query(sql, bindings as any);
   const result = rows.map(mapRowToDrink);
 
-  const returnFirst = args.id || args.slug;
+  const returnFirst = args?.id || args?.slug;
 
   if (returnFirst) {
     return result[0];
