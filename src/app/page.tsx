@@ -1,4 +1,4 @@
-import { CocktailList } from "@/components/DrinkList";
+import { DrinkList } from "@/components/DrinkList";
 import { IngredientForm } from "@/components/IngredientForm";
 import { Pagination } from "@/components/Pagination";
 import { SectionDivider } from "@/components/SectionDivider";
@@ -48,10 +48,7 @@ export default async function Home(props: {
       />
 
       <div className="mb-16">
-        <CocktailList
-          searchParams={searchParams.toString()}
-          cocktails={drinks}
-        />
+        <DrinkList searchParams={searchParams.toString()} cocktails={drinks} />
         {totalPages > 1 && (
           <div className="mt-8">
             <Pagination currentPage={page} totalPages={totalPages} />

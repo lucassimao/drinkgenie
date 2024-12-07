@@ -173,7 +173,7 @@ async function saveDrink(dto: CreateDrinkDTO): Promise<Drink> {
 
 type FindByArgs = {
   id?: number;
-  slug?: number;
+  slug?: string;
 };
 
 export async function findBy(): Promise<Drink[]>;
@@ -181,7 +181,7 @@ export async function findBy(
   args: FindByArgs & { id: number },
 ): Promise<Drink | null>;
 export async function findBy(
-  args: FindByArgs & { slug: number },
+  args: FindByArgs & { slug: string },
 ): Promise<Drink | null>;
 export async function findBy(
   args?: FindByArgs,

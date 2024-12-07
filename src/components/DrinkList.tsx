@@ -3,12 +3,12 @@ import { Drink as Cocktail } from "@/types/drink";
 import { Loader2 } from "lucide-react";
 import { DrinkCard } from "./DrinkCard";
 
-interface CocktailListProps {
+interface DrinkListProps {
   cocktails: Cocktail[];
   searchParams: string;
 }
 
-export function CocktailList({ cocktails, searchParams }: CocktailListProps) {
+export function DrinkList({ cocktails, searchParams }: DrinkListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {cocktails.map((drink) => (

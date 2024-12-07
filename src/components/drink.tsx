@@ -11,7 +11,7 @@ import Image from "next/image";
 import { IngredientBadges } from "./ingredientBadges";
 import { Vote } from "./vote";
 import clsx from "clsx";
-import { SocialShare } from "./socialShare";
+import { SocialShare } from "./SocialShare";
 
 type Props = {
   drink: Drink;

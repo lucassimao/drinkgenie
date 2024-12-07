@@ -1,6 +1,6 @@
 import { getRelativeTimeString } from "@/lib/dateUtils";
 import { Drink as Cocktail } from "@/types/drink";
-import { BarChart2, Clock } from "lucide-react";
+import { BarChart2, Clock, GlassWater } from "lucide-react";
 import Link from "next/link";
 import { FavoriteDrinkButton } from "./FavoriteDrinkButton";
 import Image from "next/image";
@@ -42,10 +42,34 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
                  transition-all duration-300 transform hover:-translate-y-1 cursor-pointer
                  flex flex-col h-full"
     >
+      {/* Image Section with Loading State */}
       <div className="aspect-w-16 aspect-h-9 relative h-48 flex-shrink-0">
-        {drink.imageUrl ? (
+        {drink.isGeneratingImage ? (
+          <div className="relative h-48 bg-gradient-to-br from-primary/5 to-primary/10 animate-pulse">
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="p-4 bg-white/10 rounded-full backdrop-blur-sm">
+                <GlassWater className="h-8 w-8 text-primary/30" />
+              </div>
+            </div>
+
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary/20 rounded-full blur-xl animate-float" />
+              <div
+                className="absolute -bottom-4 -left-4 w-20 h-20 bg-accent/20 rounded-full blur-xl animate-float"
+                style={{ animationDelay: "1s" }}
+              />
+            </div>
+
+            {/* Shimmer effect */}
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"
+              style={{ backgroundSize: "200% 100%" }}
+            />
+          </div>
+        ) : drink.imageUrl ? (
           <div className="relative h-48 overflow-hidden">
-            <Link href={`/drinks/${drink.slug}`}>
+            <Link href={`/drink/${drink.slug}`}>
               <Image
                 width={995}
                 height={995}
@@ -62,6 +86,27 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
           </div>
         )}
       </div>
+
+      {/* <div className="aspect-w-16 aspect-h-9 relative h-48 flex-shrink-0">
+        {drink.imageUrl ? (
+          <div className="relative h-48 overflow-hidden">
+            <Link href={`/drink/${drink.slug}`}>
+              <Image
+                width={995}
+                height={995}
+                src={drink.imageUrl}
+                alt={drink.name}
+                className="w-full h-full object-cover object-left-top transform group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            </Link>
+          </div>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+            <p className="text-primary/50 font-display">Image unavailable</p>
+          </div>
+        )}
+      </div> */}
 
       <div className="p-6 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-3">

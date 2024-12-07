@@ -31,21 +31,27 @@
       [x] Remove Privacy Policy, Terms of Service, Cookie Policy
       [x] Center © 2024 DrinkGenie. All rights reserved.
       [x] hide Featured in:
-      [ ] Pricing page
-      [ ] Drink detail page
+      [x] Drink detail page
       [ ] async generate image
       [ ] Sign up / Sign in
+      [ ] Pricing page
+      [ ] search result page
+      [ ] refresh search and ingredient suggestions at build time
 - [ ] vercel function to send social media posts
-      ok twitter - facebook
+      ok twitter
+      [ ] facebook
+      [ ] Instagram
+      [ ] pinterest
 - [ ] https://vercel.com/docs/production-checklist
 - [ ] Telegram notifications
 
 V2
 
-- Update Connect with us
-- video tutorials using AI
-- share with pinterest
-- share with instagram
-- share with TikTok
-- share with youtube
-- display Featured section in the Footer
+[] Update Connect with us
+[] video tutorials using AI
+[] share with pinterest
+[] share with instagram
+[] Generate AI video
+[] share with TikTok
+[] share with youtube
+[] display Featured section in the Footer
