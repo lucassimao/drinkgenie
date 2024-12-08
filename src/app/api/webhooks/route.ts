@@ -1,7 +1,7 @@
+import { stripe } from "@/lib/utils";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { sql } from "@vercel/postgres";
 import { headers } from "next/headers";
-import Stripe from "stripe";
 
 async function getRawBody(req: Request): Promise<Buffer> {
   const reader = req.body?.getReader();
@@ -33,10 +33,6 @@ export async function POST(req: Request) {
     }
 
     const rawBody = await getRawBody(req);
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: "2024-11-20.acacia",
-    });
 
     const event = stripe.webhooks.constructEvent(
       rawBody.toString(),

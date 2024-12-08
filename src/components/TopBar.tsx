@@ -1,13 +1,22 @@
 "use client";
+import { getUserCredits } from "@/lib/user";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
-import { Crown, Menu } from "lucide-react";
+import { Coins, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import cheerfulGenie from "../../public/cheerful-genie.png";
 import { SearchBar } from "./SearchBar";
 
 export function TopBar() {
   const { user } = useUser();
+  const [credits, setCredits] = useState(0);
+
+  useEffect(() => {
+    if (user?.id) {
+      getUserCredits(user.id).then(setCredits);
+    }
+  }, [user?.id]);
 
   return (
     <div className="bg-white shadow-md">
@@ -44,13 +53,16 @@ export function TopBar() {
           <div className="hidden md:flex items-center gap-6">
             <nav className="flex space-x-6">
               <Link
-                href="/subscription"
-                className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-primary/70 
-                       hover:text-primary bg-primary/5 rounded-lg transition-all duration-300 
-                       hover:bg-primary/10"
+                href="/credits"
+                className="group flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-white 
+                bg-gradient-to-r from-accent to-warning rounded-xl transition-all duration-300 
+                hover:shadow-lg transform hover:scale-[1.02]"
               >
-                <Crown className="h-4 w-4 text-warning" />
-                Pricing
+                <Coins className="h-4 w-4" />
+                <span>Get Credits</span>
+                <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+                  ${credits}/credit{credits > 1 ? "s" : null}
+                </span>
               </Link>
             </nav>
 
@@ -86,17 +98,30 @@ export function TopBar() {
         <div className="md:hidden border-t border-primary/10 py-4 space-y-4">
           <nav className="flex flex-col space-y-4">
             <Link
-              href="/subscription"
-              className="text-primary/70 hover:text-primary text-sm font-medium transition-colors"
+              href="/credits"
+              className="flex items-center justify-between px-4 py-3 text-sm font-medium text-white 
+                       bg-gradient-to-r from-accent to-warning rounded-xl"
             >
-              Pricing
+              <div className="flex items-center gap-2">
+                <Coins className="h-4 w-4" />
+                <span>Get Credits</span>
+              </div>
+              <span className="px-2 py-1 bg-white/20 rounded text-xs">
+                $1/credit
+              </span>
             </Link>
           </nav>
           <div className="flex flex-col gap-3 pt-4 border-t border-primary/10">
             <SignedIn>
-              <span className="text-sm text-primary">
-                Hi, {user?.firstName || user?.username}
-              </span>
+              <div className="flex items-center justify-between px-4">
+                <span className="text-sm text-primary">
+                  Hi, {user?.firstName || user?.username}
+                </span>
+                <div className="px-2 py-1 bg-background rounded-lg text-sm">
+                  <span className="font-medium text-accent">5</span>
+                  <span className="text-primary/60 ml-1">credits</span>
+                </div>
+              </div>
               <SignOutButton>
                 <button className="w-full px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors">
                   Sign Out
@@ -104,9 +129,15 @@ export function TopBar() {
               </SignOutButton>
             </SignedIn>
             <SignedOut>
-              <button className="w-full px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors">
-                <Link href="/sign-in">Sign In</Link>
-              </button>
+              <Link
+                href="/sign-in"
+                className="w-full px-5 py-2.5 text-sm font-medium text-white bg-accent 
+                         hover:bg-accent-dark rounded-xl transition-all duration-300 
+                         transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] 
+                         focus:outline-none focus:ring-2 focus:ring-accent/30"
+              >
+                Sign In
+              </Link>
             </SignedOut>
           </div>
         </div>
