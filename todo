@@ -33,7 +33,7 @@
       [x] hide Featured in:
       [x] Drink detail page
       [x] async generate image
-      [ ] Sign up / Sign in
+      [x] Sign up / Sign in
       [ ] Pricing page
       [ ] search result page
       [ ] refresh search and ingredient suggestions at build time
