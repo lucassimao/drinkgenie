@@ -1,11 +1,14 @@
 "use client";
 
 import { useToast } from "@/hooks/useToast";
-import { generateIdea } from "@/lib/drinks";
+import { generateDrink } from "@/lib/drinks";
+import { MAX_INGREDIENTS } from "@/lib/utils";
+import { ServiceError } from "@/types/drink";
 import { useUser } from "@clerk/nextjs";
 import { Martini, Plus, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
+import { LoadingState } from "./LoadingState";
 
 const SUGGESTED_INGREDIENTS = [
   "Vodka",
@@ -18,15 +21,14 @@ const SUGGESTED_INGREDIENTS = [
   "Cranberry Juice",
 ];
 
-//TODO review
 export function IngredientForm() {
   const router = useRouter();
-  const [, startTransition] = useTransition();
   const { user } = useUser();
   const [ingredients, setIngredients] = useState<string[]>([""]);
   const [activeInput, setActiveInput] = useState<number | null>(null);
   const suggestionsDropdownRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // closes the ingredient dropdown if you click outide of it or hit ESC key
   useEffect(() => {
@@ -54,37 +56,38 @@ export function IngredientForm() {
     };
   }, []);
 
-  const triggerAction = () => {
+  const onClickGenerate = async () => {
     if (!user) {
-      toast.warning("Sign in to unlock a world of cocktail creativity!");
+      toast.warning("Sign up to unlock a world of cocktail creativity!");
       return;
     }
 
     const filteredIngredients = ingredients.filter((ing) => ing.trim() !== "");
 
-    if (filteredIngredients.length == 0) {
+    if (
+      filteredIngredients.length == 0 ||
+      filteredIngredients.length > MAX_INGREDIENTS
+    ) {
       toast.error(
-        "Add up to 4 ingredients, and we'll shake things up for you.",
+        `Add up to ${MAX_INGREDIENTS} ingredients, and we'll shake things up for you.`,
         "Not enough to work with!",
       );
       return;
     }
 
-    startTransition(async () => {
-      const result = await generateIdea(filteredIngredients);
-      if (typeof result == "string") {
-        if (result == "No enough credits.") {
-          router.push(`/tip`);
-        } else {
-          console.error(result);
-          toast.error("Somethign went wrong!", "Ooops...");
-        }
-      } else {
-        setIngredients([""]);
-        setActiveInput(null);
-        router.push(`/drink/${result.slug}`);
-      }
-    });
+    setIsGenerating(true);
+    try {
+      const result = await generateDrink(filteredIngredients);
+      // setIngredients([""]);
+      // setActiveInput(null);
+      router.push(`/drink/${result.slug}`);
+    } catch (error) {
+      const errorMessage =
+        error instanceof ServiceError ? error.message : "Something went wrong!";
+      toast.error(errorMessage, "Ooops...");
+    } finally {
+      // setIsGenerating(false);
+    }
   };
 
   const handleAddIngredient = () => {
@@ -110,9 +113,10 @@ export function IngredientForm() {
 
   return (
     <div
-      className="bg-white rounded-2xl shadow-lg p-8 md:p-10"
+      className="relative bg-white rounded-2xl shadow-lg p-8 md:p-10 max-w-4xl mx-auto"
       ref={suggestionsDropdownRef}
     >
+      {isGenerating && <LoadingState />}
       <div className="flex items-center gap-4 mb-8">
         <div className="p-4 bg-accent/10 rounded-full">
           <Martini className="h-10 w-10 text-accent" />
@@ -188,7 +192,7 @@ export function IngredientForm() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
-          {ingredients.length < 4 && (
+          {ingredients.length < MAX_INGREDIENTS && (
             <button
               type="button"
               onClick={handleAddIngredient}
@@ -201,11 +205,13 @@ export function IngredientForm() {
             </button>
           )}
           <button
-            onClick={triggerAction}
+            onClick={onClickGenerate}
+            disabled={isGenerating || ingredients.every((ing) => !ing.trim())}
             className="flex-1 sm:flex-none relative overflow-hidden px-8 py-4 bg-gradient-to-r 
                      from-accent to-warning text-white rounded-xl font-medium group
                      transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
-                     active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-accent/30"
+                     active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-accent/30
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             <div className="relative flex items-center justify-center gap-2">

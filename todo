@@ -32,7 +32,7 @@
       [x] Center © 2024 DrinkGenie. All rights reserved.
       [x] hide Featured in:
       [x] Drink detail page
-      [ ] async generate image
+      [x] async generate image
       [ ] Sign up / Sign in
       [ ] Pricing page
       [ ] search result page
@@ -47,11 +47,39 @@
 
 V2
 
-[] Update Connect with us
-[] video tutorials using AI
-[] share with pinterest
-[] share with instagram
-[] Generate AI video
-[] share with TikTok
-[] share with youtube
-[] display Featured section in the Footer
+- [] Update Connect with us
+- [] video tutorials using AI
+- [] share with pinterest
+- [] share with instagram
+- [] Generate AI video
+- [] share with TikTok
+- [] share with youtube
+- [] display Featured section in the Footer
+- Augument drink data with ( pro version only )
+  [] Special equipment needed
+  [] Pro tips for better results
+  [] Common mistakes to avoid
+  [] Style (stirred, shaken, built, etc.)
+  [] Flavor Profile Description (sweet, sour, bitter, etc.)
+  - VARIATIONS
+    [] List 2-3 popular variations of the drink
+    [] Note which ingredients can be substituted
+    [] Suggest non-alcoholic alternatives if possible
+
+(PAIRING sugestions)
+Food pairing recommendations
+Occasion recommendations
+Best time/season to serve
+
+(Presentation tips)
+Garnish placement
+Ice recommendations
+Color and appearance description
+Photography tips for social media
+
+Include warnings where appropriate:
+
+Alcohol content notices
+Common allergens
+Flammability warnings for specific techniques
+Temperature-sensitive ingredients

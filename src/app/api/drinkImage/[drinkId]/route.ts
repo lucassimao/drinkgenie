@@ -1,11 +1,14 @@
 import { findBy } from "@/lib/drinks";
-import { waitUntil } from "@vercel/functions";
-import slugify from "slugify";
-import { put } from "@vercel/blob";
 import { Drink } from "@/types/drink";
+import { put } from "@vercel/blob";
+import { waitUntil } from "@vercel/functions";
 import { sql } from "@vercel/postgres";
+import slugify from "slugify";
+import { revalidatePath } from "next/cache";
 
 async function generateImage(drink: Drink): Promise<void> {
+  console.log(`generating image for ${drink.id}`);
+
   const response = await fetch(
     "https://external.api.recraft.ai/v1/images/generations",
     {
@@ -16,7 +19,9 @@ async function generateImage(drink: Drink): Promise<void> {
       body: JSON.stringify({
         style: "realistic_image",
         response_format: "b64_json",
-        prompt: `Portrait the cocktail ${drink.name}. ${drink.description}. Here are the steps to preprair it: ${drink.preparationSteps.join()} `,
+        size: "1024x1024",
+        model: "recraftv3",
+        prompt: `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `,
       }),
     },
   );
@@ -47,6 +52,11 @@ async function generateImage(drink: Drink): Promise<void> {
   });
 
   await sql`UPDATE drinks SET image_url = ${putResult.url}, is_generating_image=false WHERE id=${drink.id}`;
+
+  revalidatePath(`/`);
+  revalidatePath(`/drink/${drink.slug}`);
+
+  console.log(`image generated for ${drink.id}!`);
 }
 
 export async function POST(

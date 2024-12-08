@@ -11,6 +11,7 @@ import { getUserCredits } from "./user";
 import { db } from "@vercel/postgres";
 import knex from "./knex";
 import { Drink, ServiceError } from "@/types/drink";
+import { BASE_URL, MAX_INGREDIENTS } from "./utils";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -25,7 +26,7 @@ const DrinkRecipeSchema = z.object({
   preparationTime: z.string(),
   difficulty: z.enum(["Easy", `Medium`, `Hard`]),
   glassType: z.string(),
-  garnish: z.string().optional().nullable(),
+  garnish: z.string(),
 });
 
 type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
@@ -218,82 +219,6 @@ export async function getAllDrinkSlugs(): Promise<string[]> {
   return rows.map((row) => row.slug);
 }
 
-type ActionResult<T> = T | { error: string };
-
-type VoteResult = {
-  thumbs_up: number;
-  thumbs_down: number;
-};
-export async function vote(
-  drinkId: number,
-  vote: "up" | "down",
-): Promise<ActionResult<VoteResult>> {
-  const { userId } = await auth();
-
-  if (!userId) {
-    return { error: "You must be signed in to vote." };
-  }
-
-  // Can use LIMIT cuz the UNIQUE user_vote_idx ensures user can only vote once per drink
-  const userVoteResult =
-    await sql`SELECT * FROM user_vote WHERE user_id=${userId} AND drink_id=${drinkId} LIMIT 1`;
-
-  const existingVote = userVoteResult.rows[0];
-
-  const client = await db.connect();
-
-  try {
-    await client.sql`BEGIN`;
-    let result;
-
-    if (existingVote) {
-      // removing vote
-      if (existingVote.vote == vote) {
-        await client.sql`DELETE from user_vote WHERE id=${existingVote.id};`;
-
-        if (vote == "up") {
-          result =
-            await client.sql`UPDATE DRINKS SET thumbs_up = thumbs_up - 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
-        } else {
-          result =
-            await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down - 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
-        }
-      } else {
-        await client.sql`UPDATE user_vote SET vote=${vote} WHERE id=${existingVote.id};`;
-
-        if (vote == "up") {
-          result =
-            await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down - 1, thumbs_up = thumbs_up + 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
-        } else {
-          result =
-            await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1, thumbs_up = thumbs_up - 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
-        }
-      }
-    } else {
-      await client.sql`INSERT INTO user_vote(user_id,vote,drink_id) values(${userId}, ${vote},${drinkId});`;
-
-      if (vote == "up") {
-        result =
-          await client.sql`UPDATE DRINKS SET thumbs_up = thumbs_up + 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
-      } else {
-        result =
-          await client.sql`UPDATE DRINKS SET thumbs_down = thumbs_down + 1  WHERE id = ${drinkId} RETURNING thumbs_up,thumbs_down;`;
-      }
-    }
-
-    await client.sql`COMMIT`;
-
-    return result.rows[0] as VoteResult;
-  } catch (error) {
-    console.log(error, "failed to save vote");
-
-    await client.sql`ROLLBACK`;
-    return {
-      error: "Oopsie daisy! Something went wrong. Blame the internet gremlins!",
-    };
-  }
-}
-
 export async function toggleFavorite(drinkId: number): Promise<void> {
   const { userId } = await auth();
 
@@ -310,35 +235,33 @@ export async function toggleFavorite(drinkId: number): Promise<void> {
   }
 }
 
-export async function generateIdea(
-  ingredients: string[],
-): Promise<Drink | string> {
+export async function generateDrink(ingredients: string[]): Promise<Drink> {
   const user = await currentUser();
 
   if (!user) {
-    return "You need to authenticate first.";
+    throw new ServiceError("You need to authenticate first.");
   }
 
   const userId = user?.id;
 
   const userCredits = await getUserCredits(userId);
   if (userCredits <= 0) {
-    return "No enough credits.";
+    throw new ServiceError("No enough credits.");
   }
 
-  if (!Array.isArray(ingredients) || ingredients.length < 3) {
-    return "List at least 3 ingredients.";
+  if (!Array.isArray(ingredients) || ingredients.length == 0) {
+    throw new ServiceError(`List up to ${MAX_INGREDIENTS} ingredients.`);
   }
 
-  if (ingredients.length > 6 || ingredients.join("").length > 100) {
-    return "Too many ingredients!";
+  if (ingredients.length > MAX_INGREDIENTS) {
+    throw new ServiceError("Too many ingredients!");
   }
 
   try {
     console.time("openai");
 
     const completion = await openai.beta.chat.completions.parse({
-      model: "gpt-4o",
+      model: `gpt-4o-mini`, //"gpt-4o",
       user: userId,
       messages: [
         {
@@ -347,9 +270,35 @@ export async function generateIdea(
             {
               type: "text",
               text: `
-              You are a helpful, skilled, and creative barman that when given a list of ingredients can then
-              suggest famous drinks and cocktails, including the preparation steps (including measurements), a short 
-              description and the list of ingredients (just names, no measurements).
+              You are an expert mixologist with 20+ years of experience crafting cocktails in high-end establishments worldwide. 
+              You have an encyclopedic knowledge of classical and modern cocktails, deep understanding of flavor profiles, and a
+              passion for helping people discover the perfect drink. 
+
+              When presented with ingredients, you will:
+
+              INITIAL ANALYSIS:
+
+                - First scan the ingredients to understand available flavor profiles
+                - Consider classic and modern cocktails that could be made
+                - Think about possible variations or substitutions
+                - Take into account seasonal relevance
+              
+              SUGGEST A DRINK:
+                For each drink, provide:
+                - Name of the cocktail
+                - Full list of ingredients (only names, no measurements) 
+                - Step-by-step preparation instructions with exact measurements (both ml/oz and common bar measurements)
+                - Rich description
+                - Garnish details
+                - Glassware recommendation
+                - Difficulty level (Easy, Medium, or Hard)
+                - Preparation time (minutes)
+
+              Your response should be:
+                - Professional yet approachable
+                - Rich in practical details
+                - Educational but not overwhelming
+                - Engaging and conversational
             `,
             },
           ],
@@ -383,7 +332,7 @@ export async function generateIdea(
           content: [
             {
               type: "text",
-              text: `I have the following ingredients at home: ${ingredients.join(",")}. Give me a suggestion of a cocktail that I can prepare.`,
+              text: `I have the following ingredients at home: ${ingredients.join(",")}. Could you please suggest a cocktail that I can prepare?`,
             },
           ],
         },
@@ -393,18 +342,18 @@ export async function generateIdea(
     console.timeEnd("openai");
 
     if (!completion?.choices?.[0]?.message) {
-      return "Sorry, we ran out of ideas for now.";
+      throw new ServiceError("Sorry, we ran out of ideas for now.");
     }
 
     const recipe = completion.choices[0].message;
 
     if (recipe.refusal) {
       console.warn(`[REFUSAL] ingredients ${ingredients}: ${recipe.refusal}`);
-      return "Oops! Something went wrong. Please try again.";
+      throw new ServiceError("Oops! Something went wrong. Please try again.");
     }
 
     if (!recipe.parsed) {
-      return "Sorry, we ran out of ideas for now.";
+      throw new ServiceError("Sorry, we ran out of ideas for now.");
     }
 
     console.time("saveDrink");
@@ -423,14 +372,13 @@ export async function generateIdea(
     console.timeEnd("saveDrink");
 
     // endpoint will return 200 immediatly. The long running operation will keep running
-    const res = await fetch(`/api/drinkImage/${drink.id}`, {
+    const res = await fetch(`${BASE_URL}/api/drinkImage/${drink.id}`, {
       method: "POST",
     });
 
     if (!res.ok) {
-      const result = await res.json();
       console.error(
-        `failed to trigger drink #${drink.id} image generation: ${result}`,
+        `failed to trigger drink #${drink.id} image generation: ${res.status} ${res.statusText}`,
       );
     }
 
@@ -446,7 +394,7 @@ export async function generateIdea(
       console.log("An error occurred: ", e.message);
     }
   }
-  return "Sorry, we ran out of ideas for now.";
+  throw new ServiceError("Sorry, we ran out of ideas for now.");
 }
 
 export async function getNextDrinkToShare(
