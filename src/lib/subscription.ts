@@ -1,12 +1,17 @@
 "use server";
 
-import { BASE_URL, stripe } from "./utils";
+import Stripe from "stripe";
+import { BASE_URL } from "./utils";
 
 export async function createCheckoutSession(
   credits: number,
   amountInCents: number,
   email?: string,
 ): Promise<string | null> {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2024-11-20.acacia",
+  });
+
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -27,9 +32,9 @@ export async function createCheckoutSession(
       },
     ],
     mode: "payment",
-    success_url: "https://your-site.com/success",
+    success_url: `${BASE_URL}/credits/success?credits=${credits}`,
     cancel_url: `${BASE_URL}/credits`,
     customer_email: email,
   });
-  return session.url || "";
+  return session.url;
 }

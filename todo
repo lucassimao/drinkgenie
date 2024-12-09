@@ -34,7 +34,7 @@
       [x] Drink detail page
       [x] async generate image
       [x] Sign up / Sign in
-      [ ] Pricing page
+      [x] Pricing page
       [ ] search result page
       [ ] refresh search and ingredient suggestions at build time
 - [ ] vercel function to send social media posts
@@ -47,6 +47,8 @@
 
 V2
 
+- [] integrate with crisp https://crisp.chat/pt/
+- [] integrate with https://features.vote/
 - [] Update Connect with us
 - [] video tutorials using AI
 - [] share with pinterest

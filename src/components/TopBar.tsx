@@ -10,7 +10,7 @@ import { SearchBar } from "./SearchBar";
 
 export function TopBar() {
   const { user } = useUser();
-  const [credits, setCredits] = useState(0);
+  const [credits, setCredits] = useState<number | null>(null);
 
   useEffect(() => {
     if (user?.id) {
@@ -60,9 +60,11 @@ export function TopBar() {
               >
                 <Coins className="h-4 w-4" />
                 <span>Get Credits</span>
-                <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                  ${credits}/credit{credits > 1 ? "s" : null}
-                </span>
+                {typeof credits == "number" && (
+                  <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+                    ${credits}/credit{credits > 1 ? "s" : null}
+                  </span>
+                )}
               </Link>
             </nav>
 

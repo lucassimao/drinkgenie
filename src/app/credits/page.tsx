@@ -1,4 +1,5 @@
 "use client";
+import { useToast } from "@/hooks/useToast";
 import { createCheckoutSession } from "@/lib/subscription";
 import { useUser } from "@clerk/nextjs";
 import { Coins, Info, Loader2, Sparkles, Zap } from "lucide-react";
@@ -9,6 +10,7 @@ export default function Subscription() {
   const { user } = useUser();
   const pricePerCredit = 1;
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const toast = useToast();
 
   const popularAmounts = [10, 25, 50, 100];
   const features = [
@@ -40,7 +42,14 @@ export default function Subscription() {
       getTotalAmount() * 100,
       email,
     );
-    window.location.href = stripeCheckoutLink!;
+    if (!stripeCheckoutLink) {
+      toast.error(
+        `Something went wrong. Could you try again within a few min?`,
+        "Ooops",
+      );
+      return;
+    }
+    window.location.href = stripeCheckoutLink;
   }
 
   return (

@@ -1,7 +1,11 @@
-import { stripe } from "@/lib/utils";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { sql } from "@vercel/postgres";
 import { headers } from "next/headers";
+import Stripe from "stripe";
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-11-20.acacia",
+});
 
 async function getRawBody(req: Request): Promise<Buffer> {
   const reader = req.body?.getReader();
