@@ -7,7 +7,6 @@ import { DrinkImage } from "./DrinkImage";
 
 type PollingImageFetcherProps = {
   drink: Drink;
-  ot;
 };
 export const PollingImageFetcher = ({ drink }: PollingImageFetcherProps) => {
   const { updatedDrink } = useDrinkImagePoller(drink.id);

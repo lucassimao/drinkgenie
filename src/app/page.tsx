@@ -4,7 +4,8 @@ import { Pagination } from "@/components/Pagination";
 import { SectionDivider } from "@/components/SectionDivider";
 import { Testimonials } from "@/components/Testimonials";
 import { VideoTutorials } from "@/components/VideoTutorials";
-import { countDrinks, getLatestDrinkIdeas } from "@/lib/drinks";
+import { countDrinks, findBy } from "@/lib/drinks";
+import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const maxDuration = 60; // Applies to the actions
@@ -22,16 +23,16 @@ export default async function Home(props: {
   const searchParams = new URLSearchParams(await props.searchParams);
 
   const user = await currentUser();
-  const pageSize = 12;
-  const drinks = await getLatestDrinkIdeas(
-    pageSize,
+  const drinks = await findBy({
+    pageSize: DEFAULT_PAGE_SIZE,
     page,
     ingredient,
-    user?.id,
+    loggedInUserId: user?.id,
     difficulty,
-  );
+    sortBy: "latest",
+  });
   const totalPages = Math.ceil(
-    (await countDrinks(ingredient, difficulty)) / pageSize,
+    (await countDrinks(ingredient, difficulty)) / DEFAULT_PAGE_SIZE,
   );
 
   const displayTutorialsAndTestmonials = false;

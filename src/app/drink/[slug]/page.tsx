@@ -2,7 +2,7 @@ import { ParsedUrlQuery } from "querystring";
 
 import { AffiliatedLinks } from "@/components/AffiliatedLinks";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { findBy, getAllDrinkSlugs } from "@/lib/drinks";
+import { findBy, getAllDrinkSlugs, incrementViews } from "@/lib/drinks";
 import { ChefHat, Clock, Flower2, GlassWater } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -85,6 +85,9 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
     { label: "Drinks", path: "/" },
     { label: drink.name },
   ];
+
+  // no need to await
+  incrementViews(drink.id);
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">

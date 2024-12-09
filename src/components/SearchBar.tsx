@@ -13,17 +13,27 @@ export function SearchBar() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const search = searchParams.get("search") || "";
+  const search = searchParams.get("query") || "";
+
+  // eslint-disable-next-line
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      setSearch(e.target.value);
+      setIsFocused(false);
+    }
+  };
 
   function setSearch(keyword: string) {
     const params = new URLSearchParams(searchParams);
 
+    if (keyword.length < 4) return;
+
     if (keyword) {
-      params.set("search", keyword);
+      params.set("query", keyword);
+      router.push(`/search?${params.toString()}`, { scroll: true });
     } else {
-      params.delete("search");
+      router.push(`/`);
     }
-    router.push(`/?${params.toString()}`, { scroll: true });
   }
 
   return (
@@ -40,9 +50,10 @@ export function SearchBar() {
                    focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 
                    transition-all duration-300 text-base hover:border-primary/30"
           placeholder="Search cocktails, ingredients, or flavors..."
-          value={search}
+          defaultValue={search}
           onChange={(e) => setSearch(e.target.value)}
           onFocus={() => setIsFocused(true)}
+          onKeyDown={handleKeyDown}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
         />
 

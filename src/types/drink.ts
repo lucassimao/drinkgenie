@@ -12,8 +12,6 @@ export type Drink = {
   imageUrl?: string | null;
   ingredients: string[];
   preparationSteps: string[];
-  thumbsUp: number;
-  thumbsDown: number;
   slug: string;
   userId: string;
   isFavorite: boolean; // derived from favorite table. if the logged in user favorited this drink
@@ -24,6 +22,7 @@ export type Drink = {
   difficulty: "Easy" | "Medium" | "Hard";
   glassType: string;
   garnish?: string | null;
+  views: number;
 };
 
 export class ServiceError extends Error {}

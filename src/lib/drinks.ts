@@ -31,53 +31,6 @@ const DrinkRecipeSchema = z.object({
 
 type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
 
-export async function getLatestDrinkIdeas(
-  n: number,
-  page: number,
-  ingredient?: string | null,
-  loggedInUserId?: string | null, // logged in requesting drinks
-  difficulty?: string | null,
-): Promise<Drink[]> {
-  const offset = (page - 1) * n;
-
-  const queryBuilder = knex("drinks as d").select("d.*");
-
-  if (ingredient) {
-    queryBuilder.whereRaw(`array_to_string(d.ingredients, ',') ILIKE ?`, [
-      `%${ingredient}%`,
-    ]);
-  }
-
-  if (difficulty) {
-    queryBuilder.where("difficulty", difficulty);
-  }
-
-  // fetching votes made by the current user
-  if (loggedInUserId) {
-    queryBuilder
-      .leftJoin("favorites AS fav", function () {
-        this.on("d.id", "=", "fav.drink_id").andOn(
-          knex.raw("fav.user_id = ?", loggedInUserId),
-        );
-      })
-      .select(
-        knex.raw(
-          "CASE WHEN fav.id IS NOT NULL THEN true ELSE false END AS is_favorite",
-        ),
-      );
-  }
-
-  queryBuilder.orderBy("d.created_at", "desc").limit(n).offset(offset);
-
-  const { sql, bindings } = queryBuilder.toSQL().toNative();
-
-  const client = await db.connect();
-
-  // eslint-disable-next-line
-  const { rows } = await client.query(sql, bindings as any);
-  return rows.map(mapRowToDrink);
-}
-
 export async function countDrinks(
   ingredient?: string,
   difficulty?: string,
@@ -111,8 +64,6 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     description: row.description,
     imageUrl: row.image_url,
     ingredients: row.ingredients,
-    thumbsUp: row.thumbs_up,
-    thumbsDown: row.thumbs_down,
     preparationSteps: row.preparation_steps,
     slug: row.slug,
     userId: row.user_id,
@@ -123,6 +74,7 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     isGeneratingImage: row.is_generating_image,
     preparationTime: row.preparation_time,
     garnish: row.garnish,
+    views: row.views,
   };
 }
 
@@ -175,9 +127,21 @@ async function saveDrink(dto: CreateDrinkDTO): Promise<Drink> {
 type FindByArgs = {
   id?: number;
   slug?: string;
+  page?: number;
+  pageSize?: number;
+  ingredient?: string | null;
+  loggedInUserId?: string | null; // logged in requesting drinks
+  difficulty?: string | null;
+  keyword?: string | null;
+  sortBy?:
+    | "latest"
+    | "relevance"
+    | "popular"
+    | "rating"
+    | "quick"
+    | "ingredients";
 };
 
-export async function findBy(): Promise<Drink[]>;
 export async function findBy(
   args: FindByArgs & { id: number },
 ): Promise<Drink | null>;
@@ -185,9 +149,76 @@ export async function findBy(
   args: FindByArgs & { slug: string },
 ): Promise<Drink | null>;
 export async function findBy(
-  args?: FindByArgs,
+  args: Omit<FindByArgs, "id" | "slug">,
+): Promise<Drink[]>;
+export async function findBy(
+  args: FindByArgs,
 ): Promise<Drink | null | Drink[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
+
+  switch (args?.sortBy) {
+    case "ingredients":
+      queryBuilder.orderByRaw(
+        "array_length(ingredients, 1) ASC, d.created_at DESC",
+      );
+      break;
+    case "latest":
+      queryBuilder.orderBy("d.created_at", "desc");
+      break;
+    case "popular":
+      queryBuilder.orderBy("d.views", "desc");
+      break;
+    case "quick":
+      queryBuilder.orderByRaw(
+        "CAST(regexp_replace(preparation_time, '[^0-9]', '', 'g') AS INTEGER) ASC",
+      );
+      break;
+    case "rating":
+      queryBuilder
+        .leftJoin("favorites", "d.id", "favorites.drink_id")
+        .select(knex.raw("COUNT(favorites.id) as favorite_count"))
+        .groupBy("d.id")
+        .orderBy("favorite_count", "desc");
+      break;
+  }
+
+  if (typeof args?.page == "number" && typeof args?.pageSize == "number") {
+    const offset = (args.page - 1) * args.pageSize;
+
+    queryBuilder.offset(offset).limit(args.pageSize);
+  }
+
+  if (args?.difficulty) {
+    queryBuilder.where("difficulty", args.difficulty);
+  }
+
+  if (args?.keyword?.trim()) {
+    const keyword = args.keyword?.trim();
+    queryBuilder.whereRaw(
+      `d.name||d.description||garnish ilike '%${keyword}%'`,
+    );
+  }
+
+  // fetching votes made by the current user
+  if (typeof args?.loggedInUserId == `number`) {
+    queryBuilder
+      .leftJoin("favorites AS fav", function () {
+        this.on("d.id", "=", "fav.drink_id").andOn(
+          knex.raw("fav.user_id = ?", args.loggedInUserId!),
+        );
+      })
+      .select(
+        knex.raw(
+          "CASE WHEN fav.id IS NOT NULL THEN true ELSE false END AS is_favorite",
+        ),
+      );
+  }
+
+  if (args?.ingredient) {
+    queryBuilder.whereRaw(`array_to_string(d.ingredients, ',') ILIKE ?`, [
+      `%${args.ingredient}%`,
+    ]);
+  }
 
   if (args?.id) {
     queryBuilder.where("id", args.id).first();
@@ -212,6 +243,10 @@ export async function findBy(
   } else {
     return result;
   }
+}
+
+export async function incrementViews(drinkId: number): Promise<void> {
+  await sql`UPDATE drinks SET views = views+1 WHERE id=${drinkId};`;
 }
 
 export async function getAllDrinkSlugs(): Promise<string[]> {

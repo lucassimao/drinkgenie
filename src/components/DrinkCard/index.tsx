@@ -9,7 +9,7 @@ import { PollingImageFetcher } from "./PollingImageFetcher";
 
 type DrinkCardProps = {
   drink: Cocktail;
-  searchParams: string;
+  searchParams?: string;
 };
 
 const getDifficultyColor = (difficulty: string = "Easy") => {
