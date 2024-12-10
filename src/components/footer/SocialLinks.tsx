@@ -7,7 +7,7 @@ import { Youtube } from "../icons/Youtube";
 interface SocialPlatform {
   name: string;
   url: string;
-  icon: () => JSX.Element;
+  icon: () => React.ReactNode;
   followers: string;
   visible?: boolean;
   displayFollowersCount?: boolean;

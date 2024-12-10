@@ -17,7 +17,7 @@ export async function postTweet() {
   console.time(`postTweet`);
   const drink = await getNextDrinkToShare("twitter");
 
-  if (!drink) {
+  if (!drink?.imageUrl) {
     console.log("no drink to tweet. Skipping");
     return;
   }

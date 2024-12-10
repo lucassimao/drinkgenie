@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 interface SocialShareProps {
   url: string;
@@ -60,7 +61,7 @@ export function SocialShare({ url, title }: SocialShareProps) {
             }}
             title={`Share on ${button.name}`}
           >
-            <img src={button.icon} alt={button.name} className="w-5 h-5" />
+            <Image src={button.icon} alt={button.name} className="w-5 h-5" />
           </a>
         ))}
       </div>

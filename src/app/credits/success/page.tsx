@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { PartyPopper, Sparkles, ArrowRight, GlassWater } from "lucide-react";
+import { ArrowRight, GlassWater, PartyPopper, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Page() {
   const router = useRouter();

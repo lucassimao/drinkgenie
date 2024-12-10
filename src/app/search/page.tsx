@@ -1,17 +1,17 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { DrinkCard } from "@/components/DrinkCard";
 import { SearchBreadcrumbs } from "@/components/search/SearchBreadcrumbs";
 import { SearchFilters } from "@/components/search/SearchFilters";
+import { SearchLoading } from "@/components/search/SearchLoading";
 import { SearchSortOptions } from "@/components/search/SearchSortOptions";
 import { ViewToggle } from "@/components/search/ViewToggle";
-import { Drink } from "@/types/drink";
+import { useToast } from "@/hooks/useToast";
 import { findBy } from "@/lib/drinks";
 import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
-import { useToast } from "@/hooks/useToast";
-import { SearchLoading } from "@/components/search/SearchLoading";
+import { Drink } from "@/types/drink";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -47,7 +47,7 @@ export default function Page() {
         toast.error(`Something went wrong.`, "Ooops");
         setIsLoading(false);
       });
-  }, [searchParams]);
+  }, [searchParams, query, toast]);
 
   if (isLoading) {
     return <SearchLoading />;

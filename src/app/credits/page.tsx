@@ -5,7 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { Coins, Info, Loader2, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
 
-export default function Subscription() {
+export default function Page() {
   const [credits, setCredits] = useState(10);
   const { user } = useUser();
   const pricePerCredit = 1;

@@ -2,7 +2,7 @@ import { ParsedUrlQuery } from "querystring";
 
 import { AffiliatedLinks } from "@/components/AffiliatedLinks";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { findBy, getAllDrinkSlugs, incrementViews } from "@/lib/drinks";
+import { findBy, getSlugsForSSR, incrementViews } from "@/lib/drinks";
 import { ChefHat, Clock, Flower2, GlassWater } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -15,7 +15,7 @@ interface DrinkDetailProps {
 }
 
 export async function generateStaticParams() {
-  const allDrinkSlugs = await getAllDrinkSlugs();
+  const allDrinkSlugs = await getSlugsForSSR();
 
   return allDrinkSlugs.map((slug) => ({
     slug,
@@ -86,8 +86,10 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
     { label: drink.name },
   ];
 
-  // no need to await
-  incrementViews(drink.id);
+  if (typeof window !== "undefined") {
+    // no need to await
+    incrementViews(drink.id);
+  }
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">

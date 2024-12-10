@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -50,47 +50,49 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="p-2 rounded-lg border-2 border-primary/10 text-primary disabled:opacity-50 
+    <Suspense>
+      <div className="flex items-center justify-center gap-2">
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="p-2 rounded-lg border-2 border-primary/10 text-primary disabled:opacity-50 
                  disabled:cursor-not-allowed hover:bg-primary/5 transition-colors"
-        aria-label="Previous page"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
+          aria-label="Previous page"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
 
-      <div className="flex items-center gap-2">
-        {getPageNumbers().map((page, index) => (
-          <React.Fragment key={index}>
-            {page === "..." ? (
-              <span className="px-4 py-2 text-primary/40">...</span>
-            ) : (
-              <button
-                onClick={() => onPageChange(page as number)}
-                className={`min-w-[40px] h-10 rounded-lg border-2 transition-all duration-200 ${
-                  currentPage === page
-                    ? "border-accent bg-accent text-white font-medium"
-                    : "border-primary/10 text-primary hover:bg-primary/5"
-                }`}
-              >
-                {page}
-              </button>
-            )}
-          </React.Fragment>
-        ))}
+        <div className="flex items-center gap-2">
+          {getPageNumbers().map((page, index) => (
+            <React.Fragment key={index}>
+              {page === "..." ? (
+                <span className="px-4 py-2 text-primary/40">...</span>
+              ) : (
+                <button
+                  onClick={() => onPageChange(page as number)}
+                  className={`min-w-[40px] h-10 rounded-lg border-2 transition-all duration-200 ${
+                    currentPage === page
+                      ? "border-accent bg-accent text-white font-medium"
+                      : "border-primary/10 text-primary hover:bg-primary/5"
+                  }`}
+                >
+                  {page}
+                </button>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="p-2 rounded-lg border-2 border-primary/10 text-primary disabled:opacity-50 
+                 disabled:cursor-not-allowed hover:bg-primary/5 transition-colors"
+          aria-label="Next page"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
       </div>
-
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="p-2 rounded-lg border-2 border-primary/10 text-primary disabled:opacity-50 
-                 disabled:cursor-not-allowed hover:bg-primary/5 transition-colors"
-        aria-label="Next page"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
-    </div>
+    </Suspense>
   );
 }

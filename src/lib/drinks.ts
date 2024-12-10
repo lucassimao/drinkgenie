@@ -151,8 +151,9 @@ export async function findBy(
 export async function findBy(
   args: Omit<FindByArgs, "id" | "slug">,
 ): Promise<Drink[]>;
+export async function findBy(): Promise<Drink[]>;
 export async function findBy(
-  args: FindByArgs,
+  args?: FindByArgs,
 ): Promise<Drink | null | Drink[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
 
@@ -249,8 +250,9 @@ export async function incrementViews(drinkId: number): Promise<void> {
   await sql`UPDATE drinks SET views = views+1 WHERE id=${drinkId};`;
 }
 
-export async function getAllDrinkSlugs(): Promise<string[]> {
-  const { rows } = await sql`SELECT slug from DRINKS;`;
+export async function getSlugsForSSR(): Promise<string[]> {
+  const { rows } =
+    await sql`SELECT slug from DRINKS WHERE image_url IS NOT NULL;`;
   return rows.map((row) => row.slug);
 }
 
@@ -439,10 +441,10 @@ export async function getNextDrinkToShare(
 
   if (network == "twitter") {
     result =
-      await sql`SELECT * FROM drinks WHERE tweet_posted_at IS NULL ORDER BY ID DESC LIMIT 1`;
+      await sql`SELECT * FROM drinks WHERE tweet_posted_at IS NULL AND image_url IS NOT NULL ORDER BY ID DESC LIMIT 1`;
   } else if (network == "facebook") {
     result =
-      await sql`SELECT * FROM drinks WHERE facebook_posted_at IS NULL ORDER BY ID DESC LIMIT 1`;
+      await sql`SELECT * FROM drinks WHERE facebook_posted_at IS NULL AND image_url IS NOT NULL ORDER BY ID DESC LIMIT 1`;
   } else {
     throw new Error("Invalid network: " + network);
   }

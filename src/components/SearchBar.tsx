@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search, X, History, TrendingUp } from "lucide-react";
+import { History, Search, TrendingUp, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 const POPULAR_SEARCHES = ["Mojito", "Margarita", "Old Fashioned", "Martini"];
 
@@ -13,6 +14,23 @@ export function SearchBar() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Debounce callback
+  const setSearch = useDebouncedCallback(
+    (keyword: string) => {
+      const params = new URLSearchParams(searchParams);
+      console.log({ params: params.toString(), keyword });
+
+      if (keyword && keyword.length < 4) {
+        params.set("query", keyword);
+        router.push(`/search?${params.toString()}`);
+      } else {
+        router.push(`/`);
+      }
+    },
+    // delay in ms
+    300,
+  );
+
   const search = searchParams.get("query") || "";
 
   // eslint-disable-next-line
@@ -20,21 +38,10 @@ export function SearchBar() {
     if (e.key === "Enter") {
       setSearch(e.target.value);
       setIsFocused(false);
+    } else if (e.key == "Escape") {
+      setIsFocused(false);
     }
   };
-
-  function setSearch(keyword: string) {
-    const params = new URLSearchParams(searchParams);
-
-    if (keyword.length < 4) return;
-
-    if (keyword) {
-      params.set("query", keyword);
-      router.push(`/search?${params.toString()}`, { scroll: true });
-    } else {
-      router.push(`/`);
-    }
-  }
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">

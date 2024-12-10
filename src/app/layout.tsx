@@ -7,11 +7,17 @@ import clsx from "clsx";
 import type { Metadata } from "next";
 import { Pacifico, Poppins } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
 
-const pacifico = Pacifico({ display: "swap", weight: "400" });
+const pacifico = Pacifico({
+  display: "swap",
+  weight: "400",
+  subsets: ["latin"],
+});
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +41,9 @@ export default function RootLayout({
             "min-h-screen bg-background",
           )}
         >
-          <TopBar />
+          <Suspense>
+            <TopBar />
+          </Suspense>
           <div className="max-w-7xl mx-auto px-4">{children}</div>
           <Footer />
           <ToastContainer />

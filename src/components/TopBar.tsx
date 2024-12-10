@@ -51,22 +51,24 @@ export function TopBar() {
 
           {/* Navigation and Auth Buttons - Hidden on Mobile */}
           <div className="hidden md:flex items-center gap-6">
-            <nav className="flex space-x-6">
-              <Link
-                href="/credits"
-                className="group flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-white 
+            <SignedIn>
+              <nav className="flex space-x-6">
+                <Link
+                  href="/credits"
+                  className="group flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-white 
                 bg-gradient-to-r from-accent to-warning rounded-xl transition-all duration-300 
                 hover:shadow-lg transform hover:scale-[1.02]"
-              >
-                <Coins className="h-4 w-4" />
-                <span>Get Credits</span>
-                {typeof credits == "number" && (
-                  <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                    ${credits}/credit{credits > 1 ? "s" : null}
-                  </span>
-                )}
-              </Link>
-            </nav>
+                >
+                  <Coins className="h-4 w-4" />
+                  <span>Get Credits</span>
+                  {typeof credits == "number" && (
+                    <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+                      ${credits}/credit{credits > 1 ? "s" : null}
+                    </span>
+                  )}
+                </Link>
+              </nav>
+            </SignedIn>
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
@@ -98,21 +100,25 @@ export function TopBar() {
 
         {/* Mobile Menu - Only visible on mobile */}
         <div className="md:hidden border-t border-primary/10 py-4 space-y-4">
-          <nav className="flex flex-col space-y-4">
-            <Link
-              href="/credits"
-              className="flex items-center justify-between px-4 py-3 text-sm font-medium text-white 
+          <SignedIn>
+            <nav className="flex flex-col space-y-4">
+              <Link
+                href="/credits"
+                className="flex items-center justify-between px-4 py-3 text-sm font-medium text-white 
                        bg-gradient-to-r from-accent to-warning rounded-xl"
-            >
-              <div className="flex items-center gap-2">
-                <Coins className="h-4 w-4" />
-                <span>Get Credits</span>
-              </div>
-              <span className="px-2 py-1 bg-white/20 rounded text-xs">
-                $1/credit
-              </span>
-            </Link>
-          </nav>
+              >
+                <div className="flex items-center gap-2">
+                  <Coins className="h-4 w-4" />
+                  <span>Get Credits</span>
+                </div>
+                {typeof credits == "number" && (
+                  <span className="px-2 py-1 bg-white/20 rounded text-xs">
+                    $1/credit
+                  </span>
+                )}
+              </Link>
+            </nav>
+          </SignedIn>
           <div className="flex flex-col gap-3 pt-4 border-t border-primary/10">
             <SignedIn>
               <div className="flex items-center justify-between px-4">
