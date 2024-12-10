@@ -14,17 +14,19 @@ export function SearchBar() {
   const router = useRouter();
   const [params, setParamsState] = useState<URLSearchParams>(useSearchParams());
 
-  const search = (keyword: string) => {
+  const search = (keyword: string, hardRefresh = false) => {
     const clonnedParams = new URLSearchParams(params);
-
-    console.log({ params: params.toString(), keyword });
 
     if (keyword && keyword.length >= 3) {
       clonnedParams.set("query", keyword);
 
       setParamsState(clonnedParams);
-      router.replace(`/search?${clonnedParams.toString()}`);
       setIsFocused(false);
+      if (hardRefresh) {
+        window.location.href = `/search?${clonnedParams.toString()}`;
+      } else {
+        router.replace(`/search?${clonnedParams.toString()}`);
+      }
     }
   };
 
@@ -45,7 +47,7 @@ export function SearchBar() {
   // eslint-disable-next-line
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
-      search(e.target.value);
+      search(e.target.value, true);
       setIsFocused(false);
     } else if (e.key == "Escape") {
       setIsFocused(false);
