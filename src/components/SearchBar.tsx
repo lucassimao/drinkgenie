@@ -24,16 +24,18 @@ export function SearchBar() {
         params.set("query", keyword);
         router.push(`/search?${params.toString()}`);
         setIsFocused(false);
-      } else if (!keyword?.trim()) {
-        params.delete("query");
-        router.push(`/search?${params.toString()}`);
-        setIsFocused(false);
-        router.push(`/`);
       }
     },
     // delay in ms
     300,
   );
+
+  const onClearSearch = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete("query");
+    setIsFocused(false);
+    router.push(`/`);
+  };
 
   const search = searchParams.get("query") || "";
 
@@ -70,7 +72,7 @@ export function SearchBar() {
 
         {search && (
           <button
-            onClick={() => setSearch("")}
+            onClick={onClearSearch}
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
           >
             <X className="h-4 w-4 text-primary/40 hover:text-primary/60 transition-colors" />
