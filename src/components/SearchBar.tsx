@@ -13,6 +13,7 @@ export function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [params, setParamsState] = useState(new URLSearchParams(searchParams));
 
   // Debounce callback
   const setSearch = useDebouncedCallback(
@@ -22,7 +23,10 @@ export function SearchBar() {
 
       if (keyword && keyword.length >= 3) {
         params.set("query", keyword);
-        router.push(`/search?${params.toString()}`);
+        console.log("loooooooooool " + params.toString());
+
+        setParamsState(params);
+        router.replace(`/search?${params.toString()}`);
         setIsFocused(false);
       }
     },
@@ -34,10 +38,9 @@ export function SearchBar() {
     const params = new URLSearchParams(searchParams);
     params.delete("query");
     setIsFocused(false);
-    router.push(`/?${params.toString()}`);
+    setParamsState(params);
+    router.replace(`/search?${params.toString()}`);
   };
-
-  const search = searchParams.get("query") || "";
 
   // eslint-disable-next-line
   const handleKeyDown = (e: any) => {
@@ -48,6 +51,8 @@ export function SearchBar() {
       setIsFocused(false);
     }
   };
+
+  const query = params.get("query") || "";
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
@@ -63,14 +68,14 @@ export function SearchBar() {
                    focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 
                    transition-all duration-300 text-base hover:border-primary/30"
           placeholder="Search cocktails, ingredients, or flavors..."
-          defaultValue={search}
+          defaultValue={query}
           onChange={(e) => setSearch(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDown}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
         />
 
-        {search && (
+        {query && (
           <button
             onClick={onClearSearch}
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
