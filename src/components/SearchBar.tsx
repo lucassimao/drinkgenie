@@ -39,7 +39,7 @@ export function SearchBar() {
     params.delete("query");
     setIsFocused(false);
     setParamsState(params);
-    router.replace(`/search?${params.toString()}`);
+    router.replace(`/`);
   };
 
   // eslint-disable-next-line
