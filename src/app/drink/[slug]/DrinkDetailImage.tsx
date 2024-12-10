@@ -51,7 +51,7 @@ export function DrinkDetailImage({ drink }: DrinkDetailProps) {
           </div>
           <div className="self-end">
             <SocialShare
-              url={`https://drinkgenie.app/${drink.slug}`}
+              url={`https://drinkgenie.app/drink/${drink.slug}`}
               title={drink.name}
             />
           </div>
