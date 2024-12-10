@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Filter } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface FilterSection {
   title: string;
@@ -10,7 +13,7 @@ const FILTERS: Record<string, FilterSection> = {
   alcoholContent: {
     title: "Alcohol Content",
     options: [
-      { value: "non-alcoholic", label: "Non-Alcoholic" },
+      { value: "non_alcoholic", label: "Non-Alcoholic" },
       { value: "light", label: "Light (0-10%)" },
       { value: "medium", label: "Medium (10-20%)" },
       { value: "strong", label: "Strong (20%+)" },
@@ -46,6 +49,9 @@ const FILTERS: Record<string, FilterSection> = {
 };
 
 export function SearchFilters() {
+  const router = useRouter();
+  const [params, setParamsState] = useState<URLSearchParams>(useSearchParams());
+
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
   >(Object.keys(FILTERS).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
@@ -55,6 +61,36 @@ export function SearchFilters() {
       ...prev,
       [section]: !prev[section],
     }));
+  };
+
+  const onClickFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { section, option } = event.currentTarget.dataset;
+    if (!section || !option) throw new Error("invalid element");
+
+    const clonnedParams = new URLSearchParams(params);
+
+    if (clonnedParams.has(section)) {
+      const selectedOptions = clonnedParams.getAll(section);
+      clonnedParams.delete(section);
+
+      // if it exists already, removes it
+      if (selectedOptions.includes(option)) {
+        selectedOptions.forEach((o) => {
+          if (o != option) {
+            clonnedParams.append(section, o);
+          }
+        });
+      } else {
+        [...selectedOptions, option].forEach((o) =>
+          clonnedParams.append(section, o),
+        );
+      }
+    } else {
+      clonnedParams.append(section, option);
+    }
+
+    setParamsState(clonnedParams);
+    router.push(`/search?${clonnedParams.toString()}`);
   };
 
   return (
@@ -88,6 +124,13 @@ export function SearchFilters() {
                   <label key={option.value} className="flex items-center gap-2">
                     <input
                       type="checkbox"
+                      checked={
+                        params.has(key) &&
+                        params.getAll(key).includes(option.value)
+                      }
+                      data-section={key}
+                      data-option={option.value}
+                      onChange={onClickFilter}
                       className="w-4 h-4 rounded border-primary/20 text-accent focus:ring-accent"
                     />
                     <span className="text-sm text-primary/70">

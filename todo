@@ -35,7 +35,7 @@
       [x] async generate image
       [x] Sign up / Sign in
       [x] Pricing page
-      [ ] search result page
+      [x] search result page
       [ ] refresh search and ingredient suggestions at build time
 - [ ] vercel function to send social media posts
       ok twitter

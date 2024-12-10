@@ -139,6 +139,10 @@ type FindByArgs = {
     | "rating"
     | "quick"
     | "ingredients";
+  alcoholContent?: string[];
+  flavorProfile?: string[];
+  glassware?: string[];
+  temperature?: string[];
 };
 
 export async function findBy(
@@ -228,8 +232,23 @@ export async function findBy(
     queryBuilder.where("slug", args.slug).first();
   }
 
-  const { sql, bindings } = queryBuilder.toSQL().toNative();
+  if (args?.alcoholContent?.length) {
+    queryBuilder.whereRaw("alcohol_content = ANY(?)", [args.alcoholContent]);
+  }
 
+  if (args?.flavorProfile?.length) {
+    queryBuilder.whereRaw("flavor_profile = ANY(?)", [args.flavorProfile]);
+  }
+
+  if (args?.glassware?.length) {
+    queryBuilder.whereRaw("glassware = ANY(?)", [args.glassware]);
+  }
+
+  if (args?.temperature?.length) {
+    queryBuilder.whereRaw("temperature = ANY(?)", [args.temperature]);
+  }
+
+  const { sql, bindings } = queryBuilder.toSQL().toNative();
   const client = await db.connect();
 
   //eslint-disable-next-line

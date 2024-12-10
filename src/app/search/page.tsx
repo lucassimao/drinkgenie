@@ -34,6 +34,11 @@ export default function Page() {
     const sortBy = (searchParams.get("sortBy") as any) || "latest";
     const query = searchParams.get("query");
 
+    const alcoholContent = searchParams.getAll("alcoholContent");
+    const flavorProfile = searchParams.getAll("flavorProfile");
+    const glassware = searchParams.getAll("glassware");
+    const temperature = searchParams.getAll("temperature");
+
     if (!query) return;
 
     const findByPromise = findBy({
@@ -43,6 +48,10 @@ export default function Page() {
       ingredient,
       sortBy,
       keyword: query,
+      alcoholContent,
+      flavorProfile,
+      glassware,
+      temperature,
     });
     setIsLoading(true);
 
@@ -59,7 +68,7 @@ export default function Page() {
       })
       .catch(setError)
       .finally(() => setIsLoading(false));
-  }, [searchParams.toString()]);
+  }, [searchParams, isLoading]);
 
   useEffect(() => {
     if (!error) return;

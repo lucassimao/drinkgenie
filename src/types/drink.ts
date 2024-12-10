@@ -23,6 +23,11 @@ export type Drink = {
   glassType: string;
   garnish?: string | null;
   views: number;
+
+  alcoholContent?: "_non_alcoholic" | "_light" | "_medium" | "_strong";
+  flavorProfile?: "sweet" | "sour" | "bitter" | "spicy";
+  glassware?: "cocktail" | "highball" | "rocks" | "wine";
+  temperature?: "frozen" | "cold" | "room" | "hot";
 };
 
 export class ServiceError extends Error {}

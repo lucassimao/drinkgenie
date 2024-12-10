@@ -2,8 +2,9 @@
 
 import { History, Search, TrendingUp, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { usePathname } from "next/navigation";
 
 const POPULAR_SEARCHES = ["Mojito", "Margarita", "Old Fashioned", "Martini"];
 
@@ -13,6 +14,14 @@ export function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
   const [params, setParamsState] = useState<URLSearchParams>(useSearchParams());
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (!pathname.startsWith("/search")) {
+      setIsFocused(false);
+      setParamsState(new URLSearchParams(""));
+    }
+  }, [pathname]);
 
   const search = (keyword: string, hardRefresh = false) => {
     const clonnedParams = new URLSearchParams(params);
