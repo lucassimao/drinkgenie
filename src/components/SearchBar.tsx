@@ -14,21 +14,22 @@ export function SearchBar() {
   const router = useRouter();
   const [params, setParamsState] = useState<URLSearchParams>(useSearchParams());
 
-  // Debounce callback
-  const setSearch = useDebouncedCallback(
-    (keyword: string) => {
-      const clonnedParams = new URLSearchParams(params);
+  const search = (keyword: string) => {
+    const clonnedParams = new URLSearchParams(params);
 
-      console.log({ params: params.toString(), keyword });
+    console.log({ params: params.toString(), keyword });
 
-      if (keyword && keyword.length >= 3) {
-        clonnedParams.set("query", keyword);
+    if (keyword && keyword.length >= 3) {
+      clonnedParams.set("query", keyword);
 
-        setParamsState(clonnedParams);
-        router.replace(`/search?${clonnedParams.toString()}`);
-        setIsFocused(false);
-      }
-    },
+      setParamsState(clonnedParams);
+      router.replace(`/search?${clonnedParams.toString()}`);
+      setIsFocused(false);
+    }
+  };
+
+  const debouncedSearch = useDebouncedCallback(
+    search,
     // delay in ms
     300,
   );
@@ -44,7 +45,7 @@ export function SearchBar() {
   // eslint-disable-next-line
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
-      setSearch(e.target.value);
+      search(e.target.value);
       setIsFocused(false);
     } else if (e.key == "Escape") {
       setIsFocused(false);
@@ -68,7 +69,7 @@ export function SearchBar() {
                    transition-all duration-300 text-base hover:border-primary/30"
           placeholder="Search cocktails, ingredients, or flavors..."
           defaultValue={query}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => debouncedSearch(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDown}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
@@ -97,7 +98,7 @@ export function SearchBar() {
               {POPULAR_SEARCHES.map((term) => (
                 <button
                   key={term}
-                  onClick={() => setSearch(term)}
+                  onClick={() => search(term)}
                   className="px-3 py-1.5 text-sm bg-background rounded-full text-primary hover:bg-secondary/10 transition-colors"
                 >
                   {term}
@@ -116,7 +117,7 @@ export function SearchBar() {
               {RECENT_SEARCHES.map((term) => (
                 <button
                   key={term}
-                  onClick={() => setSearch(term)}
+                  onClick={() => search(term)}
                   className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-primary hover:bg-background rounded-lg transition-colors"
                 >
                   <History className="h-4 w-4 text-primary/40" />

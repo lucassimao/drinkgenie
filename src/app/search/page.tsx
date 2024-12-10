@@ -17,6 +17,8 @@ export default function Page() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
 
+  console.log({ pageQuery: query });
+
   const [view, setView] = useState<"grid" | "list">("grid");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [drinks, setDrinks] = useState<Drink[]>([]);
@@ -31,21 +33,32 @@ export default function Page() {
 
     if (!query) return;
 
-    findBy({
+    const findByPromise = findBy({
       page,
       pageSize: DEFAULT_PAGE_SIZE,
       difficulty,
       ingredient,
       sortBy,
       keyword: query,
-    })
+    });
+
+    const _1SecTimeout = new Promise<Drink[]>((_, reject) => {
+      const id = setTimeout(() => {
+        clearTimeout(id);
+        reject(new Error(`Timed out after 1s`));
+      }, 1_000);
+    });
+
+    Promise.race([findByPromise, _1SecTimeout])
       .then((drinks) => {
         setDrinks(drinks);
         setIsLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        toast.error(`Something went wrong.`, "Ooops");
+        if (err instanceof Error && err.message != "Timed out after 1s") {
+          toast.error(`Something went wrong.`, "Ooops");
+        }
         setIsLoading(false);
       });
   }, [searchParams, query, toast]);
