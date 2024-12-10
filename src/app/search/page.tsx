@@ -43,7 +43,8 @@ export default function Page() {
         setDrinks(drinks);
         setIsLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         toast.error(`Something went wrong.`, "Ooops");
         setIsLoading(false);
       });
