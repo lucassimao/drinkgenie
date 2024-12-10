@@ -20,16 +20,21 @@ export default function Page() {
   console.log({ pageQuery: query });
 
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [drinks, setDrinks] = useState<Drink[]>([]);
+  const [error, setError] = useState<Error | null>();
+
   const toast = useToast();
 
   useEffect(() => {
+    if (isLoading) return;
+
     const page = Number(searchParams.get("page")) || 1;
     const ingredient = searchParams.get("ingredient");
     const difficulty = searchParams.get("difficulty");
     // eslint-disable-next-line
     const sortBy = (searchParams.get("sortBy") as any) || "latest";
+    const query = searchParams.get("query");
 
     if (!query) return;
 
@@ -41,6 +46,7 @@ export default function Page() {
       sortBy,
       keyword: query,
     });
+    setIsLoading(true);
 
     const _1SecTimeout = new Promise<Drink[]>((_, reject) => {
       const id = setTimeout(() => {
@@ -49,19 +55,25 @@ export default function Page() {
       }, 1_000);
     });
 
+    console.log("buscando! " + searchParams.toString());
+
     Promise.race([findByPromise, _1SecTimeout])
       .then((drinks) => {
         setDrinks(drinks);
-        setIsLoading(false);
       })
-      .catch((err) => {
-        console.error(err);
-        if (err instanceof Error && err.message != "Timed out after 1s") {
-          toast.error(`Something went wrong.`, "Ooops");
-        }
-        setIsLoading(false);
-      });
-  }, [searchParams, query, toast]);
+      .catch(setError)
+      .finally(() => setIsLoading(false));
+  }, [searchParams.toString()]);
+
+  useEffect(() => {
+    if (!error) return;
+
+    console.error(error);
+    if (error instanceof Error && error.message != "Timed out after 1s") {
+      toast.error(`Something went wrong.`, "Ooops");
+    }
+    setError(null);
+  }, [toast, error]);
 
   if (isLoading) {
     return <SearchLoading />;
