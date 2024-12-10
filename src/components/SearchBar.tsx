@@ -11,22 +11,24 @@ const RECENT_SEARCHES = ["Gin and Tonic", "Moscow Mule", "Daiquiri"];
 
 export function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const [params, setParamsState] = useState(new URLSearchParams(searchParams));
+  const [params, setParamsState] = useState(
+    new URLSearchParams(useSearchParams()),
+  );
 
   // Debounce callback
   const setSearch = useDebouncedCallback(
     (keyword: string) => {
-      const params = new URLSearchParams(searchParams);
+      const clonnedParams = new URLSearchParams(params);
+
       console.log({ params: params.toString(), keyword });
 
       if (keyword && keyword.length >= 3) {
-        params.set("query", keyword);
+        clonnedParams.set("query", keyword);
         console.log("loooooooooool " + params.toString());
 
-        setParamsState(params);
-        router.replace(`/search?${params.toString()}`);
+        setParamsState(clonnedParams);
+        router.replace(`/search?${clonnedParams.toString()}`);
         setIsFocused(false);
       }
     },
@@ -35,10 +37,10 @@ export function SearchBar() {
   );
 
   const onClearSearch = () => {
-    const params = new URLSearchParams(searchParams);
-    params.delete("query");
+    const clonnedParams = new URLSearchParams(params);
+    clonnedParams.delete("query");
     setIsFocused(false);
-    setParamsState(params);
+    setParamsState(clonnedParams);
     router.replace(`/`);
   };
 
