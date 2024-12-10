@@ -25,8 +25,6 @@ export default function Page() {
   const toast = useToast();
 
   useEffect(() => {
-    if (isLoading) return;
-
     const page = Number(searchParams.get("page")) || 1;
     const ingredient = searchParams.get("ingredient");
     const difficulty = searchParams.get("difficulty");
@@ -68,7 +66,8 @@ export default function Page() {
       })
       .catch(setError)
       .finally(() => setIsLoading(false));
-  }, [searchParams, isLoading]);
+    // eslint-disable-next-line
+  }, [searchParams.toString()]);
 
   useEffect(() => {
     if (!error) return;

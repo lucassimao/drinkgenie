@@ -1,7 +1,7 @@
 "use client";
 import { getUserCredits } from "@/lib/user";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
-import { Coins, Menu } from "lucide-react";
+import { Coins } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -38,9 +38,16 @@ export function TopBar() {
                   DrinkGenie
                 </span>
               </div>
-              <button className="md:hidden p-2 text-primary/60 hover:text-primary">
-                <Menu className="h-6 w-6" />
-              </button>
+              <div className="md:hidden p-2 text-primary/60 hover:text-primary">
+                {/* <Menu className="h-6 w-6" /> */}
+                <SignedIn>
+                  <div className="flex items-center justify-between px-0">
+                    <span className="font-medium text-primary">
+                      Hi, {user?.firstName || user?.username}
+                    </span>
+                  </div>
+                </SignedIn>
+              </div>
             </div>
           </Link>
 
@@ -78,7 +85,7 @@ export function TopBar() {
                     Hi, {user?.firstName || user?.username}
                   </span>
                   <SignOutButton>
-                    <button className="px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                    <button className="px-4 py-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
                       Sign Out
                     </button>
                   </SignOutButton>
@@ -119,17 +126,8 @@ export function TopBar() {
               </Link>
             </nav>
           </SignedIn>
-          <div className="flex flex-col gap-3 pt-4 border-t border-primary/10">
+          <div className="flex flex-col gap-3">
             <SignedIn>
-              <div className="flex items-center justify-between px-4">
-                <span className="text-sm text-primary">
-                  Hi, {user?.firstName || user?.username}
-                </span>
-                <div className="px-2 py-1 bg-background rounded-lg text-sm">
-                  <span className="font-medium text-accent">5</span>
-                  <span className="text-primary/60 ml-1">credits</span>
-                </div>
-              </div>
               <SignOutButton>
                 <button className="w-full px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors">
                   Sign Out

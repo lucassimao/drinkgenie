@@ -17,16 +17,16 @@ const STORES: Store[] = [
     logo: "https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?auto=format&fit=crop&w=50&h=50&q=80",
     baseUrl: "https://www.amazon.com/s?k=",
   },
-  {
-    name: "Total Wine",
-    logo: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=50&h=50&q=80",
-    baseUrl: "https://www.totalwine.com/search/all?text=",
-  },
-  {
-    name: "Drizly",
-    logo: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=50&h=50&q=80",
-    baseUrl: "https://drizly.com/search?q=",
-  },
+  // {
+  //   name: "Total Wine",
+  //   logo: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=50&h=50&q=80",
+  //   baseUrl: "https://www.totalwine.com/search/all?text=",
+  // },
+  // {
+  //   name: "Drizly",
+  //   logo: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=50&h=50&q=80",
+  //   baseUrl: "https://drizly.com/search?q=",
+  // },
 ];
 
 export function AffiliatedLinks({ ingredients }: AffiliatedLinksProps) {
