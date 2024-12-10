@@ -12,9 +12,7 @@ const RECENT_SEARCHES = ["Gin and Tonic", "Moscow Mule", "Daiquiri"];
 export function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
-  const [params, setParamsState] = useState(
-    new URLSearchParams(useSearchParams()),
-  );
+  const [params, setParamsState] = useState<URLSearchParams>(useSearchParams());
 
   // Debounce callback
   const setSearch = useDebouncedCallback(
@@ -25,7 +23,6 @@ export function SearchBar() {
 
       if (keyword && keyword.length >= 3) {
         clonnedParams.set("query", keyword);
-        console.log("loooooooooool " + params.toString());
 
         setParamsState(clonnedParams);
         router.replace(`/search?${clonnedParams.toString()}`);
