@@ -31,6 +31,8 @@ export default function Page() {
 
     if (!query) return;
 
+    setIsLoading(true);
+
     findBy({
       page,
       pageSize: DEFAULT_PAGE_SIZE,
