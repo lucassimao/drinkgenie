@@ -34,7 +34,7 @@ export function SearchBar() {
     const params = new URLSearchParams(searchParams);
     params.delete("query");
     setIsFocused(false);
-    router.push(`/`);
+    router.push(`/?${params.toString()}`);
   };
 
   const search = searchParams.get("query") || "";
