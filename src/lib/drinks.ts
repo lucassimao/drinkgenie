@@ -1,16 +1,15 @@
 "use server";
 
+import { Drink, ServiceError } from "@/types/drink";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { QueryResultRow, sql } from "@vercel/postgres";
+import { db, QueryResultRow, sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
-import { getUserCredits } from "./user";
-import { db } from "@vercel/postgres";
 import knex from "./knex";
-import { Drink, ServiceError } from "@/types/drink";
+import { getUserCredits } from "./user";
 import { BASE_URL, MAX_INGREDIENTS } from "./utils";
 
 const openai = new OpenAI({

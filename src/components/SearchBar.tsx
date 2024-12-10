@@ -20,10 +20,14 @@ export function SearchBar() {
       const params = new URLSearchParams(searchParams);
       console.log({ params: params.toString(), keyword });
 
-      if (keyword && keyword.length < 4) {
+      if (keyword && keyword.length >= 3) {
         params.set("query", keyword);
         router.push(`/search?${params.toString()}`);
-      } else {
+        setIsFocused(false);
+      } else if (!keyword?.trim()) {
+        params.delete("query");
+        router.push(`/search?${params.toString()}`);
+        setIsFocused(false);
         router.push(`/`);
       }
     },

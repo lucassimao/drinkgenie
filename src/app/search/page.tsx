@@ -29,7 +29,7 @@ export default function Page() {
     // eslint-disable-next-line
     const sortBy = (searchParams.get("sortBy") as any) || "latest";
 
-    if (query && query?.length < 4) return;
+    if (!query) return;
 
     findBy({
       page,
