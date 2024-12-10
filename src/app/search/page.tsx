@@ -17,8 +17,6 @@ export default function Page() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
 
-  console.log({ pageQuery: query });
-
   const [view, setView] = useState<"grid" | "list">("grid");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [drinks, setDrinks] = useState<Drink[]>([]);
@@ -54,8 +52,6 @@ export default function Page() {
         reject(new Error(`Timed out after 1s`));
       }, 1_000);
     });
-
-    console.log("buscando! " + searchParams.toString());
 
     Promise.race([findByPromise, _1SecTimeout])
       .then((drinks) => {
