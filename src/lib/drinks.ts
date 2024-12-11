@@ -26,6 +26,11 @@ const DrinkRecipeSchema = z.object({
   difficulty: z.enum(["Easy", `Medium`, `Hard`]),
   glassType: z.string(),
   garnish: z.string(),
+
+  alcoholContent: z.enum(["non_alcoholic", `light`, `medium`, "strong"]),
+  flavorProfile: z.enum(["sweet", "sour", "bitter", "spicy"]),
+  glassware: z.enum(["cocktail", "highball", "rocks", "wine"]),
+  temperature: z.enum(["frozen", "cold", "room", "hot"]),
 });
 
 type DrinkRecipe = z.infer<typeof DrinkRecipeSchema>;
@@ -74,6 +79,10 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     preparationTime: row.preparation_time,
     garnish: row.garnish,
     views: row.views,
+    alcoholContent: row.alcohol_content,
+    flavorProfile: row.flavor_profile,
+    glassware: row.glassware,
+    temperature: row.temperature,
   };
 }
 
@@ -93,6 +102,10 @@ type CreateDrinkDTO = Pick<
   | "glassType"
   | "preparationTime"
   | "creator"
+  | "alcoholContent"
+  | "glassware"
+  | "flavorProfile"
+  | "temperature"
 >;
 
 async function saveDrink(dto: CreateDrinkDTO): Promise<Drink> {
@@ -108,8 +121,9 @@ async function saveDrink(dto: CreateDrinkDTO): Promise<Drink> {
       WITH slug_check AS (
         SELECT EXISTS (SELECT 1 FROM drinks WHERE slug = ${slug}) AS exists
       )
-      INSERT INTO DRINKS (user_id,creator,slug, name,created_at,difficulty,garnish,glass_type,preparation_time,description,is_generating_image,ingredients,thumbs_up, thumbs_down,preparation_steps) 
+      INSERT INTO DRINKS (alcohol_content  , glassware, flavor_profile  , temperature, user_id,creator,slug, name,created_at,difficulty,garnish,glass_type,preparation_time,description,is_generating_image,ingredients,thumbs_up, thumbs_down,preparation_steps) 
         VALUES (
+        ${dto.alcoholContent},${dto.glassware},${dto.flavorProfile},${dto.temperature},
         ${user.id},
         ${JSON.stringify(user)},
         (SELECT CASE WHEN exists THEN ${slug} || '-' || to_char(now(), 'YYYYMMDDHH24MISS') ELSE ${slug} END FROM slug_check),
@@ -348,6 +362,10 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
                 - Glassware recommendation
                 - Difficulty level (Easy, Medium, or Hard)
                 - Preparation time (minutes)
+                - Alcohol Content (Non-Alcoholic, Light (0-10%), Medium (10-20%), or Strong (20%+))
+                - Flavor Profile (Sweet, Sour, Bitter or Spicy)
+                - Glassware (cocktail, highball, rocks, or wine)
+                - Serving Temperature (frozen , cold , room , or hot)
 
               Your response should be:
                 - Professional yet approachable
@@ -378,6 +396,10 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
                 glassType: "Lowball glass",
                 preparationTime: "10 mins",
                 garnish: "Lime wedges",
+                alcoholContent: "strong",
+                flavorProfile: "sour",
+                glassware: "rocks",
+                temperature: "cold",
               } as DrinkRecipe),
             },
           ],
@@ -423,6 +445,10 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
       glassType: recipe.parsed.glassType,
       preparationTime: recipe.parsed.preparationTime,
       garnish: recipe.parsed.garnish,
+      alcoholContent: recipe.parsed.alcoholContent,
+      flavorProfile: recipe.parsed.flavorProfile,
+      glassware: recipe.parsed.glassware,
+      temperature: recipe.parsed.temperature,
     });
     console.timeEnd("saveDrink");
 

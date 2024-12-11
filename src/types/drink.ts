@@ -24,7 +24,7 @@ export type Drink = {
   garnish?: string | null;
   views: number;
 
-  alcoholContent?: "_non_alcoholic" | "_light" | "_medium" | "_strong";
+  alcoholContent?: "non_alcoholic" | "light" | "medium" | "strong";
   flavorProfile?: "sweet" | "sour" | "bitter" | "spicy";
   glassware?: "cocktail" | "highball" | "rocks" | "wine";
   temperature?: "frozen" | "cold" | "room" | "hot";
