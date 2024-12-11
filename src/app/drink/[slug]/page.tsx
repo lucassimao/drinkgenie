@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 import { DrinkDetailImage } from "./DrinkDetailImage";
 import { PollingImageFetcher } from "./PollingImageFetcher";
+import { ViewRegister } from "./ViewRegister";
 
 interface DrinkDetailProps {
   params: Promise<ParsedUrlQuery>;
@@ -91,6 +92,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <Breadcrumbs items={breadcrumbs} />
+      <ViewRegister drinkId={drink.id} />
 
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Hero Section */}

@@ -21,6 +21,8 @@
 V2
 
 - fix visualization counter
+- use production clerk keys
+- get credits buttons seems to be outdated in mobile
 - [ ] vercel function to send social media posts
       ok twitter
       [ ] Generate media posts using openai
@@ -31,10 +33,19 @@ V2
       [ ] Update Connect with us
 - [ ] https://vercel.com/docs/production-checklist
 - [ ] Telegram notifications errors, payments, video review
-- optmize for SEO
+- optmize based on Speed Insights
+- upgrade next.js
 - fix SSR of drink pages
 - [] integrate with crisp https://crisp.chat/pt/
 - [] integrate with https://features.vote/
+- check if we can use threads for openai requests
+- optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
+- read about SSR
+- pagination for search results
+- display alcohol content, flavor, glassware, and serving temp in the drink details
+- filters in the left side of the search show remain in place while doing the search
+- Retool
+  [ ] delete drink
 
 V3 New subscription plan: PRO
 
