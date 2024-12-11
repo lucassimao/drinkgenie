@@ -5,8 +5,12 @@
       "schedule": "0 9 * * *"
     },
     {
-      "path": "/api/social?network=facebook",
-      "schedule": "0 10 * * *"
+      "path": "/api/social?network=twitter",
+      "schedule": "0 15 * * *"
+    },
+    {
+      "path": "/api/social?network=twitter",
+      "schedule": "0 22 * * *"
     }
   ]
 }
