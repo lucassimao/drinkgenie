@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BackToTop } from "./footer/BackToTop";
 import { NewsletterSignup } from "./footer/NewsletterSignup";
 import { QuickLinks } from "./footer/QuickLinks";
@@ -52,9 +53,8 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 py-6">
-          {/* Replace justify-center with justify-between and uncoment the privacy, terms etc links... */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-            {/* <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-white/40">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-white/40">
               <Link
                 href="/privacy"
                 className="hover:text-white/60 transition-colors"
@@ -62,18 +62,18 @@ export function Footer() {
                 Privacy Policy
               </Link>
               <Link
-                href="/terms"
+                href="/privacy#data-usage"
                 className="hover:text-white/60 transition-colors"
               >
                 Terms of Service
               </Link>
               <Link
-                href="/cookies"
+                href="/privacy#cookies"
                 className="hover:text-white/60 transition-colors"
               >
                 Cookie Policy
               </Link>
-            </div> */}
+            </div>
             <p className="text-sm text-white/40">
               © {new Date().getFullYear()} DrinkGenie. All rights reserved.
             </p>
