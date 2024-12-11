@@ -1,7 +1,7 @@
 "use client";
 import { getUserCredits } from "@/lib/user";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
-import { Coins } from "lucide-react";
+import { Coins, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,11 +11,20 @@ import { SearchBar } from "./SearchBar";
 export function TopBar() {
   const { user } = useUser();
   const [credits, setCredits] = useState<number | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
-    if (user?.id) {
-      getUserCredits(user.id).then(setCredits);
-    }
+    if (!user?.id) return;
+
+    setIsPending(true);
+
+    getUserCredits(user.id)
+      .then(setCredits)
+      .catch((e) => {
+        console.error(e);
+        setCredits(0);
+      })
+      .finally(() => setIsPending(false));
   }, [user?.id]);
 
   return (
@@ -68,11 +77,14 @@ export function TopBar() {
                 >
                   <Coins className="h-4 w-4" />
                   <span>Get Credits</span>
-                  {typeof credits == "number" && (
+
+                  {isPending ? (
+                    <Loader2 className="h-4 w-4 text-accent animate-spin" />
+                  ) : typeof credits == "number" ? (
                     <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
                       ${credits}/credit{credits > 1 ? "s" : null}
                     </span>
-                  )}
+                  ) : null}
                 </Link>
               </nav>
             </SignedIn>
@@ -118,11 +130,14 @@ export function TopBar() {
                   <Coins className="h-4 w-4" />
                   <span>Get Credits</span>
                 </div>
-                {typeof credits == "number" && (
-                  <span className="px-2 py-1 bg-white/20 rounded text-xs">
-                    $1/credit
+
+                {isPending ? (
+                  <Loader2 className="h-4 w-4 text-accent animate-spin" />
+                ) : typeof credits == "number" ? (
+                  <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+                    ${credits}/credit{credits > 1 ? "s" : null}
                   </span>
-                )}
+                ) : null}
               </Link>
             </nav>
           </SignedIn>
