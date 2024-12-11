@@ -6,7 +6,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { VideoTutorials } from "@/components/VideoTutorials";
 import { countDrinks, findBy } from "@/lib/drinks";
 import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
-import { currentUser } from "@clerk/nextjs/server";
+// import { currentUser } from "@clerk/nextjs/server";
 
 export const maxDuration = 60; // Applies to the actions
 
@@ -22,12 +22,12 @@ export default async function Home(props: {
   const difficulty = (await props.searchParams)?.difficulty as string;
   const searchParams = new URLSearchParams(await props.searchParams);
 
-  const user = await currentUser();
+  // const user = await currentUser();
   const drinks = await findBy({
     pageSize: DEFAULT_PAGE_SIZE,
     page,
     ingredient,
-    loggedInUserId: user?.id,
+    // loggedInUserId: user?.id,
     difficulty,
     sortBy: "latest",
   });
