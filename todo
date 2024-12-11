@@ -21,8 +21,8 @@
 V2
 
 [ok] fix visualization counter
-- use production clerk keys
-- get credits buttons seems to be outdated in mobile
+[ok] use production clerk keys
+[ok] get credits buttons seems to be outdated in mobile
 - [ ] vercel function to send social media posts
       ok twitter
       [ ] Generate media posts using openai

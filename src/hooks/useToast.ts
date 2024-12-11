@@ -26,6 +26,6 @@ export function useToast() {
       info: (message: string, title?: string, duration?: number) =>
         show("info", message, title, duration),
     }),
-    [addToast],
+    [show],
   );
 }
