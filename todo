@@ -16,72 +16,50 @@
 - [x] turn votes client component
 - [x] next button (pagination) when clicked turns white
 - [x] genie image on home page
-- [ ] new design
-      [X] update deps
-      [X] update openai prompt to include new fields
-      [X] generate image
-      [X] Drink cards
-      [X] fix pagination
-      [X] hide "Master the Art of Mixology" section for now
-      [X] hide "What Our Users Say" for now - Footer
-      [X] hide our story
-      [X] update meet the team and sitemap
-      [X] link Business Inquiries to open email
-      [X] Update Connect with us
-      [x] Remove Privacy Policy, Terms of Service, Cookie Policy
-      [x] Center © 2024 DrinkGenie. All rights reserved.
-      [x] hide Featured in:
-      [x] Drink detail page
-      [x] async generate image
-      [x] Sign up / Sign in
-      [x] Pricing page
-      [x] search result page
-      [ ] refresh search and ingredient suggestions at build time
-- [ ] vercel function to send social media posts
-      ok twitter
-      [ ] facebook
-      [ ] Instagram
-      [ ] pinterest
-- [ ] https://vercel.com/docs/production-checklist
-- [ ] Telegram notifications
+- [x] new design
 
 V2
 
+- fix visualization counter
+- [ ] vercel function to send social media posts
+      ok twitter
+      [ ] Generate media posts using openai
+      [ ] facebook
+      [ ] Instagram
+      [ ] pinterest
+      [ ] video for x, instagram, youtube and tiktok using AI
+      [ ] Update Connect with us
+- [ ] https://vercel.com/docs/production-checklist
+- [ ] Telegram notifications errors, payments, video review
+- optmize for SEO
+- fix SSR of drink pages
 - [] integrate with crisp https://crisp.chat/pt/
 - [] integrate with https://features.vote/
-- [] Update Connect with us
-- [] video tutorials using AI
-- [] share with pinterest
-- [] share with instagram
-- [] Generate AI video
-- [] share with TikTok
-- [] share with youtube
-- [] display Featured section in the Footer
-- Augument drink data with ( pro version only )
-  [] Special equipment needed
-  [] Pro tips for better results
-  [] Common mistakes to avoid
-  [] Style (stirred, shaken, built, etc.)
-  [] Flavor Profile Description (sweet, sour, bitter, etc.)
-  - VARIATIONS
-    [] List 2-3 popular variations of the drink
-    [] Note which ingredients can be substituted
-    [] Suggest non-alcoholic alternatives if possible
 
-(PAIRING sugestions)
-Food pairing recommendations
-Occasion recommendations
-Best time/season to serve
+V3 New subscription plan: PRO
 
-(Presentation tips)
-Garnish placement
-Ice recommendations
-Color and appearance description
-Photography tips for social media
+[] Special equipment needed
+[] Pro tips for better results
+[] Common mistakes to avoid
 
-Include warnings where appropriate:
+- VARIATIONS
+  [] List 2-3 popular variations of the drink
+  [] Note which ingredients can be substituted
+  [] Suggest non-alcoholic alternatives if possible
+- PAIRING sugestions
+  [] Food pairing recommendations
+  [] Occasion recommendations
+  [] Best time/season to serve
+- Presentation tips
+  [] Garnish placement
+  [] Ice recommendations
+  [] Color and appearance description
+  [] Photography tips for social media
+- warnings
+  [ ] Alcohol content notices
+  [ ] Common allergens
+  [ ] Flammability warnings for specific techniques
+  [ ] Temperature-sensitive ingredients
 
-Alcohol content notices
-Common allergens
-Flammability warnings for specific techniques
-Temperature-sensitive ingredients
+- V4
+  [] display Featured section in the Footer

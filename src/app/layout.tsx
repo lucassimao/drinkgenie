@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { Pacifico, Poppins } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const pacifico = Pacifico({
   display: "swap",
@@ -32,7 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Analytics />
       <SpeedInsights />
+
       <ClerkProvider>
         <body
           className={clsx(
