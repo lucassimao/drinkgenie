@@ -2,7 +2,7 @@ import { ParsedUrlQuery } from "querystring";
 
 import { AffiliatedLinks } from "@/components/AffiliatedLinks";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { findBy, incrementViews } from "@/lib/drinks";
+import { findBy, getSlugsForSSR, incrementViews } from "@/lib/drinks";
 import { ChefHat, Clock, Flower2, GlassWater } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -16,12 +16,11 @@ interface DrinkDetailProps {
 
 export async function generateStaticParams() {
   // TODO debug SSR - maybe the database is throtling the calls?
-  // const allDrinkSlugs = await getSlugsForSSR();
+  const allDrinkSlugs = await getSlugsForSSR();
 
-  // return allDrinkSlugs.map((slug) => ({
-  //   slug,
-  // }));
-  return [];
+  return allDrinkSlugs.map((slug) => ({
+    slug,
+  }));
 }
 
 type Props = {
