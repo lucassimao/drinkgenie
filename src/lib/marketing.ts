@@ -1,8 +1,8 @@
-import TwitterApi, { EUploadMimeType } from "twitter-api-v2";
-import { getNextDrinkToShare } from "./drinks";
 import { sql } from "@vercel/postgres";
+import TwitterApi from "twitter-api-v2";
+import { getNextDrinkToShare } from "./drinks";
 
-async function downloadMedia(url: string): Promise<Buffer> {
+export async function downloadMedia(url: string): Promise<Buffer> {
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -24,8 +24,6 @@ export async function postTweet() {
 
   console.log(`Drink to tweet: ${drink.slug}`);
 
-  const buffer = await downloadMedia(drink.imageUrl);
-
   const client = new TwitterApi({
     appKey: process.env.X_API_KEY!,
     appSecret: process.env.X_API_SECRET!,
@@ -33,29 +31,10 @@ export async function postTweet() {
     accessToken: process.env.X_API_ACCESS_TOKEN,
   }).readWrite;
 
-  console.log(`sending media`);
-
-  const mediaId = await client.v1.uploadMedia(buffer, {
-    mimeType: EUploadMimeType.Jpeg,
-  });
-
-  console.log(`media sent: ${mediaId}`);
-
-  console.log("adding metadata");
-
-  await client.v1.createMediaMetadata(mediaId, {
-    alt_text: { text: drink.name },
-  });
-
-  console.log("metadata added");
   try {
-    const text = `${drink.name} https://www.drinkgenie.app/drink/${drink.slug}`;
-
-    await client.v2.tweet(text, {
-      media: {
-        media_ids: [mediaId],
-      },
-    });
+    const link = `https://www.drinkgenie.app/drink/${drink.slug}`;
+    const cappedDescription = drink.description.substring(0, link.length - 5);
+    await client.v2.tweet(cappedDescription + link);
   } catch (error) {
     if (error instanceof Error) {
       // eslint-disable-next-line
