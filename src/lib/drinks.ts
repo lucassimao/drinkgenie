@@ -159,17 +159,17 @@ type FindByArgs = {
   temperature?: string[];
 };
 
-export async function findBy(
+export async function getDrinks(
   args: FindByArgs & { id: number },
 ): Promise<Drink | null>;
-export async function findBy(
+export async function getDrinks(
   args: FindByArgs & { slug: string },
 ): Promise<Drink | null>;
-export async function findBy(
+export async function getDrinks(
   args: Omit<FindByArgs, "id" | "slug">,
 ): Promise<Drink[]>;
-export async function findBy(): Promise<Drink[]>;
-export async function findBy(
+export async function getDrinks(): Promise<Drink[]>;
+export async function getDrinks(
   args?: FindByArgs,
 ): Promise<Drink | null | Drink[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
@@ -220,10 +220,10 @@ export async function findBy(
   // fetching votes made by the current user
   if (typeof args?.loggedInUserId == `number`) {
     queryBuilder
-      .leftJoin("favorites AS fav", function () {
-        this.on("d.id", "=", "fav.drink_id").andOn(
-          knex.raw("fav.user_id = ?", args.loggedInUserId!),
-        );
+      .leftJoin("favorites AS fav", function (queryBuilder) {
+        queryBuilder
+          .on("d.id", "=", "fav.drink_id")
+          .andOn(knex.raw("fav.user_id = ?", args.loggedInUserId!));
       })
       .select(
         knex.raw(

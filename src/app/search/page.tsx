@@ -7,7 +7,7 @@ import { SearchLoading } from "@/components/search/SearchLoading";
 import { SearchSortOptions } from "@/components/search/SearchSortOptions";
 import { ViewToggle } from "@/components/search/ViewToggle";
 import { useToast } from "@/hooks/useToast";
-import { findBy } from "@/lib/drinks";
+import { getDrinks } from "@/lib/drinks";
 import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
 import { Drink } from "@/types/drink";
 import { useSearchParams } from "next/navigation";
@@ -39,7 +39,7 @@ export default function Page() {
 
     if (!query) return;
 
-    const findByPromise = findBy({
+    const findByPromise = getDrinks({
       page,
       pageSize: DEFAULT_PAGE_SIZE,
       difficulty,

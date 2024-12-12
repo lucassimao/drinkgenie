@@ -23,6 +23,7 @@ V2
 [ok] fix visualization counter
 [ok] use production clerk keys
 [ok] get credits buttons seems to be outdated in mobile
+[ ] ISR for home page paginated
 
 - [ ] vercel function to send social media posts
       [ok] twitter

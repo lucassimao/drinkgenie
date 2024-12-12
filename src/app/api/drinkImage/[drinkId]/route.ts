@@ -1,4 +1,4 @@
-import { findBy } from "@/lib/drinks";
+import { getDrinks } from "@/lib/drinks";
 import { Drink } from "@/types/drink";
 import { put } from "@vercel/blob";
 import { waitUntil } from "@vercel/functions";
@@ -71,7 +71,7 @@ export async function POST(
       statusText: `Invalid drink id: ${drinkId}`,
     });
 
-  const drink = await findBy({ id: drinkId });
+  const drink = await getDrinks({ id: drinkId });
 
   if (!drink)
     return new Response("Not Found", {

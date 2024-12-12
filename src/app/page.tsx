@@ -1,41 +1,38 @@
 import { DrinkList } from "@/components/DrinkList";
+import { DrinkListFallback } from "@/components/DrinkListFallback";
 import { IngredientForm } from "@/components/IngredientForm";
 import { Pagination } from "@/components/Pagination";
 import { SectionDivider } from "@/components/SectionDivider";
 import { Testimonials } from "@/components/Testimonials";
 import { VideoTutorials } from "@/components/VideoTutorials";
-import { countDrinks, findBy } from "@/lib/drinks";
+import { countDrinks, getDrinks } from "@/lib/drinks";
 import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
-// import { currentUser } from "@clerk/nextjs/server";
+import { Suspense } from "react";
 
 export const maxDuration = 60; // Applies to the actions
 
-export default async function Home(props: {
-  searchParams?: Promise<{
-    page?: string;
-    ingredient?: string;
-    difficulty?: string;
-  }>;
-}) {
-  const page = +((await props.searchParams)?.page as string) || 1;
-  const ingredient = (await props.searchParams)?.ingredient as string;
-  const difficulty = (await props.searchParams)?.difficulty as string;
-  const searchParams = new URLSearchParams(await props.searchParams);
+interface Props {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  // const user = await currentUser();
-  const drinks = await findBy({
-    pageSize: DEFAULT_PAGE_SIZE,
-    page,
-    ingredient,
-    // loggedInUserId: user?.id,
-    difficulty,
-    sortBy: "latest",
-  });
-  const totalPages = Math.ceil(
-    (await countDrinks(ingredient, difficulty)) / DEFAULT_PAGE_SIZE,
-  );
+export const revalidate = 3600; // 1hr
 
+export default async function Home({ searchParams }: Props) {
   const displayTutorialsAndTestmonials = false;
+
+  const { page, ingredient, difficulty } = await searchParams;
+  const initialData = await getDrinks({
+    page: Number(page) || 1,
+    pageSize: DEFAULT_PAGE_SIZE,
+    // sortBy: "latest",
+  });
+
+  // Calculate total pages on the server
+  const totalItems = await countDrinks(
+    ingredient as string,
+    difficulty as string,
+  );
+  const totalPages = Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
 
   return (
     <main>
@@ -49,12 +46,17 @@ export default async function Home(props: {
       />
 
       <div className="mb-16">
-        <DrinkList searchParams={searchParams.toString()} cocktails={drinks} />
-        {totalPages > 1 && (
-          <div className="mt-8">
-            <Pagination currentPage={page} totalPages={totalPages} />
-          </div>
-        )}
+        <Suspense fallback={<DrinkListFallback />}>
+          <DrinkList
+            initialPage={Number(page) || 1}
+            initialData={initialData}
+          />
+        </Suspense>
+        <div className="mt-8">
+          <Suspense>
+            <Pagination totalPages={totalPages} />
+          </Suspense>
+        </div>
       </div>
 
       {displayTutorialsAndTestmonials && (

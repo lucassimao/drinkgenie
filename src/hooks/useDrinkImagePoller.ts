@@ -1,4 +1,4 @@
-import { findBy } from "@/lib/drinks";
+import { getDrinks } from "@/lib/drinks";
 import { Drink } from "@/types/drink";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ export function useDrinkImagePoller(drinkId: number) {
         console.log("checking");
 
         const fetchedDrink = await Promise.race([
-          findBy({ id: drinkId }),
+          getDrinks({ id: drinkId }),
           new Promise<Drink | null>((_, reject) =>
             setTimeout(() => reject(new Error("Timeout after 5s")), 5000),
           ),
