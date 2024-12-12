@@ -34,32 +34,9 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
             text: `
             Write a fun and witty tweet to promote the cocktail ${drink.name} that includes:
 
-            START WITH A PLAYFUL OPENING SIMILAR TO THESE :
-
-              - "Life's too short for boring drinks! 🍸"
-              - "Plot twist: Your new favorite drink is here! 🎭"
-              - "Warning: This [COCKTAIL_NAME] may cause extreme happiness 😎"
-              - "Found: The cure for a mundane [day of week] ✨"
-              - "PSA: Your taste buds called, they want this [COCKTAIL_NAME] 📞"   
-              
-            INCLUDE AN HUMOROUS MIDDLE SECTION SIMILAR TO THESE :
-
-              - "It's like [funny comparison related to ingredients or flavor] but better!"
-              - "Perfect for [unexpected situation] or just because you're fancy"
-              - "[Main ingredient] and [main ingredient] had a party, and this happened..."
-              - "Imagine if [related famous person/character] was a bartender..."
-              - "The drink that makes you look like you know what you're doing 😉"          
-              
-            END WITH A CALL TO ACTION SIMILAR TO THESE:
-
-              - "Grab the recipe before your friends do! [LINK]"
-              - "Level up your drink game: [LINK]"
-              - "Your future self will thank you: [LINK]"
-              - "Join the cool kids club: [LINK]"
-              - "Because adulting deserves a reward: [LINK]"            
-            
-            ADD 2-3 RELEVANT HASHTAGS FROM:
-
+            - Start with a playful opening similar to these :
+            - Include an humorous middle section similar to these :
+            - Add 2-3 relevant hashtags from the list bellow:
               - #ThirstyThursday 
               - #WeekendVibes 
               - #CocktailO'Clock 
@@ -69,7 +46,6 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
               - #DrinkCreative 
               - #CocktailCraft 
               - #SipSipHooray
-
             RULES:
               - Keep total length under 280 characters
               - Always include one emoji in opening and one in closing

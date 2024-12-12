@@ -65,7 +65,7 @@ export async function generateMetadata(
         ? [drink.imageUrl, ...previousImages]
         : previousImages,
       siteName: "DrinkGenie",
-      url: `https://drinkgenie.app/drinks/${slug}`,
+      url: `https://drinkgenie.app/drink/${slug}`,
     },
   };
 }
