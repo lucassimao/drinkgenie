@@ -1,24 +1,13 @@
-"use client";
-
+import AutoRedirectButton from "@/components/credits/success/AutoRedirectButton";
 import { ArrowRight, GlassWater, PartyPopper, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 
-export default function Page() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+interface Props {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  const credits = Number(searchParams.get("credits")) || "0";
-
-  useEffect(() => {
-    // Automatically redirect after 10 seconds
-    const timeout = setTimeout(() => {
-      router.push("/");
-    }, 10_000);
-
-    return () => clearTimeout(timeout);
-  }, [router]);
+export default async function Page({ searchParams }: Props) {
+  const { credits } = await searchParams;
 
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center p-4">
@@ -86,10 +75,7 @@ export default function Page() {
           </div>
 
           {/* Auto-redirect Notice */}
-          <p className="text-sm text-primary/40 mt-8">
-            You&apos;ll be automatically redirected to the home page in a few
-            seconds...
-          </p>
+          <AutoRedirectButton />
         </div>
       </div>
     </div>

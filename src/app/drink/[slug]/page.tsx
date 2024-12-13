@@ -6,7 +6,7 @@ import { getDrinks, getSlugsForSSR } from "@/lib/drinks";
 import { ChefHat, Clock, Flower2, GlassWater } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { cache } from "react";
 import { DrinkDetailImage } from "./DrinkDetailImage";
 import { PollingImageFetcher } from "./PollingImageFetcher";
 import { ViewRegister } from "./ViewRegister";
@@ -14,6 +14,13 @@ import { ViewRegister } from "./ViewRegister";
 interface DrinkDetailProps {
   params: Promise<ParsedUrlQuery>;
 }
+
+const getCachedDrink = cache(async (slug: string) => {
+  const drink = await getDrinks({ slug });
+
+  if (!drink) notFound();
+  return drink;
+});
 
 export async function generateStaticParams() {
   const allDrinkSlugs = await getSlugsForSSR();
@@ -38,7 +45,7 @@ export async function generateMetadata(
     throw new Error("no slug");
   }
 
-  const drink = await getDrinks({ slug });
+  const drink = await getCachedDrink(slug);
 
   if (!drink) {
     throw new Error("no drink " + slug);
@@ -75,7 +82,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
     notFound();
   }
 
-  const drink = await getDrinks({ slug });
+  const drink = await getCachedDrink(slug);
 
   if (!drink) {
     notFound();

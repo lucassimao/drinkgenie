@@ -9,6 +9,7 @@ import { Pacifico, Poppins } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { TopBarFallback } from "@/components/TopBarFallback";
 
 const pacifico = Pacifico({
   display: "swap",
@@ -33,8 +34,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Analytics />
-      <SpeedInsights />
+      {process.env.NODE_ENV == "production" && <Analytics />}
+      {process.env.NODE_ENV == "production" && <SpeedInsights />}
 
       <ClerkProvider>
         <body
@@ -44,7 +45,7 @@ export default function RootLayout({
             "min-h-screen bg-background",
           )}
         >
-          <Suspense>
+          <Suspense fallback={<TopBarFallback />}>
             <TopBar />
           </Suspense>
           <div className="max-w-7xl mx-auto px-4">{children}</div>

@@ -24,7 +24,7 @@ export default async function Home({ searchParams }: Props) {
   const initialData = await getDrinks({
     page: Number(page) || 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    // sortBy: "latest",
+    sortBy: "latest",
   });
 
   // Calculate total pages on the server
