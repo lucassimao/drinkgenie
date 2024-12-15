@@ -1,29 +1,20 @@
-"use client";
-
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Fragment, useState } from "react";
+import Link from "next/link";
+import { Fragment } from "react";
 
 interface PaginationProps {
   totalPages: number;
+  currentPage: number;
 }
 
-export function Pagination({ totalPages }: PaginationProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
+export function Pagination({ totalPages, currentPage }: PaginationProps) {
+  // const router = useRouter();
+  // const [page, setPage] = useState(initPage);
 
-  const pathname = usePathname();
-
-  const onPageChange = (page: number) => {
-    setCurrentPage(page);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    console.log(`${pathname}?${params.toString()}`);
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  // const onPageChange = (page: number) => {
+  //   setPage(page);
+  //   router.push(`/${page}`);
+  // };
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
@@ -60,16 +51,17 @@ export function Pagination({ totalPages }: PaginationProps) {
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="p-2 rounded-lg border-2 border-primary/10 text-primary 
+      <Link href={`/${currentPage - 1}`}>
+        <button
+          disabled={currentPage === 1}
+          className="p-2 rounded-lg border-2 border-primary/10 text-primary 
           disabled:opacity-50 disabled:cursor-not-allowed 
           hover:bg-primary/5 transition-colors"
-        aria-label="Previous page"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
+          aria-label="Previous page"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+      </Link>
 
       <div className="flex items-center gap-2">
         {getPageNumbers().map((page, index) => (
@@ -77,32 +69,34 @@ export function Pagination({ totalPages }: PaginationProps) {
             {page === "..." ? (
               <span className="px-4 py-2 text-primary/40">...</span>
             ) : (
-              <button
-                onClick={() => onPageChange(page as number)}
-                className={`min-w-[40px] h-10 rounded-lg border-2 
+              <Link href={`/${page}`}>
+                <button
+                  className={`min-w-[40px] h-10 rounded-lg border-2 
                   transition-all duration-200 ${
-                    currentPage === page
+                    page === currentPage
                       ? "border-accent bg-accent text-white font-medium"
                       : "border-primary/10 text-primary hover:bg-primary/5"
                   }`}
-              >
-                {page}
-              </button>
+                >
+                  {page}
+                </button>
+              </Link>
             )}
           </Fragment>
         ))}
       </div>
 
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="p-2 rounded-lg border-2 border-primary/10 text-primary 
+      <Link href={`/${currentPage + 1}`}>
+        <button
+          disabled={currentPage === totalPages}
+          className="p-2 rounded-lg border-2 border-primary/10 text-primary 
           disabled:opacity-50 disabled:cursor-not-allowed 
           hover:bg-primary/5 transition-colors"
-        aria-label="Next page"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
+          aria-label="Next page"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      </Link>
     </div>
   );
 }

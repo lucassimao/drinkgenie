@@ -1,5 +1,4 @@
-import { DrinkList } from "@/components/DrinkList";
-import { DrinkListFallback } from "@/components/DrinkListFallback";
+import { DrinkCard } from "@/components/DrinkCard";
 import { IngredientForm } from "@/components/IngredientForm";
 import { Pagination } from "@/components/Pagination";
 import { SectionDivider } from "@/components/SectionDivider";
@@ -12,26 +11,24 @@ import { Suspense } from "react";
 export const maxDuration = 60; // Applies to the actions
 
 interface Props {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ page?: string[] }>;
 }
 
 export const revalidate = 3600; // 1hr
+const DISPLAY_TUTORIALS_AND_TESTMONIALS = false;
 
-export default async function Home({ searchParams }: Props) {
-  const displayTutorialsAndTestmonials = false;
+export default async function Home(props: Props) {
+  const params = await props.params;
+  const page = Array.isArray(params.page) ? +params.page[0] : 1;
 
-  const { page, ingredient, difficulty } = await searchParams;
-  const initialData = await getDrinks({
-    page: Number(page) || 1,
+  const drinks = await getDrinks({
+    page,
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: "latest",
   });
 
   // Calculate total pages on the server
-  const totalItems = await countDrinks(
-    ingredient as string,
-    difficulty as string,
-  );
+  const totalItems = await countDrinks();
   const totalPages = Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
 
   return (
@@ -46,20 +43,21 @@ export default async function Home({ searchParams }: Props) {
       />
 
       <div className="mb-16">
-        <Suspense fallback={<DrinkListFallback />}>
-          <DrinkList
-            initialPage={Number(page) || 1}
-            initialData={initialData}
-          />
-        </Suspense>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {drinks.map((drink) => (
+            <div key={drink.id} className="relative">
+              <DrinkCard drink={drink} />
+            </div>
+          ))}
+        </div>
         <div className="mt-8">
           <Suspense>
-            <Pagination totalPages={totalPages} />
+            <Pagination currentPage={page} totalPages={totalPages} />
           </Suspense>
         </div>
       </div>
 
-      {displayTutorialsAndTestmonials && (
+      {DISPLAY_TUTORIALS_AND_TESTMONIALS && (
         <div className="space-y-16 mb-16">
           <VideoTutorials />
           <Testimonials />
