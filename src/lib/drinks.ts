@@ -3,13 +3,14 @@
 import { Drink, ServiceError } from "@/types/drink";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
 import knex from "./knex";
 import { getUserCredits } from "./user";
-import { BASE_URL, MAX_INGREDIENTS } from "./utils";
+import { MAX_INGREDIENTS } from "./utils";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -496,7 +497,14 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
     console.timeEnd("saveDrink");
 
     // endpoint will return 200 immediatly. The long running operation will keep running
-    const res = await fetch(`${BASE_URL}/api/drinkImage/${drink.id}`, {
+    const headersList = await headers();
+    const host = headersList.get("host");
+    const proto = headersList.get("x-forwarded-proto") || "http";
+    const baseUrl = `${proto}://${host}`;
+
+    console.log(`calling now ${baseUrl}/api/drinkImage/${drink.id}`);
+
+    const res = await fetch(`${baseUrl}/api/drinkImage/${drink.id}`, {
       method: "POST",
     });
 
@@ -505,6 +513,8 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
         `failed to trigger drink #${drink.id} image generation: ${res.status} ${res.statusText}`,
       );
     }
+
+    console.log(`revalidating paths`);
 
     // revalidating cached paginated files for home
     revalidatePath(`/(home)/[[...page]]`, "page");
