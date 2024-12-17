@@ -56,7 +56,7 @@ async function generateImage(drink: Drink): Promise<void> {
     is_generating_image: false,
   });
 
-  revalidatePath(`/(home)/[[...page]]/page`, "page");
+  revalidatePath(`/(home)/[[...page]]`, "page");
   revalidatePath(`/drink/${drink.slug}`);
 
   console.log(`image generated for ${drink.id}!`);

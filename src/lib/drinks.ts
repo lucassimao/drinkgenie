@@ -507,7 +507,7 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
     }
 
     // revalidating cached paginated files for home
-    revalidatePath(`/(home)/[[...page]]/page`, "page");
+    revalidatePath(`/(home)/[[...page]]`, "page");
     return drink;
 
     // eslint-disable-next-line
