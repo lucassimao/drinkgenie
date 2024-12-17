@@ -131,7 +131,9 @@ export function SearchResults() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-primary">
-            {state.drinks.length} results for &quot;{params.query}&quot;
+            {params.query
+              ? `${state.drinks.length} results for &quot;${params.query}&quot;`
+              : "Search results"}
           </h2>
           <p className="text-primary/60 mt-1">Find your perfect drink</p>
         </div>
