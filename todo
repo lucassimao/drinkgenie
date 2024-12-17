@@ -25,10 +25,10 @@ V2
 [ok] get credits buttons seems to be outdated in mobile
 
 - optmizations
-  [ ] ISR for home page paginated
-  [ ] optmize based on Speed Insights
-  [ ] fix SSR of drink pages
-  [ ] convert /search into a server component and only the listing of results as client
+  [ok] ISR for home page paginated
+  [ok] optmize based on Speed Insights
+  [ok] fix SSR of drink pages
+  [ok] convert /search into a server component and only the listing of results as client
 - [ ] Send social media posts
       [ok] twitter
       [ok] Generate media posts using openai
