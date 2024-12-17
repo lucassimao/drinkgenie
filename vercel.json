@@ -6,11 +6,23 @@
     },
     {
       "path": "/api/social?network=twitter",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/social?network=twitter",
       "schedule": "0 15 * * *"
     },
     {
       "path": "/api/social?network=twitter",
-      "schedule": "0 22 * * *"
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/social?network=twitter",
+      "schedule": "0 21 * * *"
+    },
+    {
+      "path": "/api/social?network=twitter",
+      "schedule": "0 23 59 * *"
     }
   ]
 }
