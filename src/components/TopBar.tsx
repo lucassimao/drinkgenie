@@ -13,8 +13,6 @@ export function TopBar() {
   const [credits, setCredits] = useState(0);
 
   useEffect(() => {
-    console.log(user);
-
     if (user) {
       getUserCredits(user.id).then(setCredits);
     }

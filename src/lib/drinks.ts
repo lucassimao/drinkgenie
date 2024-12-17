@@ -243,8 +243,8 @@ export async function getDrinks(
   }
 
   if (typeof args?.page == "number" && typeof args?.pageSize == "number") {
+    console.log({ page: args?.page, pageSize: args?.pageSize });
     const offset = (args.page - 1) * args.pageSize;
-
     queryBuilder.offset(offset).limit(args.pageSize);
   }
 

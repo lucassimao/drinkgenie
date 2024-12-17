@@ -30,6 +30,13 @@ export function IngredientForm() {
   const toast = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // eslint-disable-next-line
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      handleAddIngredient();
+    }
+  };
+
   // closes the ingredient dropdown if you click outide of it or hit ESC key
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -86,14 +93,16 @@ export function IngredientForm() {
         error instanceof ServiceError ? error.message : "Something went wrong!";
       toast.error(errorMessage, "Ooops...");
     } finally {
-      // setIsGenerating(false);
+      setIsGenerating(false);
     }
   };
 
   const handleAddIngredient = () => {
-    if (ingredients.length < 4) {
+    if (ingredients.length < MAX_INGREDIENTS) {
       setIngredients([...ingredients, ""]);
       setActiveInput(ingredients.length);
+    } else if (ingredients.length == MAX_INGREDIENTS) {
+      setActiveInput(null);
     }
   };
 
@@ -147,6 +156,8 @@ export function IngredientForm() {
                          text-primary placeholder-primary/40 focus:outline-none focus:border-secondary
                          focus:ring-2 focus:ring-secondary/20 transition-all duration-300"
                 placeholder={`Ingredient ${index + 1}`}
+                onKeyDown={handleKeyDown}
+                autoFocus={activeInput == index}
               />
               {ingredients.length > 1 && (
                 <button
