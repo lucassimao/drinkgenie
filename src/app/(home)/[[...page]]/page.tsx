@@ -28,7 +28,7 @@ export async function generateStaticParams() {
 
 export default async function Home(props: Props) {
   const params = await props.params;
-  const page = params.page?.[0] ? parseInt(params.page[0]) : 1;
+  const page = params.page?.[0] ? parseInt(params.page[0]) || 1 : 1;
 
   const drinks = await getDrinks({
     page,
