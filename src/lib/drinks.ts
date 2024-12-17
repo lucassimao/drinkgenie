@@ -9,7 +9,7 @@ import slugify from "slugify";
 import { z } from "zod";
 import knex from "./knex";
 import { getUserCredits } from "./user";
-import { BASE_URL, DEFAULT_PAGE_SIZE, MAX_INGREDIENTS } from "./utils";
+import { BASE_URL, MAX_INGREDIENTS } from "./utils";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -506,15 +506,8 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
       );
     }
 
-    const totalItems = await countDrinks();
-    const totalPages = Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
-
     // revalidating cached paginated files for home
-    revalidatePath("/");
-    for (let index = 0; index < totalPages; index++) {
-      revalidatePath(`/${index + 1}`);
-    }
-
+    revalidatePath(`/(home)/[[...page]]/page`, "page");
     return drink;
 
     // eslint-disable-next-line
