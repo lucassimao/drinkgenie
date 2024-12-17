@@ -1,9 +1,9 @@
 "use server";
-
-import { sql } from "@vercel/postgres";
+import knex from "@/lib/knex";
 
 export async function saveSubscriber(email: string): Promise<void> {
-  await sql`
-        INSERT INTO subscribers (email,created_at) values (${email},now()); 
-      `;
+  await knex("subscribers").insert({
+    email: email,
+    created_at: knex.fn.now(),
+  });
 }

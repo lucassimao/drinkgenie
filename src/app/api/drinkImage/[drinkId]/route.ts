@@ -2,9 +2,9 @@ import { getDrinks } from "@/lib/drinks";
 import { Drink } from "@/types/drink";
 import { put } from "@vercel/blob";
 import { waitUntil } from "@vercel/functions";
-import { sql } from "@vercel/postgres";
 import slugify from "slugify";
 import { revalidatePath } from "next/cache";
+import knex from "@/lib/knex";
 
 async function generateImage(drink: Drink): Promise<void> {
   console.log(`generating image for ${drink.id}`);
@@ -51,9 +51,13 @@ async function generateImage(drink: Drink): Promise<void> {
     addRandomSuffix: true,
   });
 
-  await sql`UPDATE drinks SET image_url = ${putResult.url}, is_generating_image=false WHERE id=${drink.id}`;
+  await knex("drinks").where("id", drink.id).update({
+    image_url: putResult.url,
+    is_generating_image: false,
+  });
 
   revalidatePath(`/`);
+  revalidatePath(`/1`);
   revalidatePath(`/drink/${drink.slug}`);
 
   console.log(`image generated for ${drink.id}!`);

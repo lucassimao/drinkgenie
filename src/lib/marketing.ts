@@ -1,10 +1,10 @@
-import { sql } from "@vercel/postgres";
 import TwitterApi from "twitter-api-v2";
 import { getNextDrinkToShare } from "./drinks";
 import { Drink } from "@/types/drink";
 import OpenAI from "openai";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
+import knex from "@/lib/knex";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -154,8 +154,9 @@ export async function postTweet() {
 
   console.log("Tweet successfully posted");
 
-  await sql`UPDATE drinks SET tweet_posted_at = NOW() WHERE ID=${drink.id}`;
-
+  await knex("drinks").where("id", drink.id).update({
+    tweet_posted_at: knex.fn.now(),
+  });
   console.timeEnd(`postTweet`);
 }
 
