@@ -28,4 +28,7 @@ export type Drink = {
   flavorProfile?: "sweet" | "sour" | "bitter" | "spicy";
   glassware?: "cocktail" | "highball" | "rocks" | "wine";
   temperature?: "frozen" | "cold" | "room" | "hot";
+
+  width: number;
+  height: number;
 };

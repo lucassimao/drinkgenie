@@ -19,7 +19,7 @@ async function generateImage(drink: Drink): Promise<void> {
       body: JSON.stringify({
         style: "realistic_image",
         response_format: "b64_json",
-        size: "1024x1024",
+        size: "1820x1024", // 16:9 aspect ratio
         model: "recraftv3",
         prompt: `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `,
       }),
@@ -54,6 +54,8 @@ async function generateImage(drink: Drink): Promise<void> {
   await knex("drinks").where("id", drink.id).update({
     image_url: putResult.url,
     is_generating_image: false,
+    width: 1820,
+    height: 1024,
   });
 
   revalidatePath(`/(home)/[[...page]]`, "page");

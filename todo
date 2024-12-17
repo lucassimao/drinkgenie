@@ -38,24 +38,23 @@ V2
       [ ] pinterest
       [ ] video for x, instagram, youtube and tiktok using AI
       [ ] Update Connect with us
-- [ ] https://vercel.com/docs/production-checklist
+- daily add random drink receipts
+- pagination for search results
 - [ ] Telegram notifications errors, payments, video review
 - [ ] check if we can use threads of convo for openai requests to avoid sending the pompt over and over
-
 - [] integrate with crisp https://crisp.chat/pt/
 - [] integrate with https://features.vote/
-- optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
-- pagination for search results
 - display alcohol content, flavor, glassware, and serving temp in the drink details
-  [ ] delete drink
-
+- optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
+- [ ] https://vercel.com/docs/production-checklist
 
 V3 New subscription plan: PRO
 
 - Retool
-[] Special equipment needed
-[] Pro tips for better results
-[] Common mistakes to avoid
+  [ ] delete drink
+  [] Special equipment needed
+  [] Pro tips for better results
+  [] Common mistakes to avoid
 
 - VARIATIONS
   [] List 2-3 popular variations of the drink

@@ -1,6 +1,7 @@
 import { SocialShare } from "@/components/SocialShare";
 import { getRelativeTimeString } from "@/lib/dateUtils";
 import { Drink } from "@/types/drink";
+import clsx from "clsx";
 import Image from "next/image";
 
 interface DrinkDetailProps {
@@ -20,9 +21,13 @@ export function DrinkDetailImage({ drink }: DrinkDetailProps) {
       <Image
         src={drink.imageUrl}
         alt={drink.name}
-        width={1024}
-        height={1024}
-        className="w-full h-full object-cover object-left-top"
+        width={drink.width}
+        height={drink.height}
+        className={clsx(
+          "w-full h-full object-cover",
+          { "object-left-top": drink.width == 1024 && drink.height == 1024 },
+          { "object-center": drink.width == 1820 && drink.height == 1024 },
+        )}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 p-8">

@@ -79,6 +79,8 @@ function mapRowToDrink(row: Record<string, any>): Drink {
     flavorProfile: row.flavor_profile,
     glassware: row.glassware,
     temperature: row.temperature,
+    width: row.width,
+    height: row.height,
   };
 }
 
