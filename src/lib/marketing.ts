@@ -28,7 +28,7 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
   console.time("openai");
 
   const completion = await openai.beta.chat.completions.parse({
-    model: `gpt-4o-mini`,
+    model: `gpt-4o`,
     messages: [
       {
         role: "system",
@@ -40,7 +40,7 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
 
             - A playful opening
             - An humorous middle section
-            - Add 2-3 relevant hashtags from the list bellow ( If there is enough room in the tweet. Ignore otherwise ):
+            - Add 2-3 relevant hashtags from the list bellow ( Only if there is enough room in the tweet message ):
               - #CocktailO'Clock 
               - #DrinkUp 
               - #MixologyMagic 
@@ -48,9 +48,10 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
               - #DrinkCreative 
               - #CocktailCraft 
               - #SipSipHooray
+
             RULES:
-              - Keep total length under 280 characters
-              - Always include one emoji in opening and one in closing
+              - Keep tweet length under 280 characters
+              - Include one emoji in opening and one in closing if possible
               - Maintain a playful but not unprofessional tone
               - Incorporate at least one ingredient or characteristic of the cocktail
               - Always include the link
@@ -82,7 +83,7 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
         content: [
           {
             type: "text",
-            text: `Could you please generate a tweet message for the following cocktail ( be mindful of the tweet max length of only 280 chars):
+            text: `Could you please generate a tweet message for the following cocktail ( max length of 280 chars ):
 
             Name: ${drink.name}
             Description: ${drink.description}
