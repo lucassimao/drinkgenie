@@ -44,6 +44,13 @@ export async function generateMetadata(
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = parent ? (await parent).openGraph?.images || [] : [];
 
+  const images: string[] = [];
+  if (drink.twitterSummaryLargeImage) {
+    images.push(drink.twitterSummaryLargeImage);
+  } else if (drink.imageUrl) {
+    images.push(drink.imageUrl);
+  }
+
   return {
     title: drink.name,
     description: drink.description,
@@ -52,13 +59,12 @@ export async function generateMetadata(
       site: "@DrinkGenieApp",
       title: drink.name,
       description: drink.description,
-      images: drink.imageUrl ? [drink.imageUrl] : [],
+      images,
       creator: "DrinkGenie",
     },
     openGraph: {
-      images: drink.imageUrl
-        ? [drink.imageUrl, ...previousImages]
-        : previousImages,
+      images:
+        images?.length > 0 ? [...images, ...previousImages] : previousImages,
       siteName: "DrinkGenie",
       url: `https://drinkgenie.app/drink/${slug}`,
     },

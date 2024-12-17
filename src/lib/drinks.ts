@@ -81,6 +81,7 @@ function mapRowToDrink(row: Record<string, any>): Drink {
     temperature: row.temperature,
     width: row.width,
     height: row.height,
+    twitterSummaryLargeImage: row.twitter_summary_large_image,
   };
 }
 

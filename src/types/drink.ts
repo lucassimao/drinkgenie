@@ -10,6 +10,8 @@ export type Drink = {
   createdAt: Date;
   description: string;
   imageUrl?: string | null;
+  twitterSummaryLargeImage?: string | null;
+
   ingredients: string[];
   preparationSteps: string[];
   slug: string;

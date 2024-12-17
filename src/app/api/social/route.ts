@@ -1,4 +1,5 @@
 import { postToFacebook, postTweet } from "@/lib/marketing";
+import { waitUntil } from "@vercel/functions";
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
 
   switch (network) {
     case "twitter":
-      await postTweet();
+      waitUntil(postTweet());
       break;
     case "facebook":
       console.log("Sending facebook post");

@@ -5,6 +5,10 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import knex from "@/lib/knex";
+import { put } from "@vercel/blob";
+import slugify from "slugify";
+import { revalidatePath } from "next/cache";
+import sharp from "sharp";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -34,9 +38,9 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
             text: `
             Write a fun and witty tweet to promote the cocktail ${drink.name} that includes:
 
-            - Start with a playful opening similar to these :
-            - Include an humorous middle section similar to these :
-            - Add 2-3 relevant hashtags from the list bellow:
+            - A playful opening
+            - An humorous middle section
+            - Add 2-3 relevant hashtags from the list bellow ( If there is enough room in the tweet. Ignore otherwise ):
               - #CocktailO'Clock 
               - #DrinkUp 
               - #MixologyMagic 
@@ -50,6 +54,7 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
               - Maintain a playful but not unprofessional tone
               - Incorporate at least one ingredient or characteristic of the cocktail
               - Always include the link
+              - Ignore hashtags if no enough chars
           `,
           },
         ],
@@ -77,7 +82,7 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
         content: [
           {
             type: "text",
-            text: `Could you please generate a tweet message for the following cocktail:
+            text: `Could you please generate a tweet message for the following cocktail ( be mindful of the tweet max length of only 280 chars):
 
             Name: ${drink.name}
             Description: ${drink.description}
@@ -136,6 +141,7 @@ export async function postTweet() {
   }).readWrite;
 
   try {
+    await generateImageForLargeTwitterCard(drink);
     const tweet = await generateTweetUsingOpenAI(drink);
     console.log(`posting ${tweet}`);
 
@@ -158,6 +164,73 @@ export async function postTweet() {
   console.timeEnd(`postTweet`);
 }
 
+async function generateImageForLargeTwitterCard(drink: Drink): Promise<void> {
+  if (drink.twitterSummaryLargeImage) return;
+
+  console.log(`generating twitterSummaryLargeImage for ${drink.id}`);
+
+  const response = await fetch(
+    "https://external.api.recraft.ai/v1/images/generations",
+    {
+      method: "POST",
+      headers: {
+        Authorization: process.env.RECRAFT_API_key || "",
+      },
+      body: JSON.stringify({
+        style: "realistic_image",
+        response_format: "b64_json",
+        size: "2048x1024",
+        model: "recraftv3",
+        prompt: `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const { status, statusText } = response;
+    throw new Error(
+      `failed to generate image for ${drink.name}:  ${status} ${statusText}`,
+    );
+  }
+
+  const result = await response.json();
+  if (!result?.data?.length || typeof result.data[0].b64_json != "string") {
+    throw new Error(
+      `No data nor b64_json for ${drink.name}. result: ${JSON.stringify(result)}`,
+    );
+  }
+
+  const binaryData = Uint8Array.from(atob(result.data[0].b64_json), (char) =>
+    char.charCodeAt(0),
+  );
+
+  // Target aspect ratio is 1.91:1
+  // For height 1024px, ideal width would be: 1024 * 1.91 = 1956px
+  // Current width is 2048px, so we need to crop 92px total (46px from each side)
+  const croppedImage = await sharp(Buffer.from(binaryData))
+    .extract({
+      left: 46,
+      top: 0,
+      width: 1956, // 2048 - (46 * 2)
+      height: 1024,
+    })
+    .toBuffer();
+
+  const blob = new Blob([croppedImage], { type: "image/jpg" });
+
+  const putResult = await put(slugify(drink.name.toLowerCase()), blob, {
+    access: "public",
+    addRandomSuffix: true,
+  });
+
+  await knex("drinks").where("id", drink.id).update({
+    twitter_summary_large_image: putResult.url,
+  });
+
+  revalidatePath(`/drink/${drink.slug}`);
+
+  console.log(`image generated for ${drink.id}!`);
+}
 export async function postToFacebook() {
   console.log("postToFacebook not implemented");
 }
