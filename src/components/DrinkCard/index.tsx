@@ -70,7 +70,7 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
                   className="px-2 py-1 text-sm bg-warning/20 text-primary rounded-full line-clamp-1"
                 >
                   <Link
-                    href={`/?${appendSearchParam("ingredient", ingredient)}`}
+                    href={`/search?${appendSearchParam("ingredient", ingredient)}`}
                   >
                     {ingredient}
                   </Link>
@@ -86,7 +86,7 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
 
                 <span>
                   <Link
-                    href={`/?${appendSearchParam("difficulty", drink.difficulty)}`}
+                    href={`/search?${appendSearchParam("difficulty", drink.difficulty)}`}
                   >
                     {drink.difficulty}
                   </Link>
