@@ -132,7 +132,7 @@ export function SearchResults() {
         <div>
           <h2 className="text-2xl font-semibold text-primary">
             {params.query
-              ? `${state.drinks.length} results for &quot;${params.query}&quot;`
+              ? `${state.drinks.length} results for "${params.query}"`
               : "Search results"}
           </h2>
           <p className="text-primary/60 mt-1">Find your perfect drink</p>
