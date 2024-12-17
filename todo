@@ -40,20 +40,19 @@ V2
       [ ] Update Connect with us
 - [ ] https://vercel.com/docs/production-checklist
 - [ ] Telegram notifications errors, payments, video review
+- [ ] check if we can use threads of convo for openai requests to avoid sending the pompt over and over
 
 - [] integrate with crisp https://crisp.chat/pt/
 - [] integrate with https://features.vote/
-- check if we can use threads for openai requests
 - optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
-- read about SSR
 - pagination for search results
 - display alcohol content, flavor, glassware, and serving temp in the drink details
-- filters in the left side of the search show remain in place while doing the search
-- Retool
   [ ] delete drink
+
 
 V3 New subscription plan: PRO
 
+- Retool
 [] Special equipment needed
 [] Pro tips for better results
 [] Common mistakes to avoid
@@ -76,6 +75,4 @@ V3 New subscription plan: PRO
   [ ] Common allergens
   [ ] Flammability warnings for specific techniques
   [ ] Temperature-sensitive ingredients
-
-- V4
   [] display Featured section in the Footer

@@ -37,8 +37,6 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
             - Start with a playful opening similar to these :
             - Include an humorous middle section similar to these :
             - Add 2-3 relevant hashtags from the list bellow:
-              - #ThirstyThursday 
-              - #WeekendVibes 
               - #CocktailO'Clock 
               - #DrinkUp 
               - #MixologyMagic 
