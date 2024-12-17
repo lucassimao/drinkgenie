@@ -1,6 +1,6 @@
 "use server";
 
-import { Drink, ServiceError } from "@/types/drink";
+import { Drink } from "@/types/drink";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -325,7 +325,7 @@ export async function toggleFavorite(drinkId: number): Promise<void> {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new ServiceError("You must be signed in to favorite.");
+    throw new Error("You must be signed in to favorite.");
   }
 
   const rows = await knex("favorites")
@@ -352,22 +352,22 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
   const user = await currentUser();
 
   if (!user) {
-    throw new ServiceError("You need to authenticate first.");
+    throw new Error("You need to authenticate first.");
   }
 
   const userId = user?.id;
 
   const userCredits = await getUserCredits(userId);
   if (userCredits <= 0) {
-    throw new ServiceError("No enough credits.");
+    throw new Error("No enough credits.");
   }
 
   if (!Array.isArray(ingredients) || ingredients.length == 0) {
-    throw new ServiceError(`List up to ${MAX_INGREDIENTS} ingredients.`);
+    throw new Error(`List up to ${MAX_INGREDIENTS} ingredients.`);
   }
 
   if (ingredients.length > MAX_INGREDIENTS) {
-    throw new ServiceError("Too many ingredients!");
+    throw new Error("Too many ingredients!");
   }
 
   try {
@@ -463,18 +463,18 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
     console.timeEnd("openai");
 
     if (!completion?.choices?.[0]?.message) {
-      throw new ServiceError("Sorry, we ran out of ideas for now.");
+      throw new Error("Sorry, we ran out of ideas for now.");
     }
 
     const recipe = completion.choices[0].message;
 
     if (recipe.refusal) {
       console.warn(`[REFUSAL] ingredients ${ingredients}: ${recipe.refusal}`);
-      throw new ServiceError("Oops! Something went wrong. Please try again.");
+      throw new Error("Oops! Something went wrong. Please try again.");
     }
 
     if (!recipe.parsed) {
-      throw new ServiceError("Sorry, we ran out of ideas for now.");
+      throw new Error("Sorry, we ran out of ideas for now.");
     }
 
     console.time("saveDrink");
@@ -528,7 +528,7 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
       console.log("An error occurred: ", e.message);
     }
   }
-  throw new ServiceError("Sorry, we ran out of ideas for now.");
+  throw new Error("Sorry, we ran out of ideas for now.");
 }
 
 export async function getNextDrinkToShare(

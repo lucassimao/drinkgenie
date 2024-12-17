@@ -2,7 +2,7 @@
 
 import { useToast } from "@/hooks/useToast";
 import { toggleFavorite } from "@/lib/drinks";
-import { Drink, ServiceError } from "@/types/drink";
+import { Drink } from "@/types/drink";
 import { Loader2, Star } from "lucide-react";
 import { useState } from "react";
 
@@ -28,7 +28,7 @@ export function FavoriteDrinkButton({ drink }: FavoriteDrinkButtonProps) {
 
       console.error(error);
       const message =
-        error instanceof ServiceError
+        error instanceof Error
           ? error.message
           : "Could not favorite your drink now.";
       toast.error(message, "Ooops");

@@ -3,7 +3,6 @@
 import { useToast } from "@/hooks/useToast";
 import { generateDrink } from "@/lib/drinks";
 import { MAX_INGREDIENTS } from "@/lib/utils";
-import { ServiceError } from "@/types/drink";
 import { useUser } from "@clerk/nextjs";
 import { Martini, Plus, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -66,6 +65,7 @@ export function IngredientForm() {
   const onClickGenerate = async () => {
     if (!user) {
       toast.warning("Sign up to unlock a world of cocktail creativity!");
+      router.push("/sign-up");
       return;
     }
 
@@ -89,8 +89,10 @@ export function IngredientForm() {
       // setActiveInput(null);
       router.push(`/drink/${result.slug}`);
     } catch (error) {
+      console.log(error);
+
       const errorMessage =
-        error instanceof ServiceError ? error.message : "Something went wrong!";
+        error instanceof Error ? error.message : "Something went wrong!";
       toast.error(errorMessage, "Ooops...");
     } finally {
       setIsGenerating(false);

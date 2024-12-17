@@ -29,5 +29,3 @@ export type Drink = {
   glassware?: "cocktail" | "highball" | "rocks" | "wine";
   temperature?: "frozen" | "cold" | "room" | "hot";
 };
-
-export class ServiceError extends Error {}
