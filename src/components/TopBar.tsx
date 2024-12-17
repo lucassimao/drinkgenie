@@ -1,16 +1,24 @@
+"use client";
 import { getUserCredits } from "@/lib/user";
-import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
+import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
 import { Coins } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import cheerfulGenie from "../../public/cheerful-genie.png";
 import { SearchBar } from "./SearchBar";
-import { use } from "react";
 
 export function TopBar() {
-  const user = use(currentUser());
-  const credits = user ? use(getUserCredits(user.id)) : 0;
+  const { user } = useUser();
+  const [credits, setCredits] = useState(0);
+
+  useEffect(() => {
+    console.log(user);
+
+    if (user) {
+      getUserCredits(user.id).then(setCredits);
+    }
+  }, [user]);
 
   return (
     <div className="bg-white shadow-md">
@@ -46,7 +54,9 @@ export function TopBar() {
 
           {/* Search Bar - Full Width on Mobile */}
           <div className="flex-1 max-w-2xl mx-auto w-full">
-            <SearchBar />
+            <Suspense>
+              <SearchBar />
+            </Suspense>
           </div>
 
           {/* Navigation and Auth Buttons - Hidden on Mobile */}

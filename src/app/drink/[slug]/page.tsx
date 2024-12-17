@@ -6,7 +6,7 @@ import { getDrinks, getSlugsForSSR } from "@/lib/drinks";
 import { ChefHat, Clock, Flower2, GlassWater } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import React, { cache } from "react";
+import React from "react";
 import { DrinkDetailImage } from "./DrinkDetailImage";
 import { PollingImageFetcher } from "./PollingImageFetcher";
 import { ViewRegister } from "./ViewRegister";
@@ -15,19 +15,9 @@ interface DrinkDetailProps {
   params: Promise<ParsedUrlQuery>;
 }
 
-const getCachedDrink = cache(async (slug: string) => {
-  const drink = await getDrinks({ slug });
-
-  if (!drink) notFound();
-  return drink;
-});
-
-export async function generateStaticParams() {
-  const allDrinkSlugs = await getSlugsForSSR();
-
-  return allDrinkSlugs.map((slug) => ({
-    slug,
-  }));
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  const slugs = await getSlugsForSSR();
+  return slugs.map((slug) => ({ slug }));
 }
 
 type Props = {
@@ -45,7 +35,7 @@ export async function generateMetadata(
     throw new Error("no slug");
   }
 
-  const drink = await getCachedDrink(slug);
+  const drink = await getDrinks({ slug });
 
   if (!drink) {
     throw new Error("no drink " + slug);
@@ -82,7 +72,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
     notFound();
   }
 
-  const drink = await getCachedDrink(slug);
+  const drink = await getDrinks({ slug });
 
   if (!drink) {
     notFound();
@@ -160,7 +150,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
               Ingredients
             </h2>
             <ul className="space-y-2">
-              {drink.ingredients.map((ingredient, index) => (
+              {drink.ingredients?.map((ingredient, index) => (
                 <li
                   key={index}
                   className="flex items-center gap-3 p-3 bg-background rounded-lg text-primary/80"
@@ -180,7 +170,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
               Instructions
             </h2>
             <ol className="space-y-4">
-              {drink.preparationSteps.map((step, index) => (
+              {drink.preparationSteps?.map((step, index) => (
                 <li key={index} className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                     {index + 1}

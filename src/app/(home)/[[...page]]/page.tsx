@@ -17,9 +17,18 @@ interface Props {
 export const revalidate = 3600; // 1hr
 const DISPLAY_TUTORIALS_AND_TESTMONIALS = false;
 
+export async function generateStaticParams() {
+  const totalItems = await countDrinks();
+  const totalPages = Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
+
+  return new Array(totalPages + 1) // +1 for the home page
+    .fill(0)
+    .map((_, index) => ({ page: index == 0 ? [] : [String(index)] })); // 0 meaning the home page
+}
+
 export default async function Home(props: Props) {
   const params = await props.params;
-  const page = Array.isArray(params.page) ? +params.page[0] : 1;
+  const page = params.page?.[0] ? parseInt(params.page[0]) : 1;
 
   const drinks = await getDrinks({
     page,

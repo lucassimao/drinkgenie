@@ -1,14 +1,10 @@
 import AutoRedirectButton from "@/components/credits/success/AutoRedirectButton";
-import { ArrowRight, GlassWater, PartyPopper, Sparkles } from "lucide-react";
+import { MainContent } from "@/components/credits/success/MainContent";
+import { ArrowRight, PartyPopper } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
-interface Props {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function Page({ searchParams }: Props) {
-  const { credits } = await searchParams;
-
+export default function Page() {
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center p-4">
       <div className="relative">
@@ -28,30 +24,9 @@ export default async function Page({ searchParams }: Props) {
             </div>
           </div>
 
-          {/* Main Content */}
-          <h1 className="text-3xl font-display text-primary mb-4">
-            Payment Successful!
-          </h1>
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <Sparkles className="h-5 w-5 text-warning" />
-            <p className="text-lg text-primary/80">
-              {credits} magical credits added to your account
-            </p>
-            <Sparkles className="h-5 w-5 text-warning" />
-          </div>
-
-          {/* Credits Display */}
-          <div className="bg-background rounded-xl p-6 mb-8">
-            <div className="flex items-center justify-center gap-3">
-              <GlassWater className="h-6 w-6 text-accent" />
-              <span className="text-2xl font-bold text-primary">
-                {credits} Credits
-              </span>
-            </div>
-            <p className="text-primary/60 mt-2">
-              Ready to create amazing cocktails
-            </p>
-          </div>
+          <Suspense>
+            <MainContent />
+          </Suspense>
 
           {/* Next Steps */}
           <div className="space-y-4 mb-8">

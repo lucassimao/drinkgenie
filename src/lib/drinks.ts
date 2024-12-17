@@ -2,7 +2,7 @@
 
 import { Drink, ServiceError } from "@/types/drink";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { db, QueryResultRow, sql } from "@vercel/postgres";
+import { QueryResultRow, sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
@@ -51,13 +51,8 @@ export async function countDrinks(
     queryBuilder.where("difficulty", difficulty);
   }
 
-  const { sql, bindings } = queryBuilder.toSQL().toNative();
-
-  const client = await db.connect();
-
-  //eslint-disable-next-line
-  const { rows } = await client.query(sql, bindings as any);
-  return +rows[0].count;
+  const result = await queryBuilder;
+  return +result[0].count;
 }
 
 function mapRowToDrink(row: QueryResultRow): Drink {
@@ -262,20 +257,10 @@ export async function getDrinks(
     queryBuilder.whereRaw("temperature = ANY(?)", [args.temperature]);
   }
 
-  const { sql, bindings } = queryBuilder.toSQL().toNative();
-  const client = await db.connect();
-
-  //eslint-disable-next-line
-  const { rows } = await client.query(sql, bindings as any);
-  const result = rows.map(mapRowToDrink);
-
-  const returnFirst = args?.id || args?.slug;
-
-  if (returnFirst) {
-    return result[0];
-  } else {
-    return result;
-  }
+  const result = await queryBuilder;
+  return Array.isArray(result)
+    ? result.map(mapRowToDrink)
+    : mapRowToDrink(result);
 }
 
 export async function incrementViews(drinkId: number): Promise<void> {
@@ -283,9 +268,10 @@ export async function incrementViews(drinkId: number): Promise<void> {
 }
 
 export async function getSlugsForSSR(): Promise<string[]> {
-  const { rows } =
-    await sql`SELECT slug from DRINKS WHERE image_url IS NOT NULL;`;
-  return rows.map((row) => row.slug);
+  return await knex("drinks as d")
+    .pluck("d.slug")
+    .whereNotNull("image_url")
+    .orderBy("id", "desc");
 }
 
 export async function toggleFavorite(drinkId: number): Promise<void> {
