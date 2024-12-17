@@ -1,31 +1,24 @@
 "use client";
 import { getUserCredits } from "@/lib/user";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
-import { Coins, Loader2 } from "lucide-react";
+import { Coins } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import cheerfulGenie from "../../public/cheerful-genie.png";
 import { SearchBar } from "./SearchBar";
 
 export function TopBar() {
   const { user } = useUser();
-  const [credits, setCredits] = useState<number | null>(null);
-  const [isPending, setIsPending] = useState(false);
+  const [credits, setCredits] = useState(0);
 
   useEffect(() => {
-    if (!user?.id) return;
+    console.log(user);
 
-    setIsPending(true);
-
-    getUserCredits(user.id)
-      .then(setCredits)
-      .catch((e) => {
-        console.error(e);
-        setCredits(0);
-      })
-      .finally(() => setIsPending(false));
-  }, [user?.id]);
+    if (user) {
+      getUserCredits(user.id).then(setCredits);
+    }
+  }, [user]);
 
   return (
     <div className="bg-white shadow-md">
@@ -48,7 +41,6 @@ export function TopBar() {
                 </span>
               </div>
               <div className="md:hidden p-2 text-primary/60 hover:text-primary">
-                {/* <Menu className="h-6 w-6" /> */}
                 <SignedIn>
                   <div className="flex items-center justify-between px-0">
                     <span className="font-medium text-primary">
@@ -62,7 +54,9 @@ export function TopBar() {
 
           {/* Search Bar - Full Width on Mobile */}
           <div className="flex-1 max-w-2xl mx-auto w-full">
-            <SearchBar />
+            <Suspense>
+              <SearchBar />
+            </Suspense>
           </div>
 
           {/* Navigation and Auth Buttons - Hidden on Mobile */}
@@ -77,14 +71,9 @@ export function TopBar() {
                 >
                   <Coins className="h-4 w-4" />
                   <span>Get Credits</span>
-
-                  {isPending ? (
-                    <Loader2 className="h-4 w-4 text-accent animate-spin" />
-                  ) : typeof credits == "number" ? (
-                    <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                      ${credits}/credit{credits > 1 ? "s" : null}
-                    </span>
-                  ) : null}
+                  <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+                    ${credits}/credit{credits > 1 ? "s" : null}
+                  </span>
                 </Link>
               </nav>
             </SignedIn>
@@ -130,14 +119,9 @@ export function TopBar() {
                   <Coins className="h-4 w-4" />
                   <span>Get Credits</span>
                 </div>
-
-                {isPending ? (
-                  <Loader2 className="h-4 w-4 text-accent animate-spin" />
-                ) : typeof credits == "number" ? (
-                  <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                    ${credits}/credit{credits > 1 ? "s" : null}
-                  </span>
-                ) : null}
+                <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+                  ${credits}/credit{credits > 1 ? "s" : null}
+                </span>
               </Link>
             </nav>
           </SignedIn>

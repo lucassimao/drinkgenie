@@ -3,7 +3,7 @@ import { Loader2, Search } from "lucide-react";
 
 export function SearchLoading() {
   return (
-    <div className="flex flex-col items-center justify-center py-16">
+    <div className="flex flex-1 flex-col items-center justify-center py-16">
       <div className="relative mb-6">
         <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl animate-pulse" />
         <div className="relative bg-white p-4 rounded-full">

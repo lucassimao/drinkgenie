@@ -2,7 +2,7 @@ import { ParsedUrlQuery } from "querystring";
 
 import { AffiliatedLinks } from "@/components/AffiliatedLinks";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { findBy } from "@/lib/drinks";
+import { getDrinks, getSlugsForSSR } from "@/lib/drinks";
 import { ChefHat, Clock, Flower2, GlassWater } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -15,14 +15,9 @@ interface DrinkDetailProps {
   params: Promise<ParsedUrlQuery>;
 }
 
-export async function generateStaticParams() {
-  // TODO debug SSR - maybe the database is throtling the calls?
-  // const allDrinkSlugs = await getSlugsForSSR();
-
-  // return allDrinkSlugs.map((slug) => ({
-  //   slug,
-  // }));
-  return [];
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  const slugs = await getSlugsForSSR();
+  return slugs.map((slug) => ({ slug }));
 }
 
 type Props = {
@@ -40,14 +35,14 @@ export async function generateMetadata(
     throw new Error("no slug");
   }
 
-  const drink = await findBy({ slug });
+  const drink = await getDrinks({ slug });
 
   if (!drink) {
     throw new Error("no drink " + slug);
   }
 
   // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || [];
+  const previousImages = parent ? (await parent).openGraph?.images || [] : [];
 
   return {
     title: drink.name,
@@ -77,7 +72,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
     notFound();
   }
 
-  const drink = await findBy({ slug });
+  const drink = await getDrinks({ slug });
 
   if (!drink) {
     notFound();
@@ -155,7 +150,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
               Ingredients
             </h2>
             <ul className="space-y-2">
-              {drink.ingredients.map((ingredient, index) => (
+              {drink.ingredients?.map((ingredient, index) => (
                 <li
                   key={index}
                   className="flex items-center gap-3 p-3 bg-background rounded-lg text-primary/80"
@@ -175,7 +170,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
               Instructions
             </h2>
             <ol className="space-y-4">
-              {drink.preparationSteps.map((step, index) => (
+              {drink.preparationSteps?.map((step, index) => (
                 <li key={index} className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                     {index + 1}

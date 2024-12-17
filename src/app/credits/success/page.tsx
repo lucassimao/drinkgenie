@@ -1,25 +1,10 @@
-"use client";
-
-import { ArrowRight, GlassWater, PartyPopper, Sparkles } from "lucide-react";
+import AutoRedirectButton from "@/components/credits/success/AutoRedirectButton";
+import { MainContent } from "@/components/credits/success/MainContent";
+import { ArrowRight, PartyPopper } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense } from "react";
 
 export default function Page() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const credits = Number(searchParams.get("credits")) || "0";
-
-  useEffect(() => {
-    // Automatically redirect after 10 seconds
-    const timeout = setTimeout(() => {
-      router.push("/");
-    }, 10_000);
-
-    return () => clearTimeout(timeout);
-  }, [router]);
-
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center p-4">
       <div className="relative">
@@ -39,30 +24,9 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Main Content */}
-          <h1 className="text-3xl font-display text-primary mb-4">
-            Payment Successful!
-          </h1>
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <Sparkles className="h-5 w-5 text-warning" />
-            <p className="text-lg text-primary/80">
-              {credits} magical credits added to your account
-            </p>
-            <Sparkles className="h-5 w-5 text-warning" />
-          </div>
-
-          {/* Credits Display */}
-          <div className="bg-background rounded-xl p-6 mb-8">
-            <div className="flex items-center justify-center gap-3">
-              <GlassWater className="h-6 w-6 text-accent" />
-              <span className="text-2xl font-bold text-primary">
-                {credits} Credits
-              </span>
-            </div>
-            <p className="text-primary/60 mt-2">
-              Ready to create amazing cocktails
-            </p>
-          </div>
+          <Suspense>
+            <MainContent />
+          </Suspense>
 
           {/* Next Steps */}
           <div className="space-y-4 mb-8">
@@ -86,10 +50,7 @@ export default function Page() {
           </div>
 
           {/* Auto-redirect Notice */}
-          <p className="text-sm text-primary/40 mt-8">
-            You&apos;ll be automatically redirected to the home page in a few
-            seconds...
-          </p>
+          <AutoRedirectButton />
         </div>
       </div>
     </div>

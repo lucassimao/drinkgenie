@@ -1,7 +1,7 @@
 import { createClerkClient } from "@clerk/nextjs/server";
-import { sql } from "@vercel/postgres";
 import { headers } from "next/headers";
 import Stripe from "stripe";
+import knex from "@/lib/knex";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-11-20.acacia",
@@ -77,8 +77,12 @@ export async function POST(req: Request) {
     if (!user)
       throw new Error(`no customer associated to email ${customerEmail}`);
 
-    await sql`INSERT INTO credits(user_id, total, stripe_id, stripe_event) 
-                values (${user.id}, ${totalInUSD}, ${event.id}, ${JSON.stringify(session)})`;
+    await knex("credits").insert({
+      user_id: user.id,
+      total: totalInUSD,
+      stripe_id: event.id,
+      stripe_event: JSON.stringify(session),
+    });
 
     console.log(
       `Processed checkout.session.completed for ${customerEmail} ${totalInUSD}`,

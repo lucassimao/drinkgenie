@@ -5,14 +5,18 @@ import { useMemo } from "react";
 export function useToast() {
   const addToast = useToastStore((state) => state.addToast);
 
-  function show(
-    type: ToastType,
-    message: string,
-    title?: string,
-    duration = 5000,
-  ) {
-    addToast({ type, message, title, duration });
-  }
+  const show = useMemo(
+    () =>
+      function show(
+        type: ToastType,
+        message: string,
+        title?: string,
+        duration = 5000,
+      ) {
+        addToast({ type, message, title, duration });
+      },
+    [addToast],
+  );
 
   return useMemo(
     () => ({

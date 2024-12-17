@@ -2,7 +2,6 @@
 
 import { Drink, ServiceError } from "@/types/drink";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { db, QueryResultRow, sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
@@ -10,7 +9,7 @@ import slugify from "slugify";
 import { z } from "zod";
 import knex from "./knex";
 import { getUserCredits } from "./user";
-import { BASE_URL, MAX_INGREDIENTS } from "./utils";
+import { BASE_URL, DEFAULT_PAGE_SIZE, MAX_INGREDIENTS } from "./utils";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -51,16 +50,12 @@ export async function countDrinks(
     queryBuilder.where("difficulty", difficulty);
   }
 
-  const { sql, bindings } = queryBuilder.toSQL().toNative();
-
-  const client = await db.connect();
-
-  //eslint-disable-next-line
-  const { rows } = await client.query(sql, bindings as any);
-  return +rows[0].count;
+  const result = await queryBuilder;
+  return +result[0].count;
 }
 
-function mapRowToDrink(row: QueryResultRow): Drink {
+//eslint-disable-next-line
+function mapRowToDrink(row: Record<string, any>): Drink {
   return {
     id: row.id,
     name: row.name,
@@ -84,10 +79,6 @@ function mapRowToDrink(row: QueryResultRow): Drink {
     glassware: row.glassware,
     temperature: row.temperature,
   };
-}
-
-function serializeArray(arr: string[]): string {
-  return `{${arr.map((item) => `"${item.replace(/"/g, '\\"')}"`).join(",")}}`;
 }
 
 type CreateDrinkDTO = Pick<
@@ -117,22 +108,72 @@ async function saveDrink(dto: CreateDrinkDTO): Promise<Drink> {
     throw new Error("You must be signed in to use this feature");
   }
 
-  const { rows } = await sql`
-      WITH slug_check AS (
-        SELECT EXISTS (SELECT 1 FROM drinks WHERE slug = ${slug}) AS exists
-      )
-      INSERT INTO DRINKS (alcohol_content  , glassware, flavor_profile  , temperature, user_id,creator,slug, name,created_at,difficulty,garnish,glass_type,preparation_time,description,is_generating_image,ingredients,thumbs_up, thumbs_down,preparation_steps) 
-        VALUES (
-        ${dto.alcoholContent},${dto.glassware},${dto.flavorProfile},${dto.temperature},
-        ${user.id},
-        ${JSON.stringify(user)},
-        (SELECT CASE WHEN exists THEN ${slug} || '-' || to_char(now(), 'YYYYMMDDHH24MISS') ELSE ${slug} END FROM slug_check),
-        ${dto.name},
-        NOW(), ${dto.difficulty},${dto.garnish},${dto.glassType},${dto.preparationTime},
-        ${dto.description},${dto.isGeneratingImage},
-        ${serializeArray(dto.ingredients)},0,0, ${serializeArray(dto.preparationSteps)}) 
-      RETURNING *;
-    `;
+  const { rows } = await knex.raw(
+    `
+    WITH slug_check AS (
+      SELECT EXISTS (SELECT 1 FROM drinks WHERE slug = ?) AS exists
+    )
+    INSERT INTO DRINKS (
+      alcohol_content,
+      glassware,
+      flavor_profile,
+      temperature,
+      user_id,
+      creator,
+      slug,
+      name,
+      created_at,
+      difficulty,
+      garnish,
+      glass_type,
+      preparation_time,
+      description,
+      is_generating_image,
+      ingredients,
+      thumbs_up,
+      thumbs_down,
+      preparation_steps
+    )
+    VALUES (
+      ?,?,?,?,
+      ?,
+      ?,
+      (SELECT CASE 
+        WHEN exists THEN ? || '-' || to_char(now(), 'YYYYMMDDHH24MISS') 
+        ELSE ? 
+      END FROM slug_check),
+      ?,
+      NOW(),
+      ?,?,?,?,
+      ?,?,
+      ?,
+      0,0,
+      ?
+    )
+    RETURNING *;
+  `,
+    [
+      slug,
+      // Values in order
+      dto.alcoholContent,
+      dto.glassware,
+      dto.flavorProfile,
+      dto.temperature,
+      user.id,
+      JSON.stringify(user),
+      slug, // For the CASE WHEN
+      slug, // For the ELSE
+      dto.name,
+      dto.difficulty,
+      dto.garnish,
+      dto.glassType,
+      dto.preparationTime,
+      dto.description,
+      dto.isGeneratingImage,
+      dto.ingredients,
+      dto.preparationSteps,
+    ],
+  );
 
   return mapRowToDrink(rows[0]);
 }
@@ -159,17 +200,17 @@ type FindByArgs = {
   temperature?: string[];
 };
 
-export async function findBy(
+export async function getDrinks(
   args: FindByArgs & { id: number },
 ): Promise<Drink | null>;
-export async function findBy(
+export async function getDrinks(
   args: FindByArgs & { slug: string },
 ): Promise<Drink | null>;
-export async function findBy(
+export async function getDrinks(
   args: Omit<FindByArgs, "id" | "slug">,
 ): Promise<Drink[]>;
-export async function findBy(): Promise<Drink[]>;
-export async function findBy(
+export async function getDrinks(): Promise<Drink[]>;
+export async function getDrinks(
   args?: FindByArgs,
 ): Promise<Drink | null | Drink[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
@@ -220,10 +261,10 @@ export async function findBy(
   // fetching votes made by the current user
   if (typeof args?.loggedInUserId == `number`) {
     queryBuilder
-      .leftJoin("favorites AS fav", function () {
-        this.on("d.id", "=", "fav.drink_id").andOn(
-          knex.raw("fav.user_id = ?", args.loggedInUserId!),
-        );
+      .leftJoin("favorites AS fav", function (queryBuilder) {
+        queryBuilder
+          .on("d.id", "=", "fav.drink_id")
+          .andOn(knex.raw("fav.user_id = ?", args.loggedInUserId!));
       })
       .select(
         knex.raw(
@@ -262,30 +303,21 @@ export async function findBy(
     queryBuilder.whereRaw("temperature = ANY(?)", [args.temperature]);
   }
 
-  const { sql, bindings } = queryBuilder.toSQL().toNative();
-  const client = await db.connect();
-
-  //eslint-disable-next-line
-  const { rows } = await client.query(sql, bindings as any);
-  const result = rows.map(mapRowToDrink);
-
-  const returnFirst = args?.id || args?.slug;
-
-  if (returnFirst) {
-    return result[0];
-  } else {
-    return result;
-  }
+  const result = await queryBuilder;
+  return Array.isArray(result)
+    ? result.map(mapRowToDrink)
+    : mapRowToDrink(result);
 }
 
 export async function incrementViews(drinkId: number): Promise<void> {
-  await sql`UPDATE drinks SET views = views+1 WHERE id=${drinkId};`;
+  await knex("drinks").where("id", drinkId).increment("views", 1);
 }
 
 export async function getSlugsForSSR(): Promise<string[]> {
-  const { rows } =
-    await sql`SELECT slug from DRINKS WHERE image_url IS NOT NULL;`;
-  return rows.map((row) => row.slug);
+  return await knex("drinks as d")
+    .pluck("d.slug")
+    .whereNotNull("image_url")
+    .orderBy("id", "desc");
 }
 
 export async function toggleFavorite(drinkId: number): Promise<void> {
@@ -295,12 +327,23 @@ export async function toggleFavorite(drinkId: number): Promise<void> {
     throw new ServiceError("You must be signed in to favorite.");
   }
 
-  const { rows } =
-    await sql`INSERT INTO favorites(user_id,drink_id) VALUES(${userId},${drinkId}) ON CONFLICT (user_id,drink_id) DO NOTHING RETURNING ID`;
+  const rows = await knex("favorites")
+    .insert({
+      user_id: userId,
+      drink_id: drinkId,
+    })
+    .onConflict(["user_id", "drink_id"])
+    .ignore()
+    .returning("id");
 
   // on conflict triggered
   if (rows.length == 0) {
-    await sql`DELETE FROM favorites WHERE user_id=${userId} AND drink_id=${drinkId}`;
+    await knex("favorites")
+      .where({
+        user_id: userId,
+        drink_id: drinkId,
+      })
+      .delete();
   }
 }
 
@@ -463,7 +506,14 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
       );
     }
 
+    const totalItems = await countDrinks();
+    const totalPages = Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
+
+    // revalidating cached paginated files for home
     revalidatePath("/");
+    for (let index = 0; index < totalPages; index++) {
+      revalidatePath(`/${index + 1}`);
+    }
 
     return drink;
 
@@ -481,19 +531,19 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
 export async function getNextDrinkToShare(
   network: "twitter" | "facebook",
 ): Promise<Drink | null> {
-  let result = null;
-
-  if (network == "twitter") {
-    result =
-      await sql`SELECT * FROM drinks WHERE tweet_posted_at IS NULL AND image_url IS NOT NULL ORDER BY ID DESC LIMIT 1`;
-  } else if (network == "facebook") {
-    result =
-      await sql`SELECT * FROM drinks WHERE facebook_posted_at IS NULL AND image_url IS NOT NULL ORDER BY ID DESC LIMIT 1`;
-  } else {
+  const postColumn =
+    network === "twitter" ? "tweet_posted_at" : "facebook_posted_at";
+  if (!["twitter", "facebook"].includes(network)) {
     throw new Error("Invalid network: " + network);
   }
 
-  if (result.rowCount == 0) return null;
+  const result = await knex("drinks")
+    .whereNull(postColumn)
+    .whereNotNull("image_url")
+    .orderBy("id", "desc")
+    .first();
 
-  return mapRowToDrink(result.rows[0]);
+  if (!result) return null;
+
+  return mapRowToDrink(result);
 }
