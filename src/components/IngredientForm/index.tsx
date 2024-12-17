@@ -83,17 +83,14 @@ export function IngredientForm() {
     }
 
     setIsGenerating(true);
+
     try {
       const result = await generateDrink(filteredIngredients);
-      // setIngredients([""]);
-      // setActiveInput(null);
-      router.push(`/drink/${result.slug}`);
-    } catch (error) {
-      console.log(error);
-
-      const errorMessage =
-        error instanceof Error ? error.message : "Something went wrong!";
-      toast.error(errorMessage, "Ooops...");
+      if (typeof result == "string") {
+        toast.error(result, "Ooops...");
+      } else {
+        router.push(`/drink/${result.slug}`);
+      }
     } finally {
       setIsGenerating(false);
     }

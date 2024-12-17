@@ -100,13 +100,13 @@ type CreateDrinkDTO = Pick<
   | "temperature"
 >;
 
-async function saveDrink(dto: CreateDrinkDTO): Promise<Drink> {
+async function saveDrink(dto: CreateDrinkDTO): Promise<Drink | string> {
   const slug = slugify(dto.name.toLowerCase());
 
   const user = await currentUser();
 
   if (!user) {
-    throw new Error("You must be signed in to use this feature");
+    return "You must be signed in to use this feature";
   }
 
   const { rows } = await knex.raw(
@@ -321,11 +321,11 @@ export async function getSlugsForSSR(): Promise<string[]> {
     .orderBy("id", "desc");
 }
 
-export async function toggleFavorite(drinkId: number): Promise<void> {
+export async function toggleFavorite(drinkId: number): Promise<string | void> {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("You must be signed in to favorite.");
+    return "You must be signed in to favorite.";
   }
 
   const rows = await knex("favorites")
@@ -348,26 +348,28 @@ export async function toggleFavorite(drinkId: number): Promise<void> {
   }
 }
 
-export async function generateDrink(ingredients: string[]): Promise<Drink> {
+export async function generateDrink(
+  ingredients: string[],
+): Promise<Drink | string> {
   const user = await currentUser();
 
   if (!user) {
-    throw new Error("You need to authenticate first.");
+    return "You need to authenticate first.";
   }
 
   const userId = user?.id;
 
   const userCredits = await getUserCredits(userId);
   if (userCredits <= 0) {
-    throw new Error("No enough credits.");
+    return "No enough credits.";
   }
 
   if (!Array.isArray(ingredients) || ingredients.length == 0) {
-    throw new Error(`List up to ${MAX_INGREDIENTS} ingredients.`);
+    return `List up to ${MAX_INGREDIENTS} ingredients.`;
   }
 
   if (ingredients.length > MAX_INGREDIENTS) {
-    throw new Error("Too many ingredients!");
+    return "Too many ingredients!";
   }
 
   try {
@@ -463,22 +465,22 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
     console.timeEnd("openai");
 
     if (!completion?.choices?.[0]?.message) {
-      throw new Error("Sorry, we ran out of ideas for now.");
+      return "Sorry, we ran out of ideas for now.";
     }
 
     const recipe = completion.choices[0].message;
 
     if (recipe.refusal) {
       console.warn(`[REFUSAL] ingredients ${ingredients}: ${recipe.refusal}`);
-      throw new Error("Oops! Something went wrong. Please try again.");
+      return "Oops! Something went wrong. Please try again.";
     }
 
     if (!recipe.parsed) {
-      throw new Error("Sorry, we ran out of ideas for now.");
+      return "Sorry, we ran out of ideas for now.";
     }
 
     console.time("saveDrink");
-    const drink = await saveDrink({
+    const result = await saveDrink({
       name: recipe.parsed.name,
       preparationSteps: recipe.parsed.preparationSteps,
       description: recipe.parsed.description,
@@ -495,6 +497,9 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
       temperature: recipe.parsed.temperature,
     });
     console.timeEnd("saveDrink");
+
+    if (typeof result == "string") return result;
+    const drink = result;
 
     // endpoint will return 200 immediatly. The long running operation will keep running
     const headersList = await headers();
@@ -528,7 +533,7 @@ export async function generateDrink(ingredients: string[]): Promise<Drink> {
       console.log("An error occurred: ", e.message);
     }
   }
-  throw new Error("Sorry, we ran out of ideas for now.");
+  return "Sorry, we ran out of ideas for now.";
 }
 
 export async function getNextDrinkToShare(

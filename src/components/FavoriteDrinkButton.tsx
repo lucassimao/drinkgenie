@@ -16,12 +16,13 @@ export function FavoriteDrinkButton({ drink }: FavoriteDrinkButtonProps) {
   const toast = useToast();
 
   const triggerAction = async () => {
-    try {
-      setIsPending(true);
-      // Optimistic UI update
-      setIsFavorite((v) => !v);
+    setIsPending(true);
+    // Optimistic UI update
+    setIsFavorite((v) => !v);
 
-      await toggleFavorite(drink.id);
+    try {
+      const result = await toggleFavorite(drink.id);
+      if (typeof result == "string") throw new Error(result);
     } catch (error) {
       // Roll back the optimistic update
       setIsFavorite((v) => !v);
