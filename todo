@@ -32,7 +32,7 @@ V2
 - [ ] Send social media posts
       [ok] twitter
       [ok] Generate media posts using openai
-      [ ] Generate 2048x1024 image with recraft and then Crop 46px of each side so that it fits the 1.91:1 ratio
+      [ok] Generate 2048x1024 image with recraft and then Crop 46px of each side so that it fits the 1.91:1 ratio
       [ ] facebook
       [ ] Instagram
       [ ] pinterest
