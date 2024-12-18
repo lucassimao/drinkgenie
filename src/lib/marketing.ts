@@ -40,14 +40,6 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
 
             - A playful opening
             - An humorous middle section
-            - Add 2-3 relevant hashtags from the list bellow ( Only if there is enough room in the tweet message ):
-              - #CocktailO'Clock 
-              - #DrinkUp 
-              - #MixologyMagic 
-              - #HappyHour 
-              - #DrinkCreative 
-              - #CocktailCraft 
-              - #SipSipHooray
 
             RULES:
               - Keep tweet length under 280 characters
@@ -55,7 +47,7 @@ async function generateTweetUsingOpenAI(drink: Drink): Promise<string> {
               - Maintain a playful but not unprofessional tone
               - Incorporate at least one ingredient or characteristic of the cocktail
               - Always include the link
-              - Ignore hashtags if no enough chars
+              - Ignore hashtags
           `,
           },
         ],

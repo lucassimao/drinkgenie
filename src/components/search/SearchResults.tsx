@@ -9,6 +9,7 @@ import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
 import { Drink } from "@/types/drink";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { track } from "@vercel/analytics";
 
 // Define type for sort options
 type SortBy =
@@ -94,6 +95,19 @@ export function SearchResults() {
       });
 
       const drinks = await Promise.race([findByPromise, timeoutPromise]);
+      track("Search", {
+        page: params.page,
+        pageSize: DEFAULT_PAGE_SIZE,
+        difficulty: params.difficulty,
+        ingredient: params.ingredient,
+        sortBy: params.sortBy,
+        keyword: params.query,
+        alcoholContent: params.alcoholContent?.join(`,`),
+        flavorProfile: params.flavorProfile?.join(`,`),
+        glassware: params.glassware?.join(`,`),
+        temperature: params.temperature?.join(`,`),
+      });
+
       setState((prev) => ({ ...prev, drinks, isLoading: false }));
     } catch (error) {
       setState((prev) => ({
