@@ -39,7 +39,7 @@ type SearchResultsState = {
   error: Error | null;
 };
 
-const SEARCH_TIMEOUT = 1000;
+const SEARCH_TIMEOUT = 5_000;
 
 export function SearchResults() {
   const searchParams = useSearchParams();
@@ -90,22 +90,16 @@ export function SearchResults() {
       const timeoutPromise = new Promise<never>((_, reject) => {
         const id = setTimeout(() => {
           clearTimeout(id);
+          track("SearchTimeout", {
+            keyword: params.query,
+          });
           reject(new Error(`Timed out after ${SEARCH_TIMEOUT}ms`));
         }, SEARCH_TIMEOUT);
       });
 
       const drinks = await Promise.race([findByPromise, timeoutPromise]);
       track("Search", {
-        page: params.page,
-        pageSize: DEFAULT_PAGE_SIZE,
-        difficulty: params.difficulty,
-        ingredient: params.ingredient,
-        sortBy: params.sortBy,
         keyword: params.query,
-        alcoholContent: params.alcoholContent?.join(`,`),
-        flavorProfile: params.flavorProfile?.join(`,`),
-        glassware: params.glassware?.join(`,`),
-        temperature: params.temperature?.join(`,`),
       });
 
       setState((prev) => ({ ...prev, drinks, isLoading: false }));
