@@ -513,6 +513,9 @@ export async function generateDrink(
 
     const res = await fetch(`${baseUrl}/api/drinkImage/${drink.id}`, {
       method: "POST",
+      headers: {
+        authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     if (!res.ok) {
