@@ -1,4 +1,5 @@
-import { postToFacebook, postTweet } from "@/lib/marketing";
+import { postToFacebook } from "@/lib/marketing/facebook";
+import { tweet } from "@/lib/marketing/twitter";
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
 
   switch (network) {
     case "twitter":
-      await postTweet();
+      await tweet();
       break;
     case "facebook":
       console.log("Sending facebook post");

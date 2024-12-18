@@ -5,46 +5,17 @@ import { waitUntil } from "@vercel/functions";
 import slugify from "slugify";
 import { revalidatePath } from "next/cache";
 import knex from "@/lib/knex";
+import { recraftGenerate } from "@/lib/recraft";
 
 async function generateImage(drink: Drink): Promise<void> {
   console.log(`generating image for ${drink.id}`);
 
-  const response = await fetch(
-    "https://external.api.recraft.ai/v1/images/generations",
-    {
-      method: "POST",
-      headers: {
-        Authorization: process.env.RECRAFT_API_key || "",
-      },
-      body: JSON.stringify({
-        style: "realistic_image",
-        response_format: "b64_json",
-        size: "1820x1024", // 16:9 aspect ratio
-        model: "recraftv3",
-        prompt: `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `,
-      }),
-    },
-  );
+  const prompt = `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `;
 
-  if (!response.ok) {
-    const { status, statusText } = response;
-    throw new Error(
-      `failed to generate image for ${drink.name}:  ${status} ${statusText}`,
-    );
-  }
+  // 16:9 aspect ratio
+  const buffer = await recraftGenerate(prompt, 1820, 1024);
 
-  const result = await response.json();
-  if (!result?.data?.length || typeof result.data[0].b64_json != "string") {
-    throw new Error(
-      `No data nor b64_json for ${drink.name}. result: ${JSON.stringify(result)}`,
-    );
-  }
-
-  const binaryData = Uint8Array.from(atob(result.data[0].b64_json), (char) =>
-    char.charCodeAt(0),
-  );
-
-  const blob = new Blob([binaryData], { type: "image/jpg" });
+  const blob = new Blob([buffer], { type: "image/jpg" });
 
   const putResult = await put(slugify(drink.name.toLowerCase()), blob, {
     access: "public",
