@@ -162,10 +162,10 @@ export async function generateSumaryCardImage(drink: Drink): Promise<void> {
 
   console.log(`generating twitterSummaryLargeImage for ${drink.id}`);
 
-  const prompt = `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `;
+  const prompt = `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Preparation steps: ${drink.preparationSteps.join(",")}.Garnished with ${drink.garnish}. Glass type ${drink.glassType}`;
 
   // 2:1
-  const buffer = await recraftGenerate(prompt, 2048, 1024);
+  const buffer = await recraftGenerate(drink.id, prompt, 2048, 1024);
 
   const blob = new Blob([buffer], { type: "image/jpg" });
 

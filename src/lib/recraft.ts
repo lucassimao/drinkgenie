@@ -1,10 +1,18 @@
 import "server-only";
 
 export async function recraftGenerate(
+  drinkId: number,
   prompt: string,
   width: number,
   height: number,
 ): Promise<Buffer> {
+  if (prompt.length > 1_000) {
+    console.log(
+      `prompt for ${drinkId} has ${prompt.length} chars and will be trimmed`,
+    );
+  }
+
+  const finalPrompt = prompt.length > 1000 ? prompt.slice(0, 1000) : prompt;
   const response = await fetch(
     "https://external.api.recraft.ai/v1/images/generations",
     {
@@ -17,7 +25,7 @@ export async function recraftGenerate(
         response_format: "b64_json",
         size: `${width}x${height}`,
         model: "recraftv3",
-        prompt,
+        prompt: finalPrompt,
       }),
     },
   );

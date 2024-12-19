@@ -10,10 +10,10 @@ import { recraftGenerate } from "@/lib/recraft";
 async function generateImage(drink: Drink): Promise<void> {
   console.log(`generating image for ${drink.id}`);
 
-  const prompt = `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. Preparation steps: ${drink.preparationSteps.join(",")} `;
+  const prompt = `Professional photograph of the ${drink.name} cocktail. ${drink.description}. Preparation steps: ${drink.preparationSteps.join(",")}. Garnished with ${drink.garnish}. Glass type ${drink.glassType}. `;
 
   // 16:9 aspect ratio
-  const buffer = await recraftGenerate(prompt, 1820, 1024);
+  const buffer = await recraftGenerate(drink.id, prompt, 1820, 1024);
 
   const blob = new Blob([buffer], { type: "image/jpg" });
 
@@ -39,17 +39,6 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ drinkId: string }> },
 ) {
-  const authHeader = request.headers.get("authorization");
-
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    console.log({ authHeader });
-    console.log(request.headers.forEach((v, k) => console.log({ k, v })));
-
-    return new Response("Unauthorized", {
-      status: 401,
-    });
-  }
-
   const drinkId = +(await params).drinkId;
 
   if (!drinkId)
