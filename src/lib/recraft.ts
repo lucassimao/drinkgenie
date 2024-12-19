@@ -23,8 +23,8 @@ export async function recraftGenerate(
   );
 
   if (!response.ok) {
-    const { status, statusText } = response;
-    throw new Error(`failed to generate image:  ${status} ${statusText}`);
+    const { status, text } = response;
+    throw new Error(`failed to generate image:  ${status} ${text} `);
   }
 
   const result = await response.json();
