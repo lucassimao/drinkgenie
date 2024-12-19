@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 export function MainContent() {
   const searchParams = useSearchParams();
-  const credits = searchParams.get("query");
+  const credits = searchParams.get("credits");
 
   return (
     <>

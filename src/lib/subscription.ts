@@ -2,36 +2,60 @@
 
 import Stripe from "stripe";
 import { BASE_URL } from "./utils";
+import { notifyProductionIssue } from "./notification";
 
 export async function createCheckoutSession(
   credits: number,
   amountInCents: number,
   email?: string,
+  countryCode?: string,
 ): Promise<string | null> {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2024-11-20.acacia",
   });
 
+  const currency = countryCode?.toLowerCase() === "br" ? "brl" : "usd";
+  let unitAmount = amountInCents;
+  let brlRate;
+
+  if (currency == "brl") {
+    const response = await fetch(
+      "https://api.frankfurter.app/latest?from=USD&to=BRL",
+    );
+    if (response.ok) {
+      const data = await response.json();
+      brlRate = data.rates.BRL;
+    } else {
+      notifyProductionIssue("Failed to fetch USD to BRL rate");
+      brlRate = 6;
+    }
+
+    unitAmount = Math.round(amountInCents * brlRate);
+  }
+
   const session = await stripe.checkout.sessions.create({
+    metadata: {
+      credits,
+      amountInCents: unitAmount,
+      email: email || null,
+      currency,
+      amountInUSDCents: amountInCents,
+      brlRate,
+    },
     line_items: [
       {
         price_data: {
-          currency: "usd",
+          currency,
           product_data: {
             name: `${credits} DrinkGenie credits`,
-            metadata: {
-              credits,
-              amountInCents,
-              email: email || null,
-            },
+
             description: `${credits} magical cocktail creation credits. 1 credit = 1 cocktail`,
           },
-          unit_amount: amountInCents,
+          unit_amount: unitAmount,
         },
         quantity: 1,
       },
     ],
-    adaptive_pricing: { enabled: true },
     mode: "payment",
     success_url: `${BASE_URL}/credits/success?credits=${credits}`,
     cancel_url: `${BASE_URL}/credits`,

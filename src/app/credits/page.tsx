@@ -3,7 +3,7 @@ import { useToast } from "@/hooks/useToast";
 import { createCheckoutSession } from "@/lib/subscription";
 import { useUser } from "@clerk/nextjs";
 import { Coins, Info, Loader2, Sparkles, Zap } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const [credits, setCredits] = useState(10);
@@ -11,6 +11,7 @@ export default function Page() {
   const pricePerCredit = 1;
   const [isPurchasing, setIsPurchasing] = useState(false);
   const toast = useToast();
+  const [userCountry, setUserCountry] = useState("");
 
   const popularAmounts = [10, 25, 50, 100];
   const features = [
@@ -21,6 +22,27 @@ export default function Page() {
     "Save recipes to your collection",
     "Credits never expire",
   ];
+
+  const fetchUserCountry = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      const userIP = data.ip;
+
+      const countryResponse = await fetch(
+        `https://ipapi.co/${userIP}/country/`,
+      );
+      const country = await countryResponse.text();
+
+      setUserCountry(country);
+    } catch (error) {
+      console.error("Error fetching user country:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserCountry();
+  }, []);
 
   function getTotalAmount() {
     return (
@@ -41,6 +63,7 @@ export default function Page() {
       credits,
       getTotalAmount() * 100,
       email,
+      userCountry,
     );
     if (!stripeCheckoutLink) {
       toast.error(

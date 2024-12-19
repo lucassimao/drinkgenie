@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     }
     // session.amount_subtotal comes as cents
     // using trunc here to ignore any cents e.g if session.amount_subtotal is 10075 then totalInUSD will be just $100
-    const totalInUSD = Math.trunc(session.amount_subtotal / 100);
+    const totalInUSD = session.amount_subtotal / 100;
 
     if (!customerEmail) throw new Error("no customer email");
 
@@ -79,13 +79,13 @@ export async function POST(req: Request) {
 
     await knex("credits").insert({
       user_id: user.id,
-      total: totalInUSD,
+      total: session.metadata?.credits || 0,
       stripe_id: event.id,
       stripe_event: JSON.stringify(session),
     });
 
     console.log(
-      `Processed checkout.session.completed for ${customerEmail} ${totalInUSD}`,
+      `Processed checkout.session.completed for ${customerEmail} ${session.currency} ${totalInUSD}`,
     );
   } catch (err) {
     console.error(err, `Failed to process stripe webhook`);
