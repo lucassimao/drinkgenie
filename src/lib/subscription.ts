@@ -18,7 +18,7 @@ export async function createCheckoutSession(
         price_data: {
           currency: "usd",
           product_data: {
-            name: "DrinkGenie credits",
+            name: `${credits} DrinkGenie credits`,
             metadata: {
               credits,
               amountInCents,
@@ -31,6 +31,7 @@ export async function createCheckoutSession(
         quantity: 1,
       },
     ],
+    adaptive_pricing: { enabled: true },
     mode: "payment",
     success_url: `${BASE_URL}/credits/success?credits=${credits}`,
     cancel_url: `${BASE_URL}/credits`,
