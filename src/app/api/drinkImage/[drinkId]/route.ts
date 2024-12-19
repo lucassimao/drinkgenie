@@ -42,6 +42,9 @@ export async function POST(
   const authHeader = request.headers.get("authorization");
 
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    console.log({ authHeader });
+    console.log(request.headers.forEach((v, k) => console.log({ k, v })));
+
     return new Response("Unauthorized", {
       status: 401,
     });
