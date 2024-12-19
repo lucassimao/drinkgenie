@@ -135,7 +135,17 @@ export async function tweet() {
 
   try {
     await generateSumaryCardImage(drink);
-    const tweet = await generateTweetUsingOpenAI(drink);
+    let tweet: string;
+    let attempt = 0;
+
+    do {
+      tweet = await generateTweetUsingOpenAI(drink);
+      ++attempt;
+    } while (tweet.length > 280 && attempt < 5);
+
+    if (tweet.length > 280)
+      throw new Error(`Could not create a 280 chars tweet`);
+
     console.log(`posting ${tweet}`);
 
     await client.v2.tweet(tweet);
