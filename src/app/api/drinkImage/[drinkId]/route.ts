@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import knex from "@/lib/knex";
 import { recraftGenerate } from "@/lib/recraft";
 
+export const maxDuration = 60;
+
 async function generateImage(drink: Drink): Promise<void> {
   console.log(`generating image for ${drink.id}`);
 
