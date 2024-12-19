@@ -39,6 +39,14 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ drinkId: string }> },
 ) {
+  const authHeader = request.headers.get("authorization");
+
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
+  }
+
   const drinkId = +(await params).drinkId;
 
   if (!drinkId)

@@ -3,14 +3,13 @@
 import { Drink } from "@/types/drink";
 import { auth, currentUser, User } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
 import knex from "./knex";
 import { getUserCredits } from "./user";
-import { MAX_INGREDIENTS } from "./utils";
+import { BASE_URL, MAX_INGREDIENTS } from "./utils";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -511,15 +510,13 @@ export async function generateDrink(
     const drink = result;
 
     // endpoint will return 200 immediatly. The long running operation will keep running
-    const headersList = await headers();
-    const host = headersList.get("host");
-    const proto = headersList.get("x-forwarded-proto") || "http";
-    const baseUrl = `${proto}://${host}`;
+    console.log(`calling now ${BASE_URL}/api/drinkImage/${drink.id}`);
 
-    console.log(`calling now ${baseUrl}/api/drinkImage/${drink.id}`);
-
-    const res = await fetch(`${baseUrl}/api/drinkImage/${drink.id}`, {
+    const res = await fetch(`${BASE_URL}/api/drinkImage/${drink.id}`, {
       method: "POST",
+      headers: {
+        authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     if (!res.ok) {
