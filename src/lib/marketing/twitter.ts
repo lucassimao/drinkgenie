@@ -157,7 +157,7 @@ export async function tweet() {
   console.timeEnd(`postTweet`);
 }
 
-async function generateSumaryCardImage(drink: Drink): Promise<void> {
+export async function generateSumaryCardImage(drink: Drink): Promise<void> {
   if (drink.twitterSummaryLargeImage) return;
 
   console.log(`generating twitterSummaryLargeImage for ${drink.id}`);
@@ -166,18 +166,6 @@ async function generateSumaryCardImage(drink: Drink): Promise<void> {
 
   // 2:1
   const buffer = await recraftGenerate(prompt, 2048, 1024);
-
-  // Target aspect ratio is 1.91:1
-  // For height 1024px, ideal width would be: 1024 * 1.91 = 1956px
-  // Current width is 2048px, so we need to crop 92px total (46px from each side)
-  // const croppedImage = await sharp(buffer)
-  //   .extract({
-  //     left: 46,
-  //     top: 0,
-  //     width: 1956, // 2048 - (46 * 2)
-  //     height: 1024,
-  //   })
-  //   .toBuffer();
 
   const blob = new Blob([buffer], { type: "image/jpg" });
 
@@ -192,5 +180,5 @@ async function generateSumaryCardImage(drink: Drink): Promise<void> {
 
   revalidatePath(`/drink/${drink.slug}`);
 
-  console.log(`image generated for ${drink.id}!`);
+  console.log(`Sumary card image generated for ${drink.id}!`);
 }

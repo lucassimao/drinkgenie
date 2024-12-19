@@ -101,7 +101,9 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
 
           <div className="pt-4 mt-4 border-t border-primary/10">
             <div className="flex items-center justify-between text-sm text-primary/60">
-              <span>{getRelativeTimeString(drink.createdAt)}</span>
+              <span className="text-sm text-primary/60">
+                {getRelativeTimeString(drink.createdAt)}
+              </span>
               <div className="flex items-center gap-2">
                 <Image
                   width={1000}

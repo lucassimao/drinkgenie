@@ -3,6 +3,10 @@
     {
       "path": "/api/social?network=twitter",
       "schedule": "0 */2 * * *"
+    },
+    {
+      "path": "/api/bartender",
+      "schedule": "0 */1 * * *"
     }
   ]
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { Drink } from "@/types/drink";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser, User } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import OpenAI from "openai";
@@ -106,12 +106,6 @@ type CreateDrinkDTO = Pick<
 async function saveDrink(dto: CreateDrinkDTO): Promise<Drink | string> {
   const slug = slugify(dto.name.toLowerCase());
 
-  const user = await currentUser();
-
-  if (!user) {
-    return "You must be signed in to use this feature";
-  }
-
   const { rows } = await knex.raw(
     `
     WITH slug_check AS (
@@ -163,8 +157,8 @@ async function saveDrink(dto: CreateDrinkDTO): Promise<Drink | string> {
       dto.glassware,
       dto.flavorProfile,
       dto.temperature,
-      user.id,
-      JSON.stringify(user),
+      dto.creator.id,
+      JSON.stringify(dto.creator),
       slug, // For the CASE WHEN
       slug, // For the ELSE
       dto.name,
@@ -350,20 +344,33 @@ export async function toggleFavorite(drinkId: number): Promise<string | void> {
   }
 }
 
+type GenerateDrinkOptions = {
+  byPassAuth?: boolean;
+  creator?: User; // Optional because it's only required when byPassAuth is true
+};
+
 export async function generateDrink(
   ingredients: string[],
+  opts?: GenerateDrinkOptions,
 ): Promise<Drink | string> {
-  const user = await currentUser();
+  let creator;
 
-  if (!user) {
-    return "You need to authenticate first.";
-  }
+  if (opts?.byPassAuth) {
+    if (!opts.creator) {
+      return "Creator is required when bypassing auth";
+    }
+    creator = opts.creator;
+  } else {
+    const user = await currentUser();
+    if (!user) {
+      return "You need to authenticate first.";
+    }
 
-  const userId = user?.id;
-
-  const userCredits = await getUserCredits(userId);
-  if (userCredits <= 0) {
-    return "No enough credits.";
+    const userCredits = await getUserCredits(user.id);
+    if (userCredits <= 0) {
+      return "No enough credits.";
+    }
+    creator = user;
   }
 
   if (!Array.isArray(ingredients) || ingredients.length == 0) {
@@ -379,7 +386,7 @@ export async function generateDrink(
 
     const completion = await openai.beta.chat.completions.parse({
       model: `gpt-4o-mini`, //"gpt-4o",
-      user: userId,
+      user: creator.id,
       messages: [
         {
           role: "system",
@@ -488,7 +495,7 @@ export async function generateDrink(
       description: recipe.parsed.description,
       ingredients: recipe.parsed.ingredients,
       isGeneratingImage: true,
-      creator: user,
+      creator,
       difficulty: recipe.parsed.difficulty,
       glassType: recipe.parsed.glassType,
       preparationTime: recipe.parsed.preparationTime,
