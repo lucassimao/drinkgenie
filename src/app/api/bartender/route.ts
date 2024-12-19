@@ -4,6 +4,8 @@ import { generateSumaryCardImage } from "@/lib/marketing/twitter";
 import { User } from "@clerk/nextjs/server";
 import { RANDOM_USERS } from "./mockData";
 
+export const maxDuration = 60;
+
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
 

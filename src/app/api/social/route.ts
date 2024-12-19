@@ -1,5 +1,6 @@
 import { postToFacebook } from "@/lib/marketing/facebook";
 import { tweet } from "@/lib/marketing/twitter";
+export const maxDuration = 60;
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
