@@ -143,8 +143,13 @@ export async function tweet() {
       ++attempt;
     } while (tweet.length > 280 && attempt < 5);
 
-    if (tweet.length > 280)
-      throw new Error(`Could not create a 280 chars tweet`);
+    if (tweet.length > 280) {
+      console.log(
+        `failed to generate a 280 chars tweet. falling back to description`,
+      );
+      const link = `https://drinkgenie.app/drink/${drink.slug}`;
+      tweet = drink.description.slice(0, 280 - link.length + 1) + " " + link; //+1 to afford the space beween the description and the link
+    }
 
     console.log(`posting ${tweet}`);
 
