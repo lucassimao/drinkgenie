@@ -4,12 +4,12 @@ import { DrinkCard } from "@/components/DrinkCard";
 import { SearchLoading } from "@/components/search/SearchLoading";
 import { SearchSortOptions } from "@/components/search/SearchSortOptions";
 import { useToast } from "@/hooks/useToast";
-import { getDrinks } from "@/lib/drinks";
+import { DrinkWithTotal, getDrinks } from "@/lib/drinks";
 import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
-import { Drink } from "@/types/drink";
+import { track } from "@vercel/analytics";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { track } from "@vercel/analytics";
+import { Pagination } from "../Pagination";
 
 // Define type for sort options
 type SortBy =
@@ -35,7 +35,7 @@ type SearchParams = {
 
 type SearchResultsState = {
   isLoading: boolean;
-  drinks: Drink[];
+  drinks: DrinkWithTotal[];
   error: Error | null;
 };
 
@@ -67,6 +67,15 @@ export function SearchResults() {
     [searchParams],
   );
 
+  const searchResultsPaginationStrategy = useCallback(
+    (page: number): string => {
+      const updatedParams = new URLSearchParams(searchParams);
+      updatedParams.set("page", String(page));
+      return `/search?${updatedParams.toString()}`;
+    },
+    [searchParams],
+  );
+
   // Extract search logic into a separate function
   const performSearch = useCallback(async () => {
     if (!params.query) return;
@@ -85,6 +94,7 @@ export function SearchResults() {
         flavorProfile: params.flavorProfile,
         glassware: params.glassware,
         temperature: params.temperature,
+        withTotalDrinks: true,
       });
 
       const timeoutPromise = new Promise<never>((_, reject) => {
@@ -98,9 +108,11 @@ export function SearchResults() {
       });
 
       const drinks = await Promise.race([findByPromise, timeoutPromise]);
-      track("Search", {
-        keyword: params.query,
-      });
+      if (process.env.NODE_ENV == "production") {
+        track("Search", {
+          keyword: params.query,
+        });
+      }
 
       setState((prev) => ({ ...prev, drinks, isLoading: false }));
     } catch (error) {
@@ -134,13 +146,16 @@ export function SearchResults() {
     return <SearchLoading />;
   }
 
+  const totalDrinks = state.drinks?.[0]?.totalDrinks || 0;
+  const totalPages = Math.ceil(totalDrinks / DEFAULT_PAGE_SIZE);
+
   return (
     <div className="flex-1">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-primary">
             {params.query
-              ? `${state.drinks.length} results for "${params.query}"`
+              ? `${totalDrinks} results for "${params.query}"`
               : "Search results"}
           </h2>
           <p className="text-primary/60 mt-1">Find your perfect drink</p>
@@ -154,6 +169,14 @@ export function SearchResults() {
         {state.drinks.map((cocktail) => (
           <DrinkCard key={cocktail.id} drink={cocktail} />
         ))}
+      </div>
+
+      <div className="mt-8">
+        <Pagination
+          hrefStrategy={searchResultsPaginationStrategy}
+          currentPage={params.page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ export async function countDrinks(
 }
 
 //eslint-disable-next-line
-function mapRowToDrink(row: Record<string, any>): Drink {
+function mapRowToDrink(row: Record<string, any>): Drink | DrinkWithTotal {
   return {
     id: row.id,
     name: row.name,
@@ -81,6 +81,7 @@ function mapRowToDrink(row: Record<string, any>): Drink {
     width: row.width,
     height: row.height,
     twitterSummaryLargeImage: row.twitter_summary_large_image,
+    totalDrinks: row.total_drinks,
   };
 }
 
@@ -195,8 +196,14 @@ type FindByArgs = {
   flavorProfile?: string[];
   glassware?: string[];
   temperature?: string[];
+  withTotalDrinks?: boolean;
 };
 
+export type DrinkWithTotal = Drink & { totalDrinks: number };
+
+export async function getDrinks(
+  args: FindByArgs & { withTotalDrinks: true },
+): Promise<DrinkWithTotal[]>;
 export async function getDrinks(
   args: FindByArgs & { id: number },
 ): Promise<Drink | null>;
@@ -209,7 +216,7 @@ export async function getDrinks(
 export async function getDrinks(): Promise<Drink[]>;
 export async function getDrinks(
   args?: FindByArgs,
-): Promise<Drink | null | Drink[]> {
+): Promise<Drink | null | Drink[] | DrinkWithTotal[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
 
   switch (args?.sortBy) {
@@ -241,6 +248,10 @@ export async function getDrinks(
   if (typeof args?.page == "number" && typeof args?.pageSize == "number") {
     const offset = (args.page - 1) * args.pageSize;
     queryBuilder.offset(offset).limit(args.pageSize);
+  }
+
+  if (args?.withTotalDrinks) {
+    queryBuilder.select(knex.raw("COUNT(*) OVER () as total_drinks"));
   }
 
   if (args?.difficulty) {

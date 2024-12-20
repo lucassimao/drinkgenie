@@ -5,17 +5,14 @@ import { Fragment } from "react";
 interface PaginationProps {
   totalPages: number;
   currentPage: number;
+  hrefStrategy: (page: number) => string;
 }
 
-export function Pagination({ totalPages, currentPage }: PaginationProps) {
-  // const router = useRouter();
-  // const [page, setPage] = useState(initPage);
-
-  // const onPageChange = (page: number) => {
-  //   setPage(page);
-  //   router.push(`/${page}`);
-  // };
-
+export function Pagination({
+  totalPages,
+  currentPage,
+  hrefStrategy,
+}: PaginationProps) {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const showEllipsis = totalPages > 7;
@@ -51,7 +48,7 @@ export function Pagination({ totalPages, currentPage }: PaginationProps) {
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <Link href={`/${currentPage - 1}`}>
+      <Link href={hrefStrategy(currentPage - 1)}>
         <button
           disabled={currentPage === 1}
           className="p-2 rounded-lg border-2 border-primary/10 text-primary 
@@ -69,7 +66,7 @@ export function Pagination({ totalPages, currentPage }: PaginationProps) {
             {page === "..." ? (
               <span className="px-4 py-2 text-primary/40">...</span>
             ) : (
-              <Link href={`/${page}`}>
+              <Link href={hrefStrategy(+page)}>
                 <button
                   className={`min-w-[40px] h-10 rounded-lg border-2 
                   transition-all duration-200 ${
@@ -86,7 +83,7 @@ export function Pagination({ totalPages, currentPage }: PaginationProps) {
         ))}
       </div>
 
-      <Link href={`/${currentPage + 1}`}>
+      <Link href={hrefStrategy(currentPage + 1)}>
         <button
           disabled={currentPage === totalPages}
           className="p-2 rounded-lg border-2 border-primary/10 text-primary 

@@ -6,7 +6,6 @@ import { Testimonials } from "@/components/Testimonials";
 import { VideoTutorials } from "@/components/VideoTutorials";
 import { countDrinks, getDrinks } from "@/lib/drinks";
 import { DEFAULT_PAGE_SIZE } from "@/lib/utils";
-import { Suspense } from "react";
 
 export const maxDuration = 60; // Applies to the actions
 
@@ -16,6 +15,8 @@ interface Props {
 
 export const revalidate = 3600; // 1hr
 const DISPLAY_TUTORIALS_AND_TESTMONIALS = false;
+
+const homePagePaginationStrategy = (page: number) => `/${page}`;
 
 export async function generateStaticParams() {
   const totalItems = await countDrinks();
@@ -60,9 +61,11 @@ export default async function Home(props: Props) {
           ))}
         </div>
         <div className="mt-8">
-          <Suspense>
-            <Pagination currentPage={page} totalPages={totalPages} />
-          </Suspense>
+          <Pagination
+            hrefStrategy={homePagePaginationStrategy}
+            currentPage={page}
+            totalPages={totalPages}
+          />
         </div>
       </div>
 
