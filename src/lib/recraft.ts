@@ -1,5 +1,5 @@
 import "server-only";
-import { notifyProductionIssue } from "./notification";
+import { notifyProductionIssue } from "./pagerduty";
 
 export async function recraftGenerate(
   drinkId: number,
@@ -36,15 +36,18 @@ export async function recraftGenerate(
     const { status } = response;
     const text = await response.text();
 
+    const payload = { drinkId, width, height, status, body: "" };
     try {
-      const errorDetails = JSON.parse(text);
-      if (errorDetails.code == "not_enough_credits") {
-        notifyProductionIssue(`Not enough credits for recraft`);
-      }
-    } catch (error) {
-      console.error(error);
-      // just ignore, most likely the response body is empty
+      payload.body = JSON.parse(text);
+    } catch {
+      payload.body = text;
     }
+    notifyProductionIssue(
+      `[Recraft] Image generation failed`,
+      payload,
+      "critical",
+    );
+
     throw new Error(`failed to generate image:  ${status} ${text} `);
   }
 

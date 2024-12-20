@@ -3,6 +3,7 @@ import knex from "@/lib/knex";
 import { generateSumaryCardImage } from "@/lib/marketing/twitter";
 import { User } from "@clerk/nextjs/server";
 import { RANDOM_USERS } from "./mockData";
+import { notifyProductionIssue } from "@/lib/pagerduty";
 
 export const maxDuration = 60;
 
@@ -48,6 +49,11 @@ export async function GET(request: Request) {
   );
 
   if (typeof result == "string") {
+    notifyProductionIssue(
+      "[Bartender] Failed to generate drink",
+      ingredients,
+      "warning",
+    );
     return new Response("", {
       status: 500,
       statusText: result,

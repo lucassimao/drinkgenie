@@ -9,6 +9,7 @@ import TwitterApi from "twitter-api-v2";
 import { z } from "zod";
 import { getNextDrinkToShare } from "../drinks";
 import { recraftGenerate } from "../recraft";
+import { notifyProductionIssue } from "../pagerduty";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -161,6 +162,9 @@ export async function tweet() {
       const details = JSON.stringify({ data, rateLimite });
       console.error(`failed to tweet ${drink.slug}: ${details}`);
     }
+
+    notifyProductionIssue("[Twitter] Failed to tweet", { error }, "warning");
+
     throw error;
   }
 

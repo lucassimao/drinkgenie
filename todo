@@ -31,7 +31,7 @@ V2
   [ok] convert /search into a server component and only the listing of results as client
 - [ok] daily add random drink receipts
 - [ ] pagination for search results
-- [ ] PagerDuty notifications
+- [ok] PagerDuty notifications
 - [ ] Send social media posts
       [ok] twitter
       [ok] Generate media posts using openai
@@ -41,6 +41,7 @@ V2
       [ ] facebook
       [ ] Update Connect with us
 - [ ] display alcohol content, flavor, glassware, and serving temp in the drink details
+- [ ] Displayed my favourite recipes
 - [ ] check if we can use threads of convo for openai requests to avoid sending the pompt over and over
 - [ ] optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
 - [ ] https://vercel.com/docs/production-checklist
@@ -51,10 +52,11 @@ V3 New subscription plan: PRO
 
 - Retool
   [ ] delete drink
-  [] Special equipment needed
-  [] Pro tips for better results
-  [] Common mistakes to avoid
+  [ ] Special equipment needed
+  [ ] Pro tips for better results
+  [ ] Common mistakes to avoid
 
+- Weekely NEWSLETTER
 - VARIATIONS
   [] List 2-3 popular variations of the drink
   [] Note which ingredients can be substituted
@@ -70,7 +72,7 @@ V3 New subscription plan: PRO
   [] Photography tips for social media
 - warnings
   [ ] Alcohol content notices
-  [ ] Common allergens
+  [ ] Common allergens and Allergy Information
   [ ] Flammability warnings for specific techniques
   [ ] Temperature-sensitive ingredients
-  [] display Featured section in the Footer
+  [ ] display Featured section in the Footer

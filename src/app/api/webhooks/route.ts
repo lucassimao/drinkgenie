@@ -1,4 +1,5 @@
 import knex from "@/lib/knex";
+import { notifyProductionIssue } from "@/lib/pagerduty";
 import stripe from "@/lib/stripe";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
@@ -84,6 +85,12 @@ export async function POST(req: Request) {
       `Processed checkout.session.completed for ${customerEmail} ${session.currency} ${totalInUSD}`,
     );
   } catch (err) {
+    notifyProductionIssue(
+      "[Stripe] Failed to process webhook",
+      { err },
+      "critical",
+    );
+
     console.error(err, `Failed to process stripe webhook`);
     let details: string;
 

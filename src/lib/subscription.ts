@@ -1,6 +1,6 @@
 "use server";
-
-import { notifyProductionIssue } from "./notification";
+import { track } from "@vercel/analytics/server";
+import { notifyProductionIssue } from "./pagerduty";
 import stripe from "./stripe";
 import { BASE_URL } from "./utils";
 
@@ -22,7 +22,11 @@ export async function createCheckoutSession(
       const data = await response.json();
       brlRate = data.rates.BRL;
     } else {
-      notifyProductionIssue("Failed to fetch USD to BRL rate");
+      notifyProductionIssue(
+        "[Stripe] Failed to fetch USD to BRL rate",
+        { credits, amountInCents, email, countryCode },
+        "warning",
+      );
       brlRate = 6;
     }
 
@@ -57,5 +61,13 @@ export async function createCheckoutSession(
     cancel_url: `${BASE_URL}/credits`,
     customer_email: email,
   });
+
+  await track("CheckoutSession", {
+    credits,
+    amountInCents,
+    email: email || "",
+    countryCode: countryCode || "",
+  });
+
   return session.url;
 }
