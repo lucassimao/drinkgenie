@@ -13,7 +13,7 @@ export async function recraftGenerate(
     );
   }
 
-  const finalPrompt = prompt.slice(0, 1000);
+  const finalPrompt = prompt.slice(0, 990);
 
   const response = await fetch(
     "https://external.api.recraft.ai/v1/images/generations",
