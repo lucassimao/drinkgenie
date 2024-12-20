@@ -15,7 +15,6 @@ export function TopBar() {
 
   useEffect(() => {
     if (user && credits == null) {
-      console.log(`getUserCredits!`);
       getUserCredits(user.id).then(setCredits);
     }
   }, [user, credits, setCredits]);
