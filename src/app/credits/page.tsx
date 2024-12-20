@@ -1,6 +1,6 @@
 "use client";
 import { useToast } from "@/hooks/useToast";
-import { createCheckoutSession } from "@/lib/subscription";
+import { createCheckoutSession } from "@/lib/stripe";
 import { useUser } from "@clerk/nextjs";
 import { Coins, Info, Loader2, Sparkles, Zap } from "lucide-react";
 import { useEffect, useState } from "react";

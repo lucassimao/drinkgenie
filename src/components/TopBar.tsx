@@ -4,19 +4,21 @@ import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
 import { Coins } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import cheerfulGenie from "../../public/cheerful-genie.png";
 import { SearchBar } from "./SearchBar";
+import useLocalStorage from "use-local-storage";
 
 export function TopBar() {
   const { user } = useUser();
-  const [credits, setCredits] = useState(0);
+  const [credits, setCredits] = useLocalStorage<number | null>("credits", null);
 
   useEffect(() => {
-    if (user) {
+    if (user && credits == null) {
+      console.log(`getUserCredits!`);
       getUserCredits(user.id).then(setCredits);
     }
-  }, [user]);
+  }, [user, credits, setCredits]);
 
   return (
     <div className="bg-white shadow-md">
@@ -70,7 +72,7 @@ export function TopBar() {
                   <Coins className="h-4 w-4" />
                   <span>Get Credits</span>
                   <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                    ${credits}/credit{credits > 1 ? "s" : null}
+                    ${credits}/credit{credits && credits > 1 ? "s" : null}
                   </span>
                 </Link>
               </nav>
@@ -118,7 +120,7 @@ export function TopBar() {
                   <span>Get Credits</span>
                 </div>
                 <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                  ${credits}/credit{credits > 1 ? "s" : null}
+                  ${credits}/credit{credits && credits > 1 ? "s" : null}
                 </span>
               </Link>
             </nav>

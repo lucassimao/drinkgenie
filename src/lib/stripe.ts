@@ -1,8 +1,11 @@
-"use server";
-
+import "server-only";
 import Stripe from "stripe";
-import { BASE_URL } from "./utils";
 import { notifyProductionIssue } from "./notification";
+import { BASE_URL } from "./utils";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-12-18.acacia",
+});
 
 export async function createCheckoutSession(
   credits: number,
@@ -10,10 +13,6 @@ export async function createCheckoutSession(
   email?: string,
   countryCode?: string,
 ): Promise<string | null> {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-11-20.acacia",
-  });
-
   const currency = countryCode?.toLowerCase() === "br" ? "brl" : "usd";
   let unitAmount = amountInCents;
   let brlRate;
@@ -63,3 +62,5 @@ export async function createCheckoutSession(
   });
   return session.url;
 }
+
+export default stripe;

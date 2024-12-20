@@ -2,10 +2,14 @@
 
 import { GlassWater, Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import useLocalStorage from "use-local-storage";
 
 export function MainContent() {
   const searchParams = useSearchParams();
   const credits = searchParams.get("credits");
+  const [, setCredits] = useLocalStorage<number | null>("credits", null);
+
+  setCredits(undefined);
 
   return (
     <>

@@ -1,11 +1,7 @@
+import knex from "@/lib/knex";
+import stripe from "@/lib/stripe";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
-import Stripe from "stripe";
-import knex from "@/lib/knex";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-11-20.acacia",
-});
 
 async function getRawBody(req: Request): Promise<Buffer> {
   const reader = req.body?.getReader();

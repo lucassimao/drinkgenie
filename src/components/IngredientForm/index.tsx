@@ -8,6 +8,7 @@ import { Martini, Plus, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LoadingState } from "./LoadingState";
+import useLocalStorage from "use-local-storage";
 
 const SUGGESTED_INGREDIENTS = [
   "Vodka",
@@ -28,6 +29,7 @@ export function IngredientForm() {
   const suggestionsDropdownRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [, setCredits] = useLocalStorage<number | null>("credits", null);
 
   // eslint-disable-next-line
   const handleKeyDown = (e: any) => {
@@ -89,6 +91,8 @@ export function IngredientForm() {
       if (typeof result == "string") {
         toast.error(result, "Ooops...");
       } else {
+        // force credits to be refreshed
+        setCredits(undefined);
         router.push(`/drink/${result.slug}`);
       }
     } finally {
