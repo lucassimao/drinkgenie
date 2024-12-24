@@ -30,26 +30,30 @@ V2
   [ok] fix SSR of drink pages
   [ok] convert /search into a server component and only the listing of results as client
 - [ok] daily add random drink receipts
-- [ ] pagination for search results
+- [ok] pagination for search results
 - [ok] PagerDuty notifications
 - [ ] Send social media posts
       [ok] twitter
       [ok] Generate media posts using openai
       [ok] Generate 2048x1024 image with recraft and then Crop 46px of each side so that it fits the 1.91:1 ratio
-      [ ] Instagram
-      [ ] video for x, instagram, using AI
-      [ ] facebook
+      [ ] Instagram image
+      [ ] Tiktok image
+      [ ] facebook image
+      [ ] Instagram video
+      [ ] Tiktok video
+      [ ] facebook video
+      [ ] X video
       [ ] Update Connect with us
-- [ ] display alcohol content, flavor, glassware, and serving temp in the drink details
 - [ ] Displayed my favourite recipes
+- [ ] display alcohol content, flavor, glassware, and serving temp in the drink details
 - [ ] check if we can use threads of convo for openai requests to avoid sending the pompt over and over
 - [ ] optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
 - [ ] https://vercel.com/docs/production-checklist
-- [ ] integrate with crisp https://crisp.chat/pt/
-- [ ] integrate with https://features.vote/
 
 V3 New subscription plan: PRO
 
+- [ ] integrate with crisp https://crisp.chat/pt/
+- [ ] integrate with https://features.vote/
 - Retool
   [ ] delete drink
   [ ] Special equipment needed
