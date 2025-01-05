@@ -10,6 +10,7 @@ import React from "react";
 import { DrinkDetailImage } from "./DrinkDetailImage";
 import { PollingImageFetcher } from "./PollingImageFetcher";
 import { ViewRegister } from "./ViewRegister";
+import { RecipeSchema } from "@/components/RecipeSchema";
 
 interface DrinkDetailProps {
   params: Promise<ParsedUrlQuery>;
@@ -92,6 +93,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
+      <RecipeSchema drink={drink} />
       <Breadcrumbs items={breadcrumbs} />
       <ViewRegister drinkId={drink.id} />
 
