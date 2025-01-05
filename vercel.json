@@ -2,11 +2,15 @@
   "crons": [
     {
       "path": "/api/social?network=twitter",
-      "schedule": "0 */3 * * *"
+      "schedule": "0 */8 * * *"
+    },
+    {
+      "path": "/api/social?network=instagram",
+      "schedule": "0 */8 * * *"
     },
     {
       "path": "/api/bartender",
-      "schedule": "0 */4 * * *"
+      "schedule": "0 */6 * * *"
     }
   ]
 }

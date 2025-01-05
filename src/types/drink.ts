@@ -11,6 +11,7 @@ export type Drink = {
   description: string;
   imageUrl?: string | null;
   twitterSummaryLargeImage?: string | null;
+  instagramImage?: string | null;
 
   ingredients: string[];
   preparationSteps: string[];

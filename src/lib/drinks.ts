@@ -554,17 +554,16 @@ export async function generateDrink(
 }
 
 export async function getNextDrinkToShare(
-  network: "twitter" | "facebook",
+  network: "twitter" | "instagram",
 ): Promise<Drink | null> {
   const postColumn =
-    network === "twitter" ? "tweet_posted_at" : "facebook_posted_at";
-  if (!["twitter", "facebook"].includes(network)) {
+    network === "twitter" ? "tweet_posted_at" : "instagram_posted_at";
+  if (!["twitter", "instagram"].includes(network)) {
     throw new Error("Invalid network: " + network);
   }
 
   const result = await knex("drinks")
     .whereNull(postColumn)
-    .whereNotNull("image_url")
     .orderBy("id", "desc")
     .first();
 

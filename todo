@@ -36,7 +36,7 @@ V2
       [ok] twitter
       [ok] Generate media posts using openai
       [ok] Generate 2048x1024 image with recraft and then Crop 46px of each side so that it fits the 1.91:1 ratio
-      [ ] Instagram image
+      [ok] Instagram image
       [ ] Tiktok image
       [ ] facebook image
       [ ] Instagram video

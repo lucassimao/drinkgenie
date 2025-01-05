@@ -19,6 +19,8 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     url: "https://instagram.com/drinkgenie",
     icon: Instagram,
     followers: "125K",
+    displayFollowersCount: false,
+    visible: true,
   },
   {
     name: "YouTube",

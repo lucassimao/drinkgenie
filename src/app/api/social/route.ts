@@ -1,4 +1,4 @@
-import { postToFacebook } from "@/lib/marketing/facebook";
+import { postInstagram } from "@/lib/marketing/instagram";
 import { tweet } from "@/lib/marketing/twitter";
 export const maxDuration = 60;
 
@@ -12,21 +12,23 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const network = url.searchParams.get("network");
+  const network = url.searchParams.get("network") || "unknow";
+
+  console.time(network);
 
   switch (network) {
     case "twitter":
       await tweet();
       break;
-    case "facebook":
-      console.log("Sending facebook post");
-      postToFacebook();
+    case "instagram":
+      await postInstagram();
       break;
     default:
       console.error("Invalid network: " + network);
       return new Response(null, { status: 400 });
-      break;
   }
+
+  console.timeEnd(network);
 
   return Response.json({ success: true });
 }
