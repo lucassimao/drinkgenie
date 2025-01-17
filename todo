@@ -37,46 +37,43 @@ V2
       [ok] Generate media posts using openai
       [ok] Generate 2048x1024 image with recraft and then Crop 46px of each side so that it fits the 1.91:1 ratio
       [ok] Instagram image
-      [ ] Tiktok image
-      [ ] facebook image
-      [ ] Instagram video
-      [ ] Tiktok video
-      [ ] facebook video
-      [ ] X video
-      [ ] Update Connect with us
-- [ ] Displayed my favourite recipes
-- [ ] display alcohol content, flavor, glassware, and serving temp in the drink details
-- [ ] check if we can use threads of convo for openai requests to avoid sending the pompt over and over
-- [ ] optmize function invocation https://vercel.com/docs/pricing/serverless-functions#managing-function-duration
-- [ ] https://vercel.com/docs/production-checklist
+      [ok] Update Connect with us
+      [ ] fix image banner for the main page, as its displayed in facebbok, twitter to 1200x628
+- [ ] Google search console issues
+- [ ] Check if we can improve and reduce costs when generating images
 
-V3 New subscription plan: PRO
+V3
+
+- Pro features:
+  [] Display my favourite recipes
+  [] display alcohol content, flavor, glassware, and serving temp in the drink details
+  [] allow rating a recipe
+  [] Common allergens and Allergy Information
+  [] Temperature-sensitive ingredients  
+  [] Food pairing recommendations
+  [] Garnish placement
+  [] Color and appearance description
+  [] Photography tips for social media
+  [] Generate 2-3 variations of some drink. Whcih ingredients can be replaced. Suggest non-alcoholic alternatives
+  [ ] Receive new recipes via whatsapp and telegram
+- New content formats:
+
+  [ ] Instagram and Twitter quizzes
+  [ ] Update Twitter messages: 1st recipe then a reply with the link
+  [ ] TikTok, Reels,Stories, YouTube Shorts, X video
+  [ ] invideo.io, klingai
+  [ ] Storytelling on X – Highlight the origins of certain cocktails or ingredients, share curiosities.
+  [ ] Seasonal & Trendy Recipes – Create themed cocktails for major holidays or viral trends (e.g., “Barbiecore cocktails,” “pumpkin spice cocktails,” “dry January,” etc.). This helps you ride cultural waves.
+  [ ] Cocktail Enthusiast Influencers – Provide them access to your premium platform for free, ask them to create content featuring your AI’s unique recipes.
+  [ ] User-Generated Content (UGC) – Encourage existing users to share photos of the cocktails they make
+  [ ] Badges & Achievements – Gamify the experience (e.g., “Master Mixologist” badge for trying a certain number of recipes). People love sharing achievements on social media.
 
 - [ ] integrate with crisp https://crisp.chat/pt/
 - [ ] integrate with https://features.vote/
-- Retool
-  [ ] delete drink
-  [ ] Special equipment needed
-  [ ] Pro tips for better results
-  [ ] Common mistakes to avoid
+- [ ] fix drink.preparationTime. use ISO 8601 format
+      V4
 
-- Weekely NEWSLETTER
-- VARIATIONS
-  [] List 2-3 popular variations of the drink
-  [] Note which ingredients can be substituted
-  [] Suggest non-alcoholic alternatives if possible
-- PAIRING sugestions
-  [] Food pairing recommendations
-  [] Occasion recommendations
-  [] Best time/season to serve
-- Presentation tips
-  [] Garnish placement
-  [] Ice recommendations
-  [] Color and appearance description
-  [] Photography tips for social media
-- warnings
-  [ ] Alcohol content notices
-  [ ] Common allergens and Allergy Information
-  [ ] Flammability warnings for specific techniques
-  [ ] Temperature-sensitive ingredients
-  [ ] display Featured section in the Footer
+- [ ] Host video masterclasses, mixology tips, or brand-sponsored mini-courses (hosted by renowned bartenders or influencers).
+- [ ] Liquor/Spirit Brand Collaborations – Offer to feature specific spirits or liqueurs in AI-generated recipes;
+- [ ] Affiliate Marketing – Include purchase links for recommended ingredients or cocktail tools (shakers, glassware) on each generated recipe page.
+- [ ] Sponsored Content – You can create “featured cocktails of the week” sponsored by a liquor brand looking to promote a new product.

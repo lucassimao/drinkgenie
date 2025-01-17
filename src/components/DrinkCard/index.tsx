@@ -56,7 +56,7 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
       <div className="p-6 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-xl font-display text-primary group-hover:text-secondary transition-colors line-clamp-2">
-            <Link href={`/drinks/${drink.slug}`}> {drink.name}</Link>
+            <Link href={`/drink/${drink.slug}`}> {drink.name}</Link>
           </h3>
           <FavoriteDrinkButton drink={drink} />
         </div>

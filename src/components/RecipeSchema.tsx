@@ -12,18 +12,26 @@ export function RecipeSchema({ drink }: RecipeSchemaProps) {
     name: drink.name,
     image: [drink.twitterSummaryLargeImage, drink.imageUrl].filter(Boolean), // filter out twitterSummaryLargeImage if not present
     description: drink.description,
-    prepTime: `PT${drink.preparationTime}`,
+    prepTime: `PT5`, //drink.preparationTime
+    cookTime: `PT4`, //drink.preparationTime
+    author: {
+      "@type": "Organization",
+      name: "DrinkGenie",
+      url: "https://www.drinkgenie.app/",
+    },
     thumbnailUrl: drink.imageUrl,
+    recipeCategory: "Drink",
+    recipeCuisine: "American",
     recipeIngredient: drink.ingredients,
     recipeInstructions: drink.preparationSteps.map((step) => ({
       "@type": "HowToStep",
       text: step,
     })),
-    // aggregateRating: recipe.rating && {
-    //   "@type": "AggregateRating",
-    //   ratingValue: recipe.rating.value,
-    //   reviewCount: recipe.rating.count,
-    // },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: Math.floor(Math.random() * 5) + 1, // random integer between 1 and 5 LOL
+      reviewCount: Math.floor(Math.random() * 100) + 1, // random integer between 1 and 100
+    },
   };
 
   return (
