@@ -31,8 +31,6 @@ export async function postInstagram() {
       generateMedia(drink),
       generateCaption(drink),
     ]);
-    // console.log(imageUrl);
-    // console.log(caption);
 
     // let caption: string;
     // let attempt = 0;

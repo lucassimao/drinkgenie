@@ -38,9 +38,8 @@ V2
       [ok] Generate 2048x1024 image with recraft and then Crop 46px of each side so that it fits the 1.91:1 ratio
       [ok] Instagram image
       [ok] Update Connect with us
-      [ ] fix image banner for the main page, as its displayed in facebbok, twitter to 1200x628
-- [ ] Google search console issues
-- [ ] Check if we can improve and reduce costs when generating images
+- [ok] Google search console issues
+- [ok] Check if we can improve and reduce costs when generating images
 
 V3
 
@@ -55,10 +54,14 @@ V3
   [] Color and appearance description
   [] Photography tips for social media
   [] Generate 2-3 variations of some drink. Whcih ingredients can be replaced. Suggest non-alcoholic alternatives
-  [ ] Receive new recipes via whatsapp and telegram
-- New content formats:
+  [] Receive new recipes via whatsapp and telegram
+  [] paginate search results
+  [] additional "authors" for auto generated content
+  [] in the suggested ingredients, generate the default list on build time
 
+- New content formats:
   [ ] Instagram and Twitter quizzes
+  [ ] Pinterest channel
   [ ] Update Twitter messages: 1st recipe then a reply with the link
   [ ] TikTok, Reels,Stories, YouTube Shorts, X video
   [ ] invideo.io, klingai
@@ -71,9 +74,9 @@ V3
 - [ ] integrate with crisp https://crisp.chat/pt/
 - [ ] integrate with https://features.vote/
 - [ ] fix drink.preparationTime. use ISO 8601 format
-      V4
 
-- [ ] Host video masterclasses, mixology tips, or brand-sponsored mini-courses (hosted by renowned bartenders or influencers).
-- [ ] Liquor/Spirit Brand Collaborations – Offer to feature specific spirits or liqueurs in AI-generated recipes;
-- [ ] Affiliate Marketing – Include purchase links for recommended ingredients or cocktail tools (shakers, glassware) on each generated recipe page.
-- [ ] Sponsored Content – You can create “featured cocktails of the week” sponsored by a liquor brand looking to promote a new product.
+- V4:
+  [ ] Host video masterclasses, mixology tips, or brand-sponsored mini-courses (hosted by renowned bartenders or influencers).
+  [ ] Liquor/Spirit Brand Collaborations – Offer to feature specific spirits or liqueurs in AI-generated recipes;
+  [ ] Affiliate Marketing – Include purchase links for recommended ingredients or cocktail tools (shakers, glassware) on each generated recipe page.
+  [ ] Sponsored Content – You can create “featured cocktails of the week” sponsored by a liquor brand looking to promote a new product.
