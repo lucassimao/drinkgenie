@@ -35,6 +35,7 @@ const config: Config = {
         "toast-slide-in":
           "toast-slide-in 0.3s cubic-bezier(0.21, 1.02, 0.73, 1)",
         "toast-progress": "toast-progress linear forwards",
+        scroll: "animation: scroll 30s linear infinite",
       },
       keyframes: {
         shimmer: {
@@ -44,6 +45,10 @@ const config: Config = {
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
+        },
+        scroll: {
+          "0%": { transform: `translateX(0)` },
+          "100%": { transform: `translateX(-50%)` },
         },
         "toast-slide-in": {
           "0%": {

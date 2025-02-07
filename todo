@@ -44,20 +44,20 @@ V2
 V3
 
 - Pro features:
-  [] Display my favourite recipes
   [] display alcohol content, flavor, glassware, and serving temp in the drink details
-  [] allow rating a recipe
   [] Common allergens and Allergy Information
-  [] Temperature-sensitive ingredients  
+  [] Temperature-sensitive ingredients
   [] Food pairing recommendations
   [] Garnish placement
   [] Color and appearance description
   [] Photography tips for social media
   [] Generate 2-3 variations of some drink. Whcih ingredients can be replaced. Suggest non-alcoholic alternatives
-  [] Receive new recipes via whatsapp and telegram
+
+  [] in the suggested ingredients, generate the default list on build time
+  [] Display my favourite recipes
+  [] allow rating a recipe
   [] paginate search results
   [] additional "authors" for auto generated content
-  [] in the suggested ingredients, generate the default list on build time
 
 - New content formats:
   [ ] Instagram and Twitter quizzes

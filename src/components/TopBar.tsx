@@ -1,151 +1,243 @@
 "use client";
-import { getUserCredits } from "@/lib/user";
 import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/nextjs";
-import { Coins } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect } from "react";
 import cheerfulGenie from "../../public/cheerful-genie.png";
 import { SearchBar } from "./SearchBar";
-import useLocalStorage from "use-local-storage";
+
+import {
+  Bell,
+  BookOpen,
+  ChevronDown,
+  Crown,
+  Heart,
+  LogOut,
+  Settings,
+  Star,
+  User,
+} from "lucide-react";
+import { useRef, useState } from "react";
 
 export function TopBar() {
   const { user } = useUser();
-  const [credits, setCredits] = useLocalStorage<number | null>("credits", null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (user && credits == null) {
-      getUserCredits(user.id).then(setCredits);
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
     }
-  }, [user, credits, setCredits]);
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-center md:h-14 py-3 md:py-0 gap-4">
-          {/* Logo Section */}
-          <Link href="/">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 cursor-pointer">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-secondary/20 rounded-full blur animate-pulse"></div>
-                  <Image
-                    alt="DrinkGenie logo"
-                    src={cheerfulGenie}
-                    className="h-8 w-8 text-secondary relative"
-                  />
-                </div>
-                <span className="text-xl font-display text-primary">
-                  DrinkGenie
-                </span>
+    <header className="bg-white shadow-sm">
+      <nav className="max-w-7xl mx-auto px-4">
+        <div className="relative z-50">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <Link
+              className="flex-shrink-0 flex items-center gap-3 cursor-pointer"
+              href="/"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-accent/20 rounded-full blur animate-pulse" />
+                <Image
+                  alt="DrinkGenie logo"
+                  src={cheerfulGenie}
+                  className="h-8 w-8 text-secondary relative"
+                />
               </div>
-              <div className="md:hidden p-2 text-primary/60 hover:text-primary">
-                <SignedIn>
-                  <div className="flex items-center justify-between px-0">
-                    <span className="font-medium text-primary">
-                      Hi, {user?.firstName || user?.username}
-                    </span>
-                  </div>
-                </SignedIn>
+              <span className="text-2xl font-display text-primary">
+                DrinkGenie
+              </span>
+            </Link>
+
+            {/* Center Section with Search and Quick Links */}
+            <div className="flex-1 flex items-center justify-center gap-8 px-8">
+              {/* Quick Links */}
+              <div className="hidden lg:flex items-center gap-6">
+                <Link
+                  href="/search?query="
+                  className="flex items-center gap-2 text-primary/70 hover:text-primary transition-colors"
+                >
+                  <BookOpen className="h-5 w-5" />
+                  <span className="text-sm font-medium">Recipe Book</span>
+                </Link>
+              </div>
+
+              {/* Search Bar */}
+              <div className="flex-1 max-w-xl">
+                <Suspense>
+                  <SearchBar />
+                </Suspense>
               </div>
             </div>
-          </Link>
 
-          {/* Search Bar - Full Width on Mobile */}
-          <div className="flex-1 max-w-2xl mx-auto w-full">
-            <Suspense>
-              <SearchBar />
-            </Suspense>
-          </div>
-
-          {/* Navigation and Auth Buttons - Hidden on Mobile */}
-          <div className="hidden md:flex items-center gap-6">
-            <SignedIn>
-              <nav className="flex space-x-6">
-                <Link
-                  href="/credits"
-                  className="group flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-white 
-                bg-gradient-to-r from-accent to-warning rounded-xl transition-all duration-300 
-                hover:shadow-lg transform hover:scale-[1.02]"
-                >
-                  <Coins className="h-4 w-4" />
-                  <span>Get Credits</span>
-                  <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                    ${credits}/credit{credits && credits > 1 ? "s" : null}
-                  </span>
-                </Link>
-              </nav>
-            </SignedIn>
-
-            {/* Auth Buttons */}
-            <div className="flex items-center gap-3">
+            {/* Right Section */}
+            <div className="flex items-center gap-6">
+              {/* Action Icons */}
               <SignedIn>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-primary">
-                    Hi, {user?.firstName || user?.username}
-                  </span>
-                  <SignOutButton>
-                    <button className="px-4 py-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
-                      Sign Out
-                    </button>
-                  </SignOutButton>
+                <div className="hidden md:flex items-center gap-4">
+                  {/* Favorites Button with Tooltip */}
+                  <button className="group relative p-2 text-primary/60 hover:text-primary transition-colors">
+                    <Heart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-white text-xs rounded-full flex items-center justify-center">
+                      3
+                    </span>
+                    {/* Tooltip */}
+                    <div
+                      className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-primary/90 
+                                text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 
+                                transition-opacity duration-300 whitespace-nowrap pointer-events-none"
+                    >
+                      Favorite Recipes
+                    </div>
+                  </button>
+
+                  {/* Notifications Button with Tooltip */}
+                  <button className="group relative p-2 text-primary/60 hover:text-primary transition-colors">
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-warning text-white text-xs rounded-full flex items-center justify-center">
+                      2
+                    </span>
+                    {/* Tooltip */}
+                    <div
+                      className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-primary/90 
+                                text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 
+                                transition-opacity duration-300 whitespace-nowrap pointer-events-none"
+                    >
+                      Notifications
+                    </div>
+                  </button>
+                </div>
+              </SignedIn>
+
+              {/* Auth Section */}
+              <SignedIn>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex items-center gap-3 group"
+                  >
+                    <img
+                      src={user?.imageUrl}
+                      alt={user?.fullName || "User"}
+                      className="h-10 w-10 rounded-full border-2 border-accent/20 group-hover:border-accent transition-colors"
+                    />
+                    <div className="hidden md:block">
+                      <div className="font-medium text-primary group-hover:text-accent transition-colors">
+                        {user?.firstName || user?.username}
+                      </div>
+                      <div className="text-xs text-primary/60">
+                        Premium Member
+                      </div>
+                    </div>
+                    <ChevronDown
+                      className={`h-4 w-4 text-primary/60 transition-transform duration-300 ${
+                        isDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isDropdownOpen && (
+                    <div
+                      className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-primary/10 
+                                  py-2 animate-in fade-in slide-in-from-top-2"
+                    >
+                      {/* User Info */}
+                      <div className="px-4 py-3 border-b border-primary/10">
+                        <div className="font-medium text-primary">
+                          {user?.fullName}
+                        </div>
+                        <div className="text-sm text-primary/60">
+                          {user?.primaryEmailAddress?.emailAddress}
+                        </div>
+                      </div>
+
+                      {/* Menu Items */}
+                      <div className="py-2">
+                        <Link
+                          href="/profile"
+                          className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
+                                   hover:bg-primary/5 transition-colors"
+                        >
+                          <User className="h-4 w-4" />
+                          <span>Profile</span>
+                        </Link>
+                        <Link
+                          href="/subscription"
+                          className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
+                                   hover:bg-primary/5 transition-colors"
+                        >
+                          <Crown className="h-4 w-4" />
+                          <span>Premium Status</span>
+                        </Link>
+                        <Link
+                          href="/settings"
+                          className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
+                                   hover:bg-primary/5 transition-colors"
+                        >
+                          <Settings className="h-4 w-4" />
+                          <span>Settings</span>
+                        </Link>
+                      </div>
+
+                      {/* Sign Out */}
+                      <div className="border-t border-primary/10 pt-2 mt-2">
+                        <SignOutButton>
+                          <button
+                            className="w-full flex items-center gap-3 px-4 py-2 text-primary/80 
+                                         hover:text-primary hover:bg-primary/5 transition-colors"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            <span>Sign Out</span>
+                          </button>
+                        </SignOutButton>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </SignedIn>
               <SignedOut>
-                <button
-                  className="px-5 py-2 text-sm font-medium text-white bg-accent hover:bg-accent-dark 
-                           rounded-xl transition-all duration-300 transform hover:scale-[1.02] 
-                           hover:shadow-lg active:scale-[0.98] focus:outline-none focus:ring-2 
-                           focus:ring-accent/30"
-                >
-                  <Link href="/sign-in">Sign In</Link>
-                </button>
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="/sign-in"
+                    className="text-sm font-medium text-primary/70 hover:text-primary transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/subscription"
+                    className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r 
+                             from-warning to-accent rounded-xl font-medium text-white shadow-lg
+                             hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]
+                             overflow-hidden"
+                  >
+                    <div
+                      className="absolute inset-0 bg-white/20 transform -skew-x-12 translate-x-full 
+                                 group-hover:-translate-x-full transition-transform duration-700"
+                    />
+                    <div className="relative flex items-center gap-2">
+                      <Star className="h-5 w-5" />
+                      <span>Upgrade to Premium</span>
+                    </div>
+                  </Link>
+                </div>
               </SignedOut>
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu - Only visible on mobile */}
-        <div className="md:hidden border-t border-primary/10 py-4 space-y-4">
-          <SignedIn>
-            <nav className="flex flex-col space-y-4">
-              <Link
-                href="/credits"
-                className="flex items-center justify-between px-4 py-3 text-sm font-medium text-white 
-                       bg-gradient-to-r from-accent to-warning rounded-xl"
-              >
-                <div className="flex items-center gap-2">
-                  <Coins className="h-4 w-4" />
-                  <span>Get Credits</span>
-                </div>
-                <span className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
-                  ${credits}/credit{credits && credits > 1 ? "s" : null}
-                </span>
-              </Link>
-            </nav>
-          </SignedIn>
-          <div className="flex flex-col gap-3">
-            <SignedIn>
-              <SignOutButton>
-                <button className="w-full px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors">
-                  Sign Out
-                </button>
-              </SignOutButton>
-            </SignedIn>
-            <SignedOut>
-              <Link
-                href="/sign-in"
-                className="w-full px-5 py-2.5 text-sm font-medium text-white bg-accent 
-                         hover:bg-accent-dark rounded-xl transition-all duration-300 
-                         transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] 
-                         focus:outline-none focus:ring-2 focus:ring-accent/30"
-              >
-                Sign In
-              </Link>
-            </SignedOut>
-          </div>
-        </div>
-      </div>
-    </div>
+      </nav>
+    </header>
   );
 }
