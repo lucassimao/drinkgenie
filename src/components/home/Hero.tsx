@@ -1,15 +1,10 @@
-import { ArrowRight, GlassWater, Sparkles, Star } from "lucide-react";
-import Link from "next/link";
+import React from "react";
+import { Star, GlassWater, ArrowRight } from "lucide-react";
+import { Stats } from "./Stats";
 import { CocktailSlider } from "./CocktailSlider";
-import { CountUp } from "./CountUp";
+import Link from "next/link";
 
 export function Hero() {
-  const stats = [
-    { value: 120, suffix: "+", label: "Recipes" },
-    { value: 5, suffix: "+", label: "Users" },
-    { value: 4.9, suffix: "/5", label: "Rating", decimals: 1 },
-  ];
-
   return (
     <div className="relative overflow-visible">
       {/* Decorative Background Elements */}
@@ -26,34 +21,40 @@ export function Hero() {
       </div>
 
       {/* Main Content */}
-      <div className="relative min-h-[85vh] flex items-center">
-        <div className="max-w-7xl mx-auto px-4 py-20 w-full">
+      <div className="relative min-h-[85vh]">
+        <div className="max-w-7xl mx-auto px-4 py-12 w-full h-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text Content */}
-            <div className="text-left">
-              <div className="inline-flex items-center rounded-full bg-accent/10 px-4 py-1.5 mb-8">
-                <Sparkles className="mr-2 h-4 w-4 text-accent" />
-                <span className="text-sm font-medium text-primary">
-                  1000+ Free Cocktail Recipes
-                </span>
+            <div className="text-left flex flex-col justify-between space-y-12">
+              {/* Top Content */}
+              <div className="space-y-6">
+                <h1 className="text-6xl md:text-7xl font-display text-primary leading-[1.3]">
+                  <span className="block">Craft Your</span>
+                  <span
+                    className="block mt-4 bg-gradient-to-r from-accent to-warning 
+                                 bg-clip-text text-transparent leading-[1.4] pb-0"
+                  >
+                    Perfect
+                  </span>
+                  <span
+                    className="block bg-gradient-to-r from-accent to-warning 
+                                 bg-clip-text text-transparent leading-[1.4] pb-3"
+                  >
+                    Cocktail Magic
+                  </span>
+                </h1>
+
+                <p className="text-lg text-primary/70 max-w-xl leading-relaxed">
+                  Discover endless possibilities with our AI-powered cocktail
+                  companion. From classic recipes to innovative creations, find
+                  your next favorite drink.
+                </p>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-display text-primary mb-6 leading-tight">
-                Craft Your Perfect
-                <span className="block bg-gradient-to-r from-accent to-warning bg-clip-text text-transparent">
-                  Cocktail Magic
-                </span>
-              </h1>
-
-              <p className="text-xl text-primary/70 mb-8 max-w-xl">
-                Discover endless possibilities with our AI-powered cocktail
-                companion. From classic recipes to innovative creations, find
-                your next favorite drink.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              {/* Middle Content - Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/recipes"
+                  href="/search"
                   className="inline-flex items-center justify-center px-6 py-3 bg-primary/5 
                            text-primary rounded-xl font-medium transition-all duration-300 
                            hover:bg-primary/10 transform hover:scale-[1.02] group"
@@ -65,7 +66,7 @@ export function Hero() {
 
                 <Link
                   href="/subscription"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r 
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r 
                            from-accent to-warning text-white rounded-xl font-medium group
                            transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg
                            relative overflow-hidden"
@@ -84,20 +85,9 @@ export function Hero() {
                 </Link>
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6">
-                {stats.map((stat, index) => (
-                  <div key={index} className="text-left">
-                    <div className="text-2xl font-bold text-accent mb-1">
-                      <CountUp
-                        end={stat.value}
-                        suffix={stat.suffix}
-                        decimals={stat.decimals}
-                      />
-                    </div>
-                    <div className="text-sm text-primary/60">{stat.label}</div>
-                  </div>
-                ))}
+              {/* Bottom Content - Stats */}
+              <div>
+                <Stats />
               </div>
             </div>
 

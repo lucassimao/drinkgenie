@@ -573,3 +573,13 @@ export async function getNextDrinkToShare(
 
   return mapRowToDrink(result);
 }
+
+export async function getStats() {
+  const STATS = [
+    { value: 1000, suffix: "+", label: "Recipes" },
+    { value: 50000, suffix: "+", label: "Users" },
+    { value: 4.9, suffix: "/5", label: "Rating", decimals: 1 },
+  ];
+
+  return STATS;
+}

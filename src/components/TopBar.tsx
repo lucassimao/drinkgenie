@@ -137,8 +137,8 @@ export function TopBar() {
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className="flex items-center gap-3 group"
                   >
-                    <img
-                      src={user?.imageUrl}
+                    <Image
+                      src={user?.imageUrl || ""}
                       alt={user?.fullName || "User"}
                       className="h-10 w-10 rounded-full border-2 border-accent/20 group-hover:border-accent transition-colors"
                     />

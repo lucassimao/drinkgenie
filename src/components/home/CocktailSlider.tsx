@@ -4,42 +4,28 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { SearchBar } from "../SearchBar";
 import { InfiniteScroll } from "./InfiniteScroll";
-
-const FEATURED_COCKTAILS = [
-  {
-    name: "Classic Old Fashioned",
-    image:
-      "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80",
-    description: "A sophisticated blend of bourbon, bitters, and tradition",
-    tags: ["Bourbon", "Classic", "Spirit-Forward"],
-  },
-  {
-    name: "Spiced Negroni",
-    image:
-      "https://images.unsplash.com/photo-1551751299-1b51cab2694c?auto=format&fit=crop&w=1200&q=80",
-    description: "A perfect balance of gin, vermouth, and Campari",
-    tags: ["Gin", "Bitter", "Aperitif"],
-  },
-  {
-    name: "Tropical Mai Tai",
-    image:
-      "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=1200&q=80",
-    description: "Transport yourself to paradise with this rum classic",
-    tags: ["Rum", "Tropical", "Fruity"],
-  },
-];
+import { getDrinks } from "@/lib/drinks";
+import { Drink } from "@/types/drink";
+import Image from "next/image";
 
 export function CocktailSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [featuredCocktails, setFeaturedCocktails] = useState<Drink[]>([]);
+
+  useEffect(() => {
+    getDrinks({ sortBy: "latest", pageSize: 5, page: 1 }).then(
+      setFeaturedCocktails,
+    );
+  }, []);
 
   const nextSlide = useCallback(() => {
     if (!isTransitioning) {
       setIsTransitioning(true);
-      setCurrentIndex((prev) => (prev + 1) % FEATURED_COCKTAILS.length);
+      setCurrentIndex((prev) => (prev + 1) % featuredCocktails.length);
       setTimeout(() => setIsTransitioning(false), 500);
     }
-  }, [isTransitioning]);
+  }, [isTransitioning, featuredCocktails]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -54,7 +40,7 @@ export function CocktailSlider() {
       setIsTransitioning(true);
       setCurrentIndex(
         (prev) =>
-          (prev - 1 + FEATURED_COCKTAILS.length) % FEATURED_COCKTAILS.length,
+          (prev - 1 + featuredCocktails.length) % featuredCocktails.length,
       );
       setTimeout(() => setIsTransitioning(false), 500);
     }
@@ -64,7 +50,7 @@ export function CocktailSlider() {
     <div className="relative bg-white rounded-2xl shadow-xl">
       {/* Slider Container - Keep overflow-hidden here for transitions */}
       <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
-        {FEATURED_COCKTAILS.map((cocktail, index) => (
+        {featuredCocktails.map((cocktail, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
@@ -75,8 +61,8 @@ export function CocktailSlider() {
                   : "translate-x-full"
             }`}
           >
-            <img
-              src={cocktail.image}
+            <Image
+              src={cocktail.imageUrl!}
               alt={cocktail.name}
               className="w-full h-full object-cover"
             />
@@ -85,14 +71,16 @@ export function CocktailSlider() {
             {/* Content */}
             <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
               <h3 className="text-2xl font-display mb-2">{cocktail.name}</h3>
-              <p className="text-white/80 mb-4">{cocktail.description}</p>
+              <p className="text-white/80 mb-4">
+                {cocktail.description.slice(0, 50) + " ..."}
+              </p>
               <div className="flex flex-wrap gap-2">
-                {cocktail.tags.map((tag) => (
+                {cocktail.ingredients.map((ingredient) => (
                   <span
-                    key={tag}
+                    key={ingredient}
                     className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm"
                   >
-                    {tag}
+                    {ingredient}
                   </span>
                 ))}
               </div>
@@ -118,7 +106,7 @@ export function CocktailSlider() {
 
         {/* Dots Indicator */}
         <div className="absolute bottom-4 right-4 flex gap-2">
-          {FEATURED_COCKTAILS.map((_, index) => (
+          {featuredCocktails.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
