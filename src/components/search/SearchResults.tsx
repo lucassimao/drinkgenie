@@ -78,8 +78,6 @@ export function SearchResults() {
 
   // Extract search logic into a separate function
   const performSearch = useCallback(async () => {
-    if (!params.query) return;
-
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {

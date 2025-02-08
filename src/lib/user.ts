@@ -13,3 +13,9 @@ export async function getUserCredits(userId: string): Promise<number> {
 
   return rows[0].total_credits - rows[0].drink_count;
 }
+
+export async function countUserFavorites(userId: string): Promise<number> {
+  console.log(`Implement count of user favorites: ${userId}`);
+
+  return 0;
+}

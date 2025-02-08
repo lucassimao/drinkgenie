@@ -5,10 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { usePathname } from "next/navigation";
-
-const POPULAR_SEARCHES = ["Mojito", "Margarita", "Old Fashioned", "Martini"];
-
-const RECENT_SEARCHES = ["Gin and Tonic", "Moscow Mule", "Daiquiri"];
+import { getSearchStats } from "@/lib/redis";
 
 export function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
@@ -16,12 +13,33 @@ export function SearchBar() {
   const [params, setParamsState] = useState<URLSearchParams>(useSearchParams());
   const pathname = usePathname();
 
+  const [popularSearches, setPopularSearches] = useState<string[]>([
+    "Mojito",
+    "Margarita",
+    "Old Fashioned",
+    "Martini",
+  ]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([
+    "Gin and Tonic",
+    "Moscow Mule",
+    "Daiquiri",
+  ]);
+
   useEffect(() => {
     if (!pathname.startsWith("/search")) {
       setIsFocused(false);
       setParamsState(new URLSearchParams(""));
     }
   }, [pathname]);
+
+  useEffect(() => {
+    getSearchStats()
+      .then(({ popularSearches, recentSearches }) => {
+        if (popularSearches.length > 0) setPopularSearches(popularSearches);
+        if (recentSearches.length > 0) setRecentSearches(recentSearches);
+      })
+      .catch(console.error);
+  }, []);
 
   const search = (keyword: string, hardRefresh = false) => {
     const clonnedParams = new URLSearchParams(params);
@@ -106,7 +124,7 @@ export function SearchBar() {
               <span>Popular Searches</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {POPULAR_SEARCHES.map((term) => (
+              {popularSearches.map((term) => (
                 <button
                   key={term}
                   onClick={() => search(term)}
@@ -125,7 +143,7 @@ export function SearchBar() {
               <span>Recent Searches</span>
             </div>
             <div className="space-y-2">
-              {RECENT_SEARCHES.map((term) => (
+              {recentSearches.map((term) => (
                 <button
                   key={term}
                   onClick={() => search(term)}

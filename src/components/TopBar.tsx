@@ -6,6 +6,7 @@ import { Suspense, useEffect } from "react";
 import cheerfulGenie from "../../public/cheerful-genie.png";
 import { SearchBar } from "./SearchBar";
 
+import { countUserFavorites } from "@/lib/user";
 import {
   Bell,
   BookOpen,
@@ -13,9 +14,7 @@ import {
   Crown,
   Heart,
   LogOut,
-  Settings,
   Star,
-  User,
 } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -23,6 +22,7 @@ export function TopBar() {
   const { user } = useUser();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [favortiesCount, setFavoritesCount] = useState(0);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -37,6 +37,12 @@ export function TopBar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      countUserFavorites(user.id).then(setFavoritesCount);
+    }
+  }, [user]);
 
   return (
     <header className="bg-white shadow-sm">
@@ -66,7 +72,7 @@ export function TopBar() {
               {/* Quick Links */}
               <div className="hidden lg:flex items-center gap-6">
                 <Link
-                  href="/search?query="
+                  href="/search"
                   className="flex items-center gap-2 text-primary/70 hover:text-primary transition-colors"
                 >
                   <BookOpen className="h-5 w-5" />
@@ -88,10 +94,13 @@ export function TopBar() {
               <SignedIn>
                 <div className="hidden md:flex items-center gap-4">
                   {/* Favorites Button with Tooltip */}
-                  <button className="group relative p-2 text-primary/60 hover:text-primary transition-colors">
+                  <Link
+                    href={"/favorites"}
+                    className="group relative p-2 text-primary/60 hover:text-primary transition-colors"
+                  >
                     <Heart className="h-5 w-5" />
                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-white text-xs rounded-full flex items-center justify-center">
-                      3
+                      {favortiesCount}
                     </span>
                     {/* Tooltip */}
                     <div
@@ -101,13 +110,13 @@ export function TopBar() {
                     >
                       Favorite Recipes
                     </div>
-                  </button>
+                  </Link>
 
                   {/* Notifications Button with Tooltip */}
                   <button className="group relative p-2 text-primary/60 hover:text-primary transition-colors">
                     <Bell className="h-5 w-5" />
                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-warning text-white text-xs rounded-full flex items-center justify-center">
-                      2
+                      0
                     </span>
                     {/* Tooltip */}
                     <div
@@ -167,12 +176,12 @@ export function TopBar() {
                       {/* Menu Items */}
                       <div className="py-2">
                         <Link
-                          href="/profile"
+                          href="/favorites"
                           className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
                                    hover:bg-primary/5 transition-colors"
                         >
-                          <User className="h-4 w-4" />
-                          <span>Profile</span>
+                          <Heart className="h-4 w-4" />
+                          <span>Favorite Recipes</span>
                         </Link>
                         <Link
                           href="/subscription"
@@ -180,15 +189,7 @@ export function TopBar() {
                                    hover:bg-primary/5 transition-colors"
                         >
                           <Crown className="h-4 w-4" />
-                          <span>Premium Status</span>
-                        </Link>
-                        <Link
-                          href="/settings"
-                          className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
-                                   hover:bg-primary/5 transition-colors"
-                        >
-                          <Settings className="h-4 w-4" />
-                          <span>Settings</span>
+                          <span>Subscription</span>
                         </Link>
                       </div>
 

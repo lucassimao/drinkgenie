@@ -10,6 +10,7 @@ import { z } from "zod";
 import knex from "./knex";
 import { getUserCredits } from "./user";
 import { BASE_URL, MAX_INGREDIENTS } from "./utils";
+import { trackSearch } from "./redis";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -263,6 +264,7 @@ export async function getDrinks(
     queryBuilder.whereRaw(
       `d.name||d.description||garnish||difficulty||ingredients::text ilike '%${keyword}%'`,
     );
+    trackSearch(keyword);
   }
 
   // fetching votes made by the current user

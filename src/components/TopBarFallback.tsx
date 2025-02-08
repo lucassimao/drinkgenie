@@ -28,13 +28,13 @@ export function TopBarFallback() {
             <div className="flex-1 flex items-center justify-center gap-8 px-8">
               {/* Quick Links */}
               <div className="hidden lg:flex items-center gap-6">
-                <a
-                  href="/recipes"
+                <Link
+                  href="/search"
                   className="flex items-center gap-2 text-primary/70"
                 >
                   <BookOpen className="h-5 w-5" />
                   <span className="text-sm font-medium">Recipe Book</span>
-                </a>
+                </Link>
               </div>
 
               {/* Static Search Input */}
