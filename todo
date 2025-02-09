@@ -53,11 +53,11 @@ V3
   [] Photography tips for social media
   [] Generate 2-3 variations of some drink. Whcih ingredients can be replaced. Suggest non-alcoholic alternatives
 
-  [] in the suggested ingredients, generate the default list on build time
   [] Display my favourite recipes
   [] allow rating a recipe
-  [] paginate search results
   [] additional "authors" for auto generated content
+  [ok] paginate search results
+  [ok] in the suggested ingredients, generate the default list on build time
 
 - New content formats:
   [ ] Instagram and Twitter quizzes

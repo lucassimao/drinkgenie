@@ -7,6 +7,7 @@ import { InfiniteScroll } from "./InfiniteScroll";
 import { getDrinks } from "@/lib/drinks";
 import { Drink } from "@/types/drink";
 import Image from "next/image";
+import Link from "next/link";
 
 export function CocktailSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -64,6 +65,8 @@ export function CocktailSlider() {
             <Image
               src={cocktail.imageUrl!}
               alt={cocktail.name}
+              height={cocktail.height}
+              width={cocktail.width}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -80,7 +83,11 @@ export function CocktailSlider() {
                     key={ingredient}
                     className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm"
                   >
-                    {ingredient}
+                    <Link
+                      href={`/search?query=${encodeURIComponent(ingredient)}`}
+                    >
+                      {ingredient}
+                    </Link>
                   </span>
                 ))}
               </div>
@@ -129,20 +136,7 @@ export function CocktailSlider() {
           <SearchBar />
         </Suspense>
         <div className="mt-6">
-          <InfiniteScroll
-            items={[
-              "Mojito",
-              "Margarita",
-              "Old Fashioned",
-              "Martini",
-              "Negroni",
-              "Daiquiri",
-              "Moscow Mule",
-              "Whiskey Sour",
-              "Gin & Tonic",
-              "Cosmopolitan",
-            ]}
-          />
+          <InfiniteScroll />
         </div>
       </div>
     </div>

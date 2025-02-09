@@ -574,10 +574,26 @@ export async function getNextDrinkToShare(
   return mapRowToDrink(result);
 }
 
-export async function getStats() {
+type Stats = {
+  value: number;
+  suffix: string;
+  label: string;
+  decimals?: number;
+}[];
+
+export async function getStats(): Promise<Stats> {
+  const {
+    rows: [row],
+  } = await knex.raw(`
+    SELECT 
+      (SELECT COUNT(*) FROM drinks) AS total_drinks, 
+      (SELECT COUNT(DISTINCT ingredient) 
+       FROM drinks, LATERAL unnest(ingredients) AS ingredient) AS unique_ingredients
+          `);
+
   const STATS = [
-    { value: 1000, suffix: "+", label: "Recipes" },
-    { value: 50000, suffix: "+", label: "Users" },
+    { value: +row.total_drinks, suffix: "+", label: "Recipes" },
+    { value: +row.unique_ingredients, suffix: "+", label: "Ingredients" },
     { value: 4.9, suffix: "/5", label: "Rating", decimals: 1 },
   ];
 
