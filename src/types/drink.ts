@@ -26,6 +26,7 @@ export type Drink = {
   glassType: string;
   garnish?: string | null;
   views: number;
+  calories?: number;
 
   alcoholContent?: "non_alcoholic" | "light" | "medium" | "strong";
   flavorProfile?: "sweet" | "sour" | "bitter" | "spicy";
