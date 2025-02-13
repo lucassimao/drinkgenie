@@ -60,6 +60,7 @@ V3
   [] additional "authors" for auto generated content
   [ok] paginate search results
   [ok] in the suggested ingredients, generate the default list on build time
+  [ ] create subscription table
 
 - New content formats:
   [ ] Use www.deepreel.com

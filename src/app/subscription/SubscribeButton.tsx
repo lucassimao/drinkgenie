@@ -5,12 +5,14 @@ import { Loader2, LogIn, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { createCheckoutSession } from "@/lib/subscription";
 import { useToast } from "@/hooks/useToast";
+import { useRouter } from "next/navigation";
 
 export function SubscribeButton() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const router = useRouter();
 
   async function handleSubscribe() {
     setIsLoading(true);
@@ -33,11 +35,13 @@ export function SubscribeButton() {
     }
   }
 
+  const signIn = () => router.push("/sign-in");
+
   return (
     <>
       <button
-        onClick={handleSubscribe}
-        disabled={!isSignedIn || isLoading}
+        onClick={isSignedIn ? handleSubscribe : signIn}
+        disabled={isLoading}
         className="group w-full max-w-md bg-gradient-to-r from-accent to-warning 
                text-white rounded-xl py-4 font-medium text-lg
                shadow-lg hover:shadow-xl transition-all duration-300 
