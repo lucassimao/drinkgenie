@@ -1,9 +1,8 @@
-import { SignedOut } from "@clerk/nextjs";
-import { Crown, Shield, Lock } from "lucide-react";
+import { Crown, Lock, Shield } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import { FeaturesTable } from "./FeaturesTable";
 import { SubscribeButton } from "./SubscribeButton";
-import { Suspense } from "react";
 import { SubscribeButtonFallback } from "./SubscribeButtonFallback";
 
 export default function SubscriptionPage() {
@@ -25,6 +24,7 @@ export default function SubscriptionPage() {
         </div>
 
         <FeaturesTable />
+
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-8 animate-fade-in-up relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent/20 rounded-full blur-3xl" />
@@ -58,12 +58,6 @@ export default function SubscriptionPage() {
           <Suspense fallback={<SubscribeButtonFallback />}>
             <SubscribeButton />
           </Suspense>
-
-          <SignedOut>
-            <p className="mt-4 text-sm text-primary/60">
-              Please sign in to access premium features
-            </p>
-          </SignedOut>
 
           {/* Trust indicators */}
           <div className="mt-8 space-y-3">
