@@ -14,7 +14,7 @@ export default function Page() {
           style={{ animationDelay: "1s" }}
         />
         {/* Main Card */}
-        <div className="relative bg-white p-5 rounded-2xl shadow-xl max-w-md w-full backdrop-blur-sm border border-white/20">
+        <div className="relative bg-white p-5 rounded-2xl shadow-xl max-w-md w-full backdrop-blur-xs border border-white/20">
           {/* Logo Section */}
           <div className="text-center mb-10">
             <div className="flex justify-center mb-6">
@@ -46,7 +46,7 @@ export default function Page() {
                 headerTitle: "hidden",
                 headerSubtitle: "hidden",
                 socialButtonsBlockButton:
-                  "w-full mb-3 p-4 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg",
+                  "w-full mb-3 p-4 rounded-xl bg-linear-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg",
                 socialButtonsBlockButtonText: "font-medium",
                 socialButtonsProviderIcon: "w-5 h-5",
                 dividerRow: "hidden",

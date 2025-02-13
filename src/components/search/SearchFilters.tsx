@@ -51,7 +51,7 @@ export function SearchFilters() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
+    <div className="bg-white rounded-xl shadow-xs p-6">
       <div className="flex items-center gap-2 mb-6">
         <Filter className="h-5 w-5 text-primary" />
         <h3 className="text-lg font-medium text-primary">Filters</h3>
@@ -88,7 +88,7 @@ export function SearchFilters() {
                       data-section={key}
                       data-option={option.value}
                       onChange={onClickFilter}
-                      className="w-4 h-4 rounded border-primary/20 text-accent focus:ring-accent"
+                      className="w-4 h-4 rounded-sm border-primary/20 text-accent focus:ring-accent"
                     />
                     <span className="text-sm text-primary/70">
                       {option.label}

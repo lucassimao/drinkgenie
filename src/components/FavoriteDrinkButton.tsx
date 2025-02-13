@@ -45,10 +45,10 @@ export function FavoriteDrinkButton({ drink }: FavoriteDrinkButtonProps) {
         className={`group relative p-4 md:p-3 rounded-xl mt-0 transition-all duration-300 touch-manipulation
                 ${
                   isPending
-                    ? "bg-white/20 backdrop-blur-sm cursor-wait"
+                    ? "bg-white/20 backdrop-blur-xs cursor-wait"
                     : isFavorite
                       ? "bg-warning text-white hover:bg-warning/90 active:bg-warning/80"
-                      : "bg-white/20 backdrop-blur-sm hover:bg-white/30 active:bg-white/40"
+                      : "bg-white/20 backdrop-blur-xs hover:bg-white/30 active:bg-white/40"
                 }`}
         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >
@@ -79,7 +79,7 @@ export function FavoriteDrinkButton({ drink }: FavoriteDrinkButtonProps) {
         <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-2">
           <div
             className="bg-primary/90 text-white text-sm px-3 py-1.5 rounded-lg whitespace-nowrap 
-                     shadow-lg backdrop-blur-sm"
+                     shadow-lg backdrop-blur-xs"
           >
             {isFavorite ? "Remove from favorites" : "Add to favorites"}
           </div>

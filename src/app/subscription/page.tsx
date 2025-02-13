@@ -7,12 +7,12 @@ import { SubscribeButtonFallback } from "./SubscribeButtonFallback";
 
 export default function SubscriptionPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background/50 to-background py-16 px-4">
+    <div className="min-h-screen bg-linear-to-b from-background via-background/50 to-background py-16 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <div className="animate-fade-in-up">
           <h1 className="text-5xl md:text-6xl font-display text-primary mb-6">
             Elevate Your
-            <span className="bg-gradient-to-r from-accent to-warning bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-accent to-warning bg-clip-text text-transparent">
               {" "}
               Mixology Game
             </span>
@@ -34,7 +34,7 @@ export default function SubscriptionPage() {
 
           <div className="flex items-center justify-center gap-3 mb-6">
             <Crown className="h-8 w-8 text-accent animate-pulse" />
-            <h2 className="text-3xl font-display bg-gradient-to-r from-accent to-warning bg-clip-text text-transparent">
+            <h2 className="text-3xl font-display bg-linear-to-r from-accent to-warning bg-clip-text text-transparent">
               Premium Access
             </h2>
           </div>

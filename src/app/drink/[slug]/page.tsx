@@ -180,7 +180,7 @@ export default async function DrinkDetail({ params }: DrinkDetailProps) {
             <ol className="space-y-4">
               {drink.preparationSteps?.map((step, index) => (
                 <li key={index} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                     {index + 1}
                   </div>
                   <p className="text-primary/80 pt-1">{step}</p>

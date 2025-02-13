@@ -42,7 +42,7 @@ export function Testimonials() {
         {TESTIMONIALS.map((testimonial) => (
           <div
             key={testimonial.id}
-            className="bg-white/10 backdrop-blur-sm rounded-lg p-6 relative"
+            className="bg-white/10 backdrop-blur-xs rounded-lg p-6 relative"
           >
             <Quote className="absolute top-4 right-4 h-12 w-12 text-white/10" />
             <div className="flex items-start gap-4 mb-4">

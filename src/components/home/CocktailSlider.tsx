@@ -112,9 +112,9 @@ export function CocktailSlider() {
     return (
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden mx-auto max-w-[90vw] lg:max-w-none">
         {/* Match the aspect ratio of the main slider */}
-        <div className="relative aspect-[4/3]">
+        <div className="relative aspect-4/3">
           {/* Gradient background animation */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 animate-pulse">
+          <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-primary/10 animate-pulse">
             {/* Decorative background elements */}
             <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary/20 rounded-full blur-xl animate-float" />
             <div
@@ -127,7 +127,7 @@ export function CocktailSlider() {
           <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
             <div className="relative mb-6">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl animate-pulse" />
-              <div className="relative p-4 bg-white/10 backdrop-blur-sm rounded-full">
+              <div className="relative p-4 bg-white/10 backdrop-blur-xs rounded-full">
                 <Loader2 className="h-8 w-8 text-accent animate-spin" />
               </div>
             </div>
@@ -151,7 +151,7 @@ export function CocktailSlider() {
   if (error) {
     return (
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden mx-auto max-w-[90vw] lg:max-w-none">
-        <div className="relative aspect-[4/3] bg-background">
+        <div className="relative aspect-4/3 bg-background">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-4">
               <AlertCircle className="h-8 w-8 text-warning mx-auto mb-4" />
@@ -178,7 +178,7 @@ export function CocktailSlider() {
       {/* Slider Container */}
       <div
         ref={sliderRef}
-        className="relative aspect-[4/3] overflow-hidden rounded-t-2xl"
+        className="relative aspect-4/3 overflow-hidden rounded-t-2xl"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -200,7 +200,7 @@ export function CocktailSlider() {
                   .map((ingredient) => (
                     <span
                       key={ingredient}
-                      className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/20 backdrop-blur-sm rounded-full 
+                      className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/20 backdrop-blur-xs rounded-full 
                              text-xs sm:text-sm text-white whitespace-nowrap"
                     >
                       <Link
@@ -255,7 +255,7 @@ export function CocktailSlider() {
               className="w-full h-full object-cover"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-black/20" />
           </div>
         ))}
 
@@ -267,7 +267,7 @@ export function CocktailSlider() {
               prevSlide();
             }}
             className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 
-                     backdrop-blur-sm text-white hover:bg-white/20 transition-colors z-20"
+                     backdrop-blur-xs text-white hover:bg-white/20 transition-colors z-20"
             aria-label="Previous slide"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -278,7 +278,7 @@ export function CocktailSlider() {
               nextSlide();
             }}
             className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 
-                     backdrop-blur-sm text-white hover:bg-white/20 transition-colors z-20"
+                     backdrop-blur-xs text-white hover:bg-white/20 transition-colors z-20"
             aria-label="Next slide"
           >
             <ChevronRight className="h-6 w-6" />
@@ -306,7 +306,7 @@ export function CocktailSlider() {
       {/* Slider Container */}
       <div
         ref={sliderRef}
-        className="relative aspect-[4/3] overflow-hidden rounded-t-2xl"
+        className="relative aspect-4/3 overflow-hidden rounded-t-2xl"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -331,7 +331,7 @@ export function CocktailSlider() {
                 className="w-full h-full object-cover"
                 loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-black/20" />
 
               {/* Content */}
               <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
@@ -345,7 +345,7 @@ export function CocktailSlider() {
                   {cocktail.ingredients.slice(0, 3).map((ingredient) => (
                     <span
                       key={ingredient}
-                      className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/20 backdrop-blur-sm rounded-full 
+                      className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/20 backdrop-blur-xs rounded-full 
                                text-xs sm:text-sm text-white whitespace-nowrap"
                     >
                       <Link
@@ -369,7 +369,7 @@ export function CocktailSlider() {
               prevSlide();
             }}
             className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 
-                     backdrop-blur-sm text-white hover:bg-white/20 transition-colors"
+                     backdrop-blur-xs text-white hover:bg-white/20 transition-colors"
             aria-label="Previous slide"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -380,7 +380,7 @@ export function CocktailSlider() {
               nextSlide();
             }}
             className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 
-                     backdrop-blur-sm text-white hover:bg-white/20 transition-colors"
+                     backdrop-blur-xs text-white hover:bg-white/20 transition-colors"
             aria-label="Next slide"
           >
             <ChevronRight className="h-6 w-6" />

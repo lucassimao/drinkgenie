@@ -19,7 +19,7 @@ export default function SubscriptionSuccessPage() {
           {/* Success Icon */}
           <div className="mb-8 relative">
             <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl animate-pulse" />
-            <div className="relative bg-gradient-to-br from-accent to-warning p-6 rounded-full inline-flex">
+            <div className="relative bg-linear-to-br from-accent to-warning p-6 rounded-full inline-flex">
               <PartyPopper className="h-12 w-12 text-white" />
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function SubscriptionSuccessPage() {
           {/* CTA Button */}
           <Link
             href="/"
-            className="inline-block w-full bg-gradient-to-r from-accent to-warning text-white rounded-xl 
+            className="inline-block w-full bg-linear-to-r from-accent to-warning text-white rounded-xl 
                      py-4 font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-300 
                      transform hover:scale-[1.02]"
           >

@@ -10,7 +10,7 @@ export async function Stats() {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="text-center px-2 sm:px-4 py-2 sm:py-3 bg-white/5 rounded-xl backdrop-blur-sm
+          className="text-center px-2 sm:px-4 py-2 sm:py-3 bg-white/5 rounded-xl backdrop-blur-xs
                  border border-white/10 hover:border-white/20 transition-colors"
         >
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-accent mb-1">

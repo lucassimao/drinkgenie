@@ -156,7 +156,7 @@ export function IngredientForm() {
                 }}
                 onFocus={() => setActiveInput(index)}
                 className="w-full px-5 py-4 bg-background border-2 border-primary/10 rounded-xl
-                         text-primary placeholder-primary/40 focus:outline-none focus:border-secondary
+                         text-primary placeholder-primary/40 focus:outline-hidden focus:border-secondary
                          focus:ring-2 focus:ring-secondary/20 transition-all duration-300"
                 placeholder={`Ingredient ${index + 1}`}
                 onKeyDown={handleKeyDown}
@@ -221,10 +221,10 @@ export function IngredientForm() {
           <button
             onClick={onClickGenerate}
             disabled={isGenerating || ingredients.every((ing) => !ing.trim())}
-            className="flex-1 sm:flex-none relative overflow-hidden px-8 py-4 bg-gradient-to-r 
+            className="flex-1 sm:flex-none relative overflow-hidden px-8 py-4 bg-linear-to-r 
                      from-accent to-warning text-white rounded-xl font-medium group
                      transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
-                     active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-accent/30
+                     active:scale-[0.98] focus:outline-hidden focus:ring-4 focus:ring-accent/30
                      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />

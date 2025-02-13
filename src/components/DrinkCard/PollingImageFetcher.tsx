@@ -16,9 +16,9 @@ export const PollingImageFetcher = ({ drink }: PollingImageFetcherProps) => {
   }
 
   return (
-    <div className="relative h-48 bg-gradient-to-br from-primary/5 to-primary/10 animate-pulse">
+    <div className="relative h-48 bg-linear-to-br from-primary/5 to-primary/10 animate-pulse">
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="p-4 bg-white/10 rounded-full backdrop-blur-sm">
+        <div className="p-4 bg-white/10 rounded-full backdrop-blur-xs">
           <GlassWater className="h-8 w-8 text-primary/30" />
         </div>
       </div>
@@ -34,7 +34,7 @@ export const PollingImageFetcher = ({ drink }: PollingImageFetcherProps) => {
 
       {/* Shimmer effect */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"
+        className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent animate-shimmer"
         style={{ backgroundSize: "200% 100%" }}
       />
     </div>

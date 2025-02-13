@@ -9,7 +9,7 @@ export function Footer() {
 
   return (
     <footer className="relative bg-primary mt-12">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary-dark to-primary opacity-50" />
+      <div className="absolute inset-0 bg-linear-to-b from-primary-dark to-primary opacity-50" />
 
       <div className="relative max-w-7xl mx-auto px-4">
         {/* Main Footer Content */}

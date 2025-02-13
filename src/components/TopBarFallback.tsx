@@ -5,16 +5,16 @@ import cheerfulGenie from "../../public/cheerful-genie.png";
 
 export function TopBarFallback() {
   return (
-    <header className="bg-white shadow-sm relative z-50">
+    <header className="bg-white shadow-xs relative z-50">
       <nav className="max-w-7xl mx-auto px-4">
         <div className="h-16 md:h-20 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link
-            className="flex-shrink-0 flex items-center gap-3 cursor-pointer"
+            className="shrink-0 flex items-center gap-3 cursor-pointer"
             href="/"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-accent/20 rounded-full blur animate-pulse" />
+              <div className="absolute inset-0 bg-accent/20 rounded-full blur-sm animate-pulse" />
               <Image
                 alt="DrinkGenie logo"
                 src={cheerfulGenie}
@@ -39,7 +39,7 @@ export function TopBarFallback() {
                   placeholder="Search cocktails, ingredients, or flavors..."
                   className="block w-full pl-10 pr-10 py-2.5 bg-white border-2 border-primary/20 rounded-xl 
                            text-primary placeholder-primary/40 shadow-[0_2px_8px_rgba(74,111,165,0.06)]
-                           focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 
+                           focus:outline-hidden focus:border-secondary focus:ring-2 focus:ring-secondary/20 
                            transition-all duration-300"
                 />
               </div>
@@ -73,7 +73,7 @@ export function TopBarFallback() {
             <Link
               href="/subscription"
               className="group relative inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 
-                       bg-gradient-to-r from-warning to-accent rounded-xl font-medium text-white 
+                       bg-linear-to-r from-warning to-accent rounded-xl font-medium text-white 
                        shadow-lg hover:shadow-xl transition-all duration-300 transform 
                        hover:scale-[1.02] overflow-hidden"
             >
@@ -106,7 +106,7 @@ export function TopBarFallback() {
                   placeholder="Search cocktails, ingredients, or flavors..."
                   className="block w-full pl-10 pr-10 py-2.5 bg-white border-2 border-primary/20 rounded-xl 
                            text-primary placeholder-primary/40 shadow-[0_2px_8px_rgba(74,111,165,0.06)]
-                           focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 
+                           focus:outline-hidden focus:border-secondary focus:ring-2 focus:ring-secondary/20 
                            transition-all duration-300"
                 />
               </div>

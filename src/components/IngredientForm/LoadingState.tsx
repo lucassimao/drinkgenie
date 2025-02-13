@@ -20,7 +20,7 @@ export function LoadingState() {
   }, []);
 
   return (
-    <div className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-2xl z-10 flex items-center justify-center">
+    <div className="absolute inset-0 bg-white/95 backdrop-blur-xs rounded-2xl z-10 flex items-center justify-center">
       <div className="text-center px-4">
         <div className="relative mb-6">
           {/* Animated sparkles */}
@@ -37,7 +37,7 @@ export function LoadingState() {
           {/* Main loader */}
           <div className="relative">
             <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl animate-pulse" />
-            <div className="relative bg-gradient-to-br from-accent to-warning p-4 rounded-full">
+            <div className="relative bg-linear-to-br from-accent to-warning p-4 rounded-full">
               <Loader2 className="h-8 w-8 text-white animate-spin" />
             </div>
           </div>
@@ -50,7 +50,7 @@ export function LoadingState() {
         {/* Progress bar */}
         <div className="w-48 h-1.5 bg-primary/10 rounded-full mx-auto overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-accent to-warning rounded-full animate-shimmer"
+            className="h-full bg-linear-to-r from-accent to-warning rounded-full animate-shimmer"
             style={{ backgroundSize: "200% 100%" }}
           />
         </div>

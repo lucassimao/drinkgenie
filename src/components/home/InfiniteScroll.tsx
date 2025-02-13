@@ -49,7 +49,7 @@ export function InfiniteScroll() {
           <button
             key={`${drink.id}-${index}`}
             className="px-3 py-1.5 text-sm bg-primary/5 rounded-full text-primary 
-                       hover:bg-primary/10 transition-colors whitespace-nowrap flex-shrink-0"
+                       hover:bg-primary/10 transition-colors whitespace-nowrap shrink-0"
           >
             <Link href={`/drink/${drink.slug}`}>{drink.name}</Link>
           </button>

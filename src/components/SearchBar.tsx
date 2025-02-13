@@ -94,7 +94,7 @@ export function SearchBar() {
           type="text"
           className="block w-full pl-10 pr-10 py-2.5 bg-white border-2 border-primary/20 rounded-xl 
                    text-primary placeholder-primary/40 shadow-[0_2px_8px_rgba(74,111,165,0.06)]
-                   focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 
+                   focus:outline-hidden focus:border-secondary focus:ring-2 focus:ring-secondary/20 
                    transition-all duration-300 text-base hover:border-primary/30"
           placeholder="Search cocktails, ingredients, or flavors..."
           defaultValue={query}

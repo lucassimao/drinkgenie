@@ -31,13 +31,13 @@ export function Hero() {
                 <h1 className="text-6xl md:text-7xl font-display text-primary leading-[1.3]">
                   <span className="block">Craft Your</span>
                   <span
-                    className="block mt-4 bg-gradient-to-r from-accent to-warning 
+                    className="block mt-4 bg-linear-to-r from-accent to-warning 
                                  bg-clip-text text-transparent leading-[1.4] pb-0"
                   >
                     Perfect
                   </span>
                   <span
-                    className="block bg-gradient-to-r from-accent to-warning 
+                    className="block bg-linear-to-r from-accent to-warning 
                                  bg-clip-text text-transparent leading-[1.4] pb-3"
                   >
                     Cocktail Magic
@@ -66,7 +66,7 @@ export function Hero() {
 
                 <Link
                   href="/subscription"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r 
+                  className="inline-flex items-center justify-center px-6 py-3 bg-linear-to-r 
                            from-accent to-warning text-white rounded-xl font-medium group
                            transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg
                            relative overflow-hidden"

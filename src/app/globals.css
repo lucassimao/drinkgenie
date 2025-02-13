@@ -1,6 +1,92 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary: #4a6fa5;
+  --color-primary-dark: #3b5883;
+
+  --color-secondary: #98b6e4;
+  --color-secondary-dark: #7b9ad8;
+
+  --color-accent: #e4a853;
+  --color-accent-dark: #d19443;
+
+  --color-warning: #e4c7b7;
+  --color-background: #f5f7fa;
+
+  --font-sans: Poppins, sans-serif;
+  --font-display: Pacifico, cursive;
+
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-toast-slide-in: toast-slide-in 0.3s
+    cubic-bezier(0.21, 1.02, 0.73, 1);
+  --animate-toast-progress: toast-progress linear forwards;
+  --animate-scroll: animation: scroll 30s linear infinite;
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes toast-slide-in {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes toast-progress {
+    0% {
+      transform: scaleX(1);
+    }
+    100% {
+      transform: scaleX(0);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 body {
   font-family: Arial, Helvetica, sans-serif;

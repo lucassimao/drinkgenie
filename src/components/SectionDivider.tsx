@@ -10,12 +10,12 @@ export function SectionDivider({ title, subtitle }: SectionDividerProps) {
     <div className="text-center pb-16">
       {/* Gradient Badge */}
       <div
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r 
-                 from-warning/20 to-accent/20 backdrop-blur-sm mb-6"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r 
+                 from-warning/20 to-accent/20 backdrop-blur-xs mb-6"
       >
         <Wand2 className="h-4 w-4 text-warning" />
         <span
-          className="text-sm font-medium bg-gradient-to-r from-warning to-accent 
+          className="text-sm font-medium bg-linear-to-r from-warning to-accent 
                    bg-clip-text text-transparent"
         >
           Free Recipes
@@ -26,7 +26,7 @@ export function SectionDivider({ title, subtitle }: SectionDividerProps) {
       <h2 className="text-4xl md:text-5xl font-display text-primary mb-4">
         {title}
         <span
-          className="block text-transparent bg-clip-text bg-gradient-to-r 
+          className="block text-transparent bg-clip-text bg-linear-to-r 
                    from-warning to-accent mt-2 pb-5"
         >
           For Everyone

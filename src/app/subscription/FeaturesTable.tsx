@@ -81,7 +81,7 @@ export function FeaturesTable() {
       <div className="hidden md:block bg-white/5 rounded-2xl overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gradient-to-r from-accent to-warning text-white">
+            <tr className="bg-linear-to-r from-accent to-warning text-white">
               <th className="py-6 px-6 text-left text-lg font-display">
                 Features
               </th>
