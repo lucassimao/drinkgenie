@@ -52,8 +52,8 @@ export async function createCheckoutSession(
       },
     ],
     mode: "subscription",
-    success_url: `${BASE_URL}/credits/success?credits=${credits}`,
-    cancel_url: `${BASE_URL}/credits`,
+    success_url: `${BASE_URL}/subscription/success`,
+    cancel_url: `${BASE_URL}/subscription`,
     customer_email: email,
   });
 
