@@ -27,6 +27,7 @@ docker/backup.sql
 # misc
 .DS_Store
 *.pem
+/attached_assets/
 
 # debug
 npm-debug.log*
