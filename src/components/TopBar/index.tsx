@@ -93,7 +93,7 @@ export function TopBar() {
 
             {/* Auth Section */}
             {!isSignedIn && (
-              <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-2 hidden sm:block sm:gap-4">
                 {/* Sign In only for large screens */}
 
                 <Link
