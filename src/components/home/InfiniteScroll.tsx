@@ -38,7 +38,7 @@ export function InfiniteScroll() {
   return (
     <div
       ref={scrollRef}
-      className="flex overflow-x-hidden whitespace-nowrap mask-gradient"
+      className="flex overflow-x-hidden whitespace-nowrap mask-gradient w-full"
       style={{
         maskImage:
           "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",

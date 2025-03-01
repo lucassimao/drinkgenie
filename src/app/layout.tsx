@@ -48,7 +48,9 @@ export default function RootLayout({
           <Suspense fallback={<TopBarFallback />}>
             <TopBar />
           </Suspense>
-          <div className="max-w-7xl mx-auto px-4">{children}</div>
+          <div className="max-w-7xl mx-auto px-4 w-full overflow-x-hidden">
+            {children}
+          </div>
           <Footer />
           <ToastContainer />
         </body>
