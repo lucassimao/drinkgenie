@@ -20,14 +20,14 @@ export function Pagination({
     if (showEllipsis) {
       if (currentPage <= 4) {
         // Show first 5 pages + ellipsis + last page
-        pages.push(...Array.from({ length: 5 }, (_, i) => i + 1));
+        pages.push(...Array.from({ length: 3 }, (_, i) => i + 1));
         pages.push("...");
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 3) {
         // Show first page + ellipsis + last 5 pages
         pages.push(1);
         pages.push("...");
-        pages.push(...Array.from({ length: 5 }, (_, i) => totalPages - 4 + i));
+        pages.push(...Array.from({ length: 3 }, (_, i) => totalPages - 4 + i));
       } else {
         // Show first + ellipsis + current-1,current,current+1 + ellipsis + last
         pages.push(1);
