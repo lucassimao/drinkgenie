@@ -57,6 +57,13 @@ export default function Page() {
             }}
             routing="path"
             path="/sign-in"
+            redirectUrl={
+              typeof window !== "undefined"
+                ? new URLSearchParams(window.location.search).get(
+                    "redirect_url",
+                  ) || "/search"
+                : "/search"
+            }
             fallbackRedirectUrl="/"
           />
 

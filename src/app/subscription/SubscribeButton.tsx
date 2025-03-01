@@ -35,7 +35,7 @@ export function SubscribeButton() {
     }
   }
 
-  const signIn = () => router.push("/sign-in");
+  const signIn = () => router.push("/sign-in?redirect_url=/subscription");
 
   return (
     <>

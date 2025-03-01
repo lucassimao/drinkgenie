@@ -4,7 +4,7 @@ const features = [
   {
     name: "Cocktail Recipes",
     description: "Access our extensive library of handcrafted cocktail recipes",
-    free: true,
+    free: false,
     premium: true,
   },
   {
@@ -108,7 +108,7 @@ export function FeaturesTable() {
                   </div>
                 </td>
                 <td className="py-5 px-6 text-center text-primary/80">
-                  {feature.free ? "✓" : "−"}
+                  {feature.name === "Cocktail Recipes" ? "Limited" : "-"}
                 </td>
                 <td className="py-5 px-6 text-center text-accent">
                   {feature.name === "AI Drink Generator" ? "Unlimited" : "✓"}
