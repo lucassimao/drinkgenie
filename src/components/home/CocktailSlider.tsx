@@ -205,6 +205,7 @@ export function CocktailSlider() {
                     >
                       <Link
                         href={`/search?query=${encodeURIComponent(ingredient)}`}
+                        rel="nofollow"
                       >
                         {ingredient}
                       </Link>

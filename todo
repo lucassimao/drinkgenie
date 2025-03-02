@@ -44,6 +44,11 @@ V2
 V3
 
 - Pro features:
+  [] Display my favourite recipes
+  [] Show subscription history
+  [] Allow cancel subscription
+  [] Favorite and list favorite recipes
+
   [] display alcohol content, flavor, glassware, and serving temp in the drink details
   [] Common allergens and Allergy Information
   [] Temperature-sensitive ingredients
@@ -55,12 +60,10 @@ V3
   [] make sure search page can show results if no query but only filters
   [] add calories to the db
 
-  [] Display my favourite recipes
-  [] allow rating a recipe
   [] additional "authors" for auto generated content
   [ok] paginate search results
   [ok] in the suggested ingredients, generate the default list on build time
-  [ ] create subscription table
+  [ok] create subscription table
 
 - New content formats:
   [ ] Use www.deepreel.com

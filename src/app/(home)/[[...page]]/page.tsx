@@ -16,7 +16,7 @@ interface Props {
 export const revalidate = 3600; // 1hr
 const DISPLAY_TUTORIALS_AND_TESTMONIALS = false;
 
-const homePagePaginationStrategy = (page: number) => `/${page}`;
+const homePagePaginationStrategy = (page: number) => `/${page}#recipes`;
 
 export async function generateStaticParams() {
   const totalItems = await countDrinks();
@@ -45,7 +45,7 @@ export default async function Home(props: Props) {
     <main className="max-w-7xl mx-auto">
       <Hero />
 
-      <div className="px-4">
+      <div className="px-4" id="recipes">
         <SectionDivider
           title="Popular Free Recipes"
           subtitle="Explore our community's favorite drinks - no subscription needed!"
