@@ -48,7 +48,7 @@ export function Pagination({
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <Link href={hrefStrategy(currentPage - 1)}>
+      <Link rel="nofollow" href={hrefStrategy(currentPage - 1)}>
         <button
           disabled={currentPage === 1}
           className="p-2 rounded-lg border-2 border-primary/10 text-primary 
@@ -66,7 +66,7 @@ export function Pagination({
             {page === "..." ? (
               <span className="px-4 py-2 text-primary/40">...</span>
             ) : (
-              <Link href={hrefStrategy(+page)}>
+              <Link rel="nofollow" href={hrefStrategy(+page)}>
                 <button
                   className={`min-w-[40px] h-10 rounded-lg border-2 
                   transition-all duration-200 ${
@@ -83,7 +83,7 @@ export function Pagination({
         ))}
       </div>
 
-      <Link href={hrefStrategy(currentPage + 1)}>
+      <Link rel="nofollow" href={hrefStrategy(currentPage + 1)}>
         <button
           disabled={currentPage === totalPages}
           className="p-2 rounded-lg border-2 border-primary/10 text-primary 

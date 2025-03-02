@@ -109,6 +109,7 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
                 >
                   <Link
                     href={`/search?${appendSearchParam("query", ingredient)}`}
+                    rel="nofollow"
                   >
                     {ingredient}
                   </Link>

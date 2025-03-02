@@ -17,7 +17,7 @@ export async function checkSubscription() {
     const subscription = await knex("subscriptions")
       .select("id")
       .where({ user_id: userId })
-      .where("endDate", ">", now)
+      .where("end_date", ">", now)
       .first();
 
     return {
