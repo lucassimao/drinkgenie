@@ -104,7 +104,7 @@ export function FeaturesTable() {
                   {feature.name === "Cocktail Recipes" ? "Limited" : "-"}
                 </td>
                 <td className="py-5 px-6 text-center text-accent">
-                  {feature.name === "AI Drink Generator" ? "Unlimited" : "✓"}
+                  {feature.name === "AI Drink Builder" ? "Unlimited" : "✓"}
                 </td>
               </tr>
             ))}

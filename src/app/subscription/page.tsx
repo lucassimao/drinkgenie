@@ -25,7 +25,10 @@ export default function SubscriptionPage() {
 
         <FeaturesTable />
 
-        <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-8 animate-fade-in-up relative overflow-hidden">
+        <div
+          id="hero"
+          className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-8 animate-fade-in-up relative overflow-hidden"
+        >
           {/* Background decoration */}
           <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent/20 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-warning/20 rounded-full blur-3xl" />
