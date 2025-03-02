@@ -8,7 +8,7 @@ const features = [
     premium: true,
   },
   {
-    name: "AI Drink Generator",
+    name: "AI Drink Builder",
     description:
       "Create custom cocktails with our AI using your favorite ingredients",
     free: false,
@@ -36,13 +36,6 @@ const features = [
   {
     name: "Expert Food Pairing",
     description: "Professional recommendations for food combinations",
-    free: false,
-    premium: true,
-  },
-  {
-    name: "Media Gallery",
-    description:
-      "Upload and share photos and videos of your cocktail creations",
     free: false,
     premium: true,
   },

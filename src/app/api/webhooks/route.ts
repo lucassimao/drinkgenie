@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       stripe_id: event.id,
       stripe_event: JSON.stringify(session),
       start: new Date(),
-      endDate,
+      end_date: endDate,
       amount: session.amount_subtotal,
     });
 
