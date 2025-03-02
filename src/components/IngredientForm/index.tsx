@@ -145,7 +145,11 @@ export function IngredientForm() {
       <div className="space-y-8">
         <div className="grid gap-5">
           {ingredients.map((ingredient, index) => (
-            <div key={index} className="relative">
+            <div
+              key={index}
+              className="relative"
+              style={{ position: "relative", zIndex: 10 }}
+            >
               <input
                 type="text"
                 value={ingredient}
@@ -176,16 +180,16 @@ export function IngredientForm() {
               {/* Suggestions Dropdown */}
               {activeInput === index && (
                 <div
-                  className="absolute z-10 left-0 right-0 mt-2 py-3 bg-white rounded-xl shadow-lg
-                              border border-primary/10"
-                  ref={suggestionsDropdownRef}
+                  className="absolute z-[100] left-0 right-0 mt-2 py-3 bg-white rounded-xl shadow-lg
+                              border border-primary/10 max-h-80 overflow-y-auto"
+                  style={{ position: "absolute" }}
                 >
                   <div className="px-4 pb-2 mb-2 border-b border-primary/5">
                     <p className="text-sm text-primary/60">
                       Suggested Ingredients
                     </p>
                   </div>
-                  <div className="max-h-48 overflow-y-auto px-2">
+                  <div className="max-h-60 overflow-y-auto px-2">
                     {SUGGESTED_INGREDIENTS.map((suggestion) => (
                       <button
                         key={suggestion}
