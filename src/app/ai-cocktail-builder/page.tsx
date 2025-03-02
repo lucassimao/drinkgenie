@@ -28,7 +28,7 @@ export default async function AIBuilderPage() {
 
       <div className="mt-8 text-center space-y-4 max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-display text-primary">
-          <span className="block">Craft Your</span>
+          <span className="block mb-3">Craft Your</span>
           <span className="bg-linear-to-r from-accent to-warning bg-clip-text text-transparent">
             Perfect Cocktail
           </span>
@@ -40,7 +40,7 @@ export default async function AIBuilderPage() {
         </p>
       </div>
 
-      <div className="mt-12">
+      <div className="mt-10">
         <IngredientForm />
       </div>
     </main>

@@ -8,7 +8,6 @@ import { Martini, Plus, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LoadingState } from "./LoadingState";
-import useLocalStorage from "use-local-storage";
 
 const SUGGESTED_INGREDIENTS = [
   "Vodka",
@@ -29,7 +28,6 @@ export function IngredientForm() {
   const suggestionsDropdownRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [, setCredits] = useLocalStorage<number | null>("credits", null);
 
   // eslint-disable-next-line
   const handleKeyDown = (e: any) => {
@@ -91,8 +89,6 @@ export function IngredientForm() {
       if (typeof result == "string") {
         toast.error(result, "Ooops...");
       } else {
-        // force credits to be refreshed
-        setCredits(undefined);
         router.push(`/drink/${result.slug}`);
       }
     } finally {
@@ -128,7 +124,6 @@ export function IngredientForm() {
       className="relative bg-white rounded-2xl shadow-lg p-8 md:p-10 max-w-4xl mx-auto"
       ref={suggestionsDropdownRef}
     >
-      {isGenerating && <LoadingState />}
       <div className="flex items-center gap-4 mb-8">
         <div className="p-4 bg-accent/10 rounded-full">
           <Martini className="h-10 w-10 text-accent" />
@@ -234,11 +229,12 @@ export function IngredientForm() {
             <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             <div className="relative flex items-center justify-center gap-2">
               <Sparkles className="h-5 w-5 animate-pulse" />
-              <span className="text-lg">Get Magical Suggestions</span>
+              <span className="text-lg">Get Magical Suggestion</span>
             </div>
           </button>
         </div>
       </div>
+      {isGenerating && <LoadingState />}
     </div>
   );
 }

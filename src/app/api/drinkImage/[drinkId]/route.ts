@@ -65,8 +65,9 @@ export async function POST(
       statusText: `drink id: ${drinkId}`,
     });
 
-  waitUntil(generateImage(drink));
-
+  if (process.env.NODE_ENV == "production") {
+    waitUntil(generateImage(drink));
+  }
   return new Response("ok", {
     status: 200,
   });

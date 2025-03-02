@@ -8,9 +8,9 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
 import knex from "./knex";
-import { getUserCredits } from "./user";
-import { BASE_URL, MAX_INGREDIENTS } from "./utils";
 import { trackSearch } from "./redis";
+import { BASE_URL, MAX_INGREDIENTS } from "./utils";
+import { checkSubscription } from "./actions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -378,11 +378,12 @@ export async function generateDrink(
       return "You need to authenticate first.";
     }
 
-    const userCredits = await getUserCredits(user.id);
-    if (userCredits <= 0) {
-      return "No enough credits.";
-    }
     creator = user;
+  }
+
+  const { hasActiveSubscription } = await checkSubscription();
+  if (!hasActiveSubscription) {
+    return "You need an active subscription to use the AI Cocktail Builder.";
   }
 
   if (!Array.isArray(ingredients) || ingredients.length == 0) {

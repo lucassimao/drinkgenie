@@ -9,7 +9,7 @@ export async function PremiumActionButton() {
     <>
       {hasActiveSubscription ? (
         <Link
-          href="/ai-builder"
+          href="/ai-cocktail-builder"
           className="inline-flex items-center justify-center px-6 py-3 bg-linear-to-r 
                    from-accent to-warning text-white rounded-xl font-medium group
                    transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg
