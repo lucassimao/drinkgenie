@@ -47,7 +47,7 @@ export default async function Home(props: Props) {
 
       <div className="px-4" id="recipes">
         <SectionDivider
-          title="Popular Free Recipes"
+          title="Popular Cocktail Recipes"
           subtitle="Explore our community's favorite drinks - no subscription needed!"
         />
 
