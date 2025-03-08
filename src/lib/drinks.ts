@@ -183,7 +183,6 @@ type FindByArgs = {
   page?: number;
   pageSize?: number;
   ingredient?: string | null;
-  loggedInUserId?: string | null; // logged in requesting drinks
   difficulty?: string | null;
   keyword?: string | null;
   sortBy?:
@@ -219,6 +218,7 @@ export async function getDrinks(
   args?: FindByArgs,
 ): Promise<Drink | null | Drink[] | DrinkWithTotal[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
+  const user = await currentUser();
 
   switch (args?.sortBy) {
     case "ingredients":
@@ -238,10 +238,14 @@ export async function getDrinks(
       );
       break;
     case "rating":
+      // Use a subquery to handle the rating sort to avoid aggregation conflicts
+      const favoriteCountSubquery = knex("favorites")
+        .count("* as count")
+        .whereRaw("drink_id = d.id")
+        .as("favorite_count");
+
       queryBuilder
-        .leftJoin("favorites", "d.id", "favorites.drink_id")
-        .select(knex.raw("COUNT(favorites.id) as favorite_count"))
-        .groupBy("d.id")
+        .select(favoriteCountSubquery)
         .orderBy("favorite_count", "desc");
       break;
   }
@@ -268,12 +272,12 @@ export async function getDrinks(
   }
 
   // fetching votes made by the current user
-  if (typeof args?.loggedInUserId == `number`) {
+  if (user?.id) {
     queryBuilder
       .leftJoin("favorites AS fav", function (queryBuilder) {
         queryBuilder
           .on("d.id", "=", "fav.drink_id")
-          .andOn(knex.raw("fav.user_id = ?", args.loggedInUserId!));
+          .andOn(knex.raw("fav.user_id = ?", user.id));
       })
       .select(
         knex.raw(

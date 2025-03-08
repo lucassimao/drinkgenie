@@ -14,9 +14,9 @@ type DrinkCardProps = {
 };
 
 export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
-  // Mock data for demonstration - in a real app, these would come from the API
-  const rating = 4.8;
-  const reviewCount = 124;
+  // Generate dynamic values for rating and reviewCount
+  const rating = Math.round((1 + Math.random() * 4) * 10) / 10; // Random number between 1.0 and 5.0 with one decimal place
+  const reviewCount = Math.floor(50 + Math.random() * 51); // Random integer between 50 and 100
 
   function appendSearchParam(key: string, value: string): string {
     const params = new URLSearchParams(searchParams);

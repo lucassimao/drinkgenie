@@ -21,6 +21,7 @@ export function FavoriteDrinkButton({ drink }: FavoriteDrinkButtonProps) {
     setIsFavorite((v) => !v);
 
     try {
+      // Call the server action to toggle favorite
       const result = await toggleFavorite(drink.id);
       if (typeof result == "string") throw new Error(result);
     } catch (error) {
