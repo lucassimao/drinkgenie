@@ -6,7 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 type FavoritesPageProps = {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string[] }>;
 };
 
 export default async function FavoritesPage({
@@ -19,7 +19,8 @@ export default async function FavoritesPage({
   }
 
   // Get current page from search params
-  const page = parseInt(searchParams.page || "1", 10);
+  const params = await searchParams;
+  const page = params.page?.[0] ? parseInt(params.page[0]) || 1 : 1;
 
   // Get favorited drinks directly using the getFavoriteDrinks function
   const favorites = await getFavoriteDrinks(user.id, page, DEFAULT_PAGE_SIZE);
