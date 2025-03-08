@@ -8,7 +8,6 @@ import { Martini, Plus, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LoadingState } from "./LoadingState";
-import useLocalStorage from "use-local-storage";
 
 const SUGGESTED_INGREDIENTS = [
   "Vodka",
@@ -29,7 +28,6 @@ export function IngredientForm() {
   const suggestionsDropdownRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [, setCredits] = useLocalStorage<number | null>("credits", null);
 
   // eslint-disable-next-line
   const handleKeyDown = (e: any) => {
@@ -91,8 +89,6 @@ export function IngredientForm() {
       if (typeof result == "string") {
         toast.error(result, "Ooops...");
       } else {
-        // force credits to be refreshed
-        setCredits(undefined);
         router.push(`/drink/${result.slug}`);
       }
     } finally {
@@ -128,7 +124,6 @@ export function IngredientForm() {
       className="relative bg-white rounded-2xl shadow-lg p-8 md:p-10 max-w-4xl mx-auto"
       ref={suggestionsDropdownRef}
     >
-      {isGenerating && <LoadingState />}
       <div className="flex items-center gap-4 mb-8">
         <div className="p-4 bg-accent/10 rounded-full">
           <Martini className="h-10 w-10 text-accent" />
@@ -145,7 +140,11 @@ export function IngredientForm() {
       <div className="space-y-8">
         <div className="grid gap-5">
           {ingredients.map((ingredient, index) => (
-            <div key={index} className="relative">
+            <div
+              key={index}
+              className="relative"
+              style={{ position: "relative", zIndex: 10 }}
+            >
               <input
                 type="text"
                 value={ingredient}
@@ -156,7 +155,7 @@ export function IngredientForm() {
                 }}
                 onFocus={() => setActiveInput(index)}
                 className="w-full px-5 py-4 bg-background border-2 border-primary/10 rounded-xl
-                         text-primary placeholder-primary/40 focus:outline-none focus:border-secondary
+                         text-primary placeholder-primary/40 focus:outline-hidden focus:border-secondary
                          focus:ring-2 focus:ring-secondary/20 transition-all duration-300"
                 placeholder={`Ingredient ${index + 1}`}
                 onKeyDown={handleKeyDown}
@@ -176,16 +175,16 @@ export function IngredientForm() {
               {/* Suggestions Dropdown */}
               {activeInput === index && (
                 <div
-                  className="absolute z-10 left-0 right-0 mt-2 py-3 bg-white rounded-xl shadow-lg
-                              border border-primary/10"
-                  ref={suggestionsDropdownRef}
+                  className="absolute z-[100] left-0 right-0 mt-2 py-3 bg-white rounded-xl shadow-lg
+                              border border-primary/10 max-h-80 overflow-y-auto"
+                  style={{ position: "absolute" }}
                 >
                   <div className="px-4 pb-2 mb-2 border-b border-primary/5">
                     <p className="text-sm text-primary/60">
                       Suggested Ingredients
                     </p>
                   </div>
-                  <div className="max-h-48 overflow-y-auto px-2">
+                  <div className="max-h-60 overflow-y-auto px-2">
                     {SUGGESTED_INGREDIENTS.map((suggestion) => (
                       <button
                         key={suggestion}
@@ -221,20 +220,21 @@ export function IngredientForm() {
           <button
             onClick={onClickGenerate}
             disabled={isGenerating || ingredients.every((ing) => !ing.trim())}
-            className="flex-1 sm:flex-none relative overflow-hidden px-8 py-4 bg-gradient-to-r 
+            className="flex-1 sm:flex-none relative overflow-hidden px-8 py-4 bg-linear-to-r 
                      from-accent to-warning text-white rounded-xl font-medium group
                      transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
-                     active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-accent/30
+                     active:scale-[0.98] focus:outline-hidden focus:ring-4 focus:ring-accent/30
                      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             <div className="relative flex items-center justify-center gap-2">
               <Sparkles className="h-5 w-5 animate-pulse" />
-              <span className="text-lg">Get Magical Suggestions</span>
+              <span className="text-lg">Get Magical Suggestion</span>
             </div>
           </button>
         </div>
       </div>
+      {isGenerating && <LoadingState />}
     </div>
   );
 }

@@ -45,21 +45,28 @@ V3
 
 - Pro features:
   [] Display my favourite recipes
+  [] Show subscription history
+  [] Allow cancel subscription
+  [] Favorite and list favorite recipes
+
   [] display alcohol content, flavor, glassware, and serving temp in the drink details
-  [] allow rating a recipe
   [] Common allergens and Allergy Information
-  [] Temperature-sensitive ingredients  
+  [] Temperature-sensitive ingredients
   [] Food pairing recommendations
   [] Garnish placement
   [] Color and appearance description
   [] Photography tips for social media
   [] Generate 2-3 variations of some drink. Whcih ingredients can be replaced. Suggest non-alcoholic alternatives
-  [] Receive new recipes via whatsapp and telegram
-  [] paginate search results
+  [] make sure search page can show results if no query but only filters
+  [] add calories to the db
+
   [] additional "authors" for auto generated content
-  [] in the suggested ingredients, generate the default list on build time
+  [ok] paginate search results
+  [ok] in the suggested ingredients, generate the default list on build time
+  [ok] create subscription table
 
 - New content formats:
+  [ ] Use www.deepreel.com
   [ ] Instagram and Twitter quizzes
   [ ] Pinterest channel
   [ ] Update Twitter messages: 1st recipe then a reply with the link

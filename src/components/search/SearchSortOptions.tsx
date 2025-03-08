@@ -33,7 +33,7 @@ export function SearchSortOptions() {
         defaultValue={sortBy || "latest"}
         onChange={(e) => onSortChange(e.target.value)}
         className="px-4 py-2 bg-white rounded-lg border border-primary/20 text-primary
-                 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
+                 focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent"
       >
         {SORT_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>

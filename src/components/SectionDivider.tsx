@@ -1,5 +1,4 @@
-import React from "react";
-import { Sparkles } from "lucide-react";
+import { Wand2 } from "lucide-react";
 
 interface SectionDividerProps {
   title: string;
@@ -8,21 +7,37 @@ interface SectionDividerProps {
 
 export function SectionDivider({ title, subtitle }: SectionDividerProps) {
   return (
-    <div className="relative pb-12">
-      <div className="absolute inset-0 flex items-center" aria-hidden="true">
-        <div className="w-full border-t border-primary/10" />
+    <div className="text-center pb-16">
+      {/* Gradient Badge */}
+      <div
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r 
+                 from-warning/20 to-accent/20 backdrop-blur-xs mb-6"
+      >
+        <Wand2 className="h-4 w-4 text-warning" />
+        <span
+          className="text-sm font-medium bg-linear-to-r from-warning to-accent 
+                   bg-clip-text text-transparent"
+        >
+          Free Recipes
+        </span>
       </div>
-      <div className="relative flex justify-center">
-        <div className="bg-background px-6 flex flex-col items-center">
-          <div className="bg-white shadow-md rounded-full p-3 mb-3">
-            <Sparkles className="h-6 w-6 text-accent" />
-          </div>
-          <h2 className="text-2xl font-display text-primary">{title}</h2>
-          {subtitle && (
-            <p className="mt-1 text-sm text-primary/60">{subtitle}</p>
-          )}
-        </div>
-      </div>
+
+      {/* Title with Gradient */}
+      <h2 className="text-4xl md:text-5xl font-display text-primary mb-4">
+        {title}
+        <span
+          className="block text-transparent bg-clip-text bg-linear-to-r 
+                   from-warning to-accent mt-2 pb-5"
+        >
+          For Everyone
+        </span>
+      </h2>
+
+      {subtitle && (
+        <p className="text-xl text-primary/60 max-w-2xl mx-auto p-0">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

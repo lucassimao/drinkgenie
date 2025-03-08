@@ -33,9 +33,10 @@ export async function createCheckoutSession(
     unitAmount = Math.round(amountInCents * brlRate);
   }
 
+  const isProduction = process.env.NODE_ENV == "production";
+
   const session = await stripe.checkout.sessions.create({
     metadata: {
-      credits,
       amountInCents: unitAmount,
       email: email || null,
       currency,
@@ -44,30 +45,26 @@ export async function createCheckoutSession(
     },
     line_items: [
       {
-        price_data: {
-          currency,
-          product_data: {
-            name: `${credits} DrinkGenie credits`,
-
-            description: `${credits} magical cocktail creation credits. 1 credit = 1 cocktail`,
-          },
-          unit_amount: unitAmount,
-        },
+        price: isProduction
+          ? "price_1QrrtxGIsJDYEH18F0IHkQcn"
+          : "price_1QrrxkGIsJDYEH188sNvAsHq",
         quantity: 1,
       },
     ],
-    mode: "payment",
-    success_url: `${BASE_URL}/credits/success?credits=${credits}`,
-    cancel_url: `${BASE_URL}/credits`,
+    mode: "subscription",
+    success_url: `${BASE_URL}/subscription/success`,
+    cancel_url: `${BASE_URL}/subscription`,
     customer_email: email,
   });
 
-  await track("CheckoutSession", {
-    credits,
-    amountInCents,
-    email: email || "",
-    countryCode: countryCode || "",
-  });
+  if (isProduction) {
+    await track("CheckoutSession", {
+      credits,
+      amountInCents,
+      email: email || "",
+      countryCode: countryCode || "",
+    });
+  }
 
   return session.url;
 }

@@ -43,7 +43,7 @@ export function ToastItem({ toast }: ToastItemProps) {
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="flex-shrink-0 ml-4 text-gray-400 hover:text-gray-600 transition-colors"
+              className="shrink-0 ml-4 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <X className="h-5 w-5" />
             </button>

@@ -15,7 +15,7 @@ export default function Page() {
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar */}
-        <div className="lg:w-64 flex-shrink-0">
+        <div className="lg:w-64 shrink-0">
           <Suspense fallback={<SearchFiltersFallback />}>
             <SearchFilters />
           </Suspense>

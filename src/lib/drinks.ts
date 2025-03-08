@@ -8,8 +8,9 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import slugify from "slugify";
 import { z } from "zod";
 import knex from "./knex";
-import { getUserCredits } from "./user";
+import { trackSearch } from "./redis";
 import { BASE_URL, MAX_INGREDIENTS } from "./utils";
+import { checkSubscription } from "./actions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -55,7 +56,7 @@ export async function countDrinks(
 }
 
 //eslint-disable-next-line
-function mapRowToDrink(row: Record<string, any>): Drink | DrinkWithTotal {
+function mapRowToDrink(row: Record<string, any>): DrinkWithTotal {
   return {
     id: row.id,
     name: row.name,
@@ -182,7 +183,6 @@ type FindByArgs = {
   page?: number;
   pageSize?: number;
   ingredient?: string | null;
-  loggedInUserId?: string | null; // logged in requesting drinks
   difficulty?: string | null;
   keyword?: string | null;
   sortBy?:
@@ -218,6 +218,7 @@ export async function getDrinks(
   args?: FindByArgs,
 ): Promise<Drink | null | Drink[] | DrinkWithTotal[]> {
   const queryBuilder = knex<Drink>("drinks as d").select("d.*");
+  const user = await currentUser();
 
   switch (args?.sortBy) {
     case "ingredients":
@@ -237,10 +238,14 @@ export async function getDrinks(
       );
       break;
     case "rating":
+      // Use a subquery to handle the rating sort to avoid aggregation conflicts
+      const favoriteCountSubquery = knex("favorites")
+        .count("* as count")
+        .whereRaw("drink_id = d.id")
+        .as("favorite_count");
+
       queryBuilder
-        .leftJoin("favorites", "d.id", "favorites.drink_id")
-        .select(knex.raw("COUNT(favorites.id) as favorite_count"))
-        .groupBy("d.id")
+        .select(favoriteCountSubquery)
         .orderBy("favorite_count", "desc");
       break;
   }
@@ -263,15 +268,16 @@ export async function getDrinks(
     queryBuilder.whereRaw(
       `d.name||d.description||garnish||difficulty||ingredients::text ilike '%${keyword}%'`,
     );
+    trackSearch(keyword);
   }
 
   // fetching votes made by the current user
-  if (typeof args?.loggedInUserId == `number`) {
+  if (user?.id) {
     queryBuilder
       .leftJoin("favorites AS fav", function (queryBuilder) {
         queryBuilder
           .on("d.id", "=", "fav.drink_id")
-          .andOn(knex.raw("fav.user_id = ?", args.loggedInUserId!));
+          .andOn(knex.raw("fav.user_id = ?", user.id));
       })
       .select(
         knex.raw(
@@ -314,6 +320,46 @@ export async function getDrinks(
   return Array.isArray(result)
     ? result.map(mapRowToDrink)
     : mapRowToDrink(result);
+}
+
+export async function getFavoriteDrinks(
+  userId: string,
+  page: number,
+  pageSize: number,
+): Promise<DrinkWithTotal[]> {
+  const offset = (page - 1) * pageSize;
+
+  // Use a window function to get total count in the same query
+  const queryBuilder = knex<Drink>("drinks as d")
+    .select("d.*")
+    .select(knex.raw("COUNT(*) OVER() as total_drinks"))
+    .select(knex.raw("TRUE as is_favorite"))
+    .innerJoin("favorites AS fav", function (queryBuilder) {
+      queryBuilder
+        .on("d.id", "=", "fav.drink_id")
+        .andOn(knex.raw("fav.user_id = ?", userId));
+    })
+    .orderBy("d.id", "desc")
+    .offset(offset)
+    .limit(pageSize);
+
+  // Mark all returned drinks as favorites since they're coming from the favorites table
+  const drinks = await queryBuilder;
+  return drinks.map(mapRowToDrink);
+}
+
+/**
+ * Get the count of favorite drinks for a specific user
+ * @param userId The ID of the user
+ * @returns A Promise that resolves to the count of favorite drinks
+ */
+export async function countFavoriteDrinks(userId: string): Promise<number> {
+  const result = await knex("favorites")
+    .count("* as count")
+    .where("user_id", userId)
+    .first();
+
+  return result ? Number(result.count) : 0;
 }
 
 export async function incrementViews(drinkId: number): Promise<void> {
@@ -376,11 +422,12 @@ export async function generateDrink(
       return "You need to authenticate first.";
     }
 
-    const userCredits = await getUserCredits(user.id);
-    if (userCredits <= 0) {
-      return "No enough credits.";
-    }
     creator = user;
+  }
+
+  const { hasActiveSubscription } = await checkSubscription();
+  if (!hasActiveSubscription) {
+    return "You need an active subscription to use the AI Cocktail Builder.";
   }
 
   if (!Array.isArray(ingredients) || ingredients.length == 0) {
@@ -416,7 +463,7 @@ export async function generateDrink(
                 - Consider classic and modern cocktails that could be made
                 - Think about possible variations or substitutions
                 - Take into account seasonal relevance
-              
+
               SUGGEST A DRINK:
                 For each drink, provide:
                 - Name of the cocktail
@@ -570,4 +617,30 @@ export async function getNextDrinkToShare(
   if (!result) return null;
 
   return mapRowToDrink(result);
+}
+
+type Stats = {
+  value: number;
+  suffix: string;
+  label: string;
+  decimals?: number;
+}[];
+
+export async function getStats(): Promise<Stats> {
+  const {
+    rows: [row],
+  } = await knex.raw(`
+    SELECT 
+      (SELECT COUNT(*) FROM drinks) AS total_drinks, 
+      (SELECT COUNT(DISTINCT ingredient) 
+       FROM drinks, LATERAL unnest(ingredients) AS ingredient) AS unique_ingredients
+          `);
+
+  const STATS = [
+    { value: +row.total_drinks, suffix: "+", label: "Recipes" },
+    { value: +row.unique_ingredients, suffix: "+", label: "Ingredients" },
+    { value: 4.9, suffix: "/5", label: "Rating", decimals: 1 },
+  ];
+
+  return STATS;
 }

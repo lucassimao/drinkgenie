@@ -52,7 +52,7 @@ export function NewsletterSignup() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
           className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                   text-white placeholder-white/40 focus:outline-none focus:border-white/20"
+                   text-white placeholder-white/40 focus:outline-hidden focus:border-white/20"
           required
         />
         <button

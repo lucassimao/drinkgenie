@@ -1,5 +1,5 @@
 import { DrinkCard } from "@/components/DrinkCard";
-import { IngredientForm } from "@/components/IngredientForm";
+import { Hero } from "@/components/home/Hero";
 import { Pagination } from "@/components/Pagination";
 import { SectionDivider } from "@/components/SectionDivider";
 import { Testimonials } from "@/components/Testimonials";
@@ -16,7 +16,7 @@ interface Props {
 export const revalidate = 3600; // 1hr
 const DISPLAY_TUTORIALS_AND_TESTMONIALS = false;
 
-const homePagePaginationStrategy = (page: number) => `/${page}`;
+const homePagePaginationStrategy = (page: number) => `/${page}#recipes`;
 
 export async function generateStaticParams() {
   const totalItems = await countDrinks();
@@ -42,17 +42,15 @@ export default async function Home(props: Props) {
   const totalPages = Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
 
   return (
-    <main>
-      <div className="py-12 max-w-2xl mx-auto">
-        <IngredientForm />
-      </div>
+    <main className="max-w-7xl mx-auto">
+      <Hero />
 
-      <SectionDivider
-        title="Magical Suggestions"
-        subtitle="Discover cocktails crafted just for you"
-      />
+      <div className="px-4" id="recipes">
+        <SectionDivider
+          title="Popular Cocktail Recipes"
+          subtitle="Explore our community's favorite drinks - no subscription needed!"
+        />
 
-      <div className="mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {drinks.map((drink) => (
             <div key={drink.id} className="relative">
@@ -60,6 +58,7 @@ export default async function Home(props: Props) {
             </div>
           ))}
         </div>
+
         <div className="mt-8">
           <Pagination
             hrefStrategy={homePagePaginationStrategy}
@@ -67,14 +66,23 @@ export default async function Home(props: Props) {
             totalPages={totalPages}
           />
         </div>
-      </div>
 
-      {DISPLAY_TUTORIALS_AND_TESTMONIALS && (
-        <div className="space-y-16 mb-16">
-          <VideoTutorials />
-          <Testimonials />
-        </div>
-      )}
+        {DISPLAY_TUTORIALS_AND_TESTMONIALS && (
+          <div className="space-y-16 mb-16">
+            <SectionDivider
+              title="Learn & Improve"
+              subtitle="Master the art of mixology"
+            />
+            <VideoTutorials />
+
+            <SectionDivider
+              title="What Our Users Say"
+              subtitle="Join thousands of happy cocktail enthusiasts"
+            />
+            <Testimonials />
+          </div>
+        )}
+      </div>
     </main>
   );
 }

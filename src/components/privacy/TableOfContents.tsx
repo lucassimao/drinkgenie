@@ -13,7 +13,7 @@ const sections = [
 
 export function TableOfContents() {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm sticky top-4">
+    <div className="bg-white rounded-xl p-6 shadow-xs sticky top-4">
       <div className="flex items-center gap-2 mb-4">
         <List className="h-5 w-5 text-accent" />
         <h2 className="font-medium text-primary">Contents</h2>

@@ -79,7 +79,7 @@ export function VideoTutorials() {
         {TUTORIALS.map((tutorial) => (
           <div
             key={tutorial.id}
-            className="group cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+            className="group cursor-pointer bg-white rounded-xl shadow-xs hover:shadow-md transition-all duration-300"
             onMouseEnter={() => setHoveredId(tutorial.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
@@ -91,7 +91,7 @@ export function VideoTutorials() {
               />
 
               {/* Duration Badge */}
-              <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/75 rounded-lg backdrop-blur-sm">
+              <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/75 rounded-lg backdrop-blur-xs">
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4 text-white" />
                   <span className="text-sm font-medium text-white">

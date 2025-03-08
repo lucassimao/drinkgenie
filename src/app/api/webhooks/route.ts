@@ -74,11 +74,18 @@ export async function POST(req: Request) {
     if (!user)
       throw new Error(`no customer associated to email ${customerEmail}`);
 
-    await knex("credits").insert({
+    const currentDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(currentDate.getDate() + 30); // Add 30 days
+
+    await knex("subscriptions").insert({
       user_id: user.id,
-      total: session.metadata?.credits || 0,
       stripe_id: event.id,
       stripe_event: JSON.stringify(session),
+      start: new Date(),
+      end_date: endDate,
+      amount: session.amount_subtotal,
+      status: "active",
     });
 
     console.log(
