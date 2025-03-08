@@ -1,6 +1,7 @@
-import { Crown, Lock, Shield } from "lucide-react";
+import { Crown, Lock, Shield, Clock } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
+import Link from "next/link"; // Added Link import
 import { FeaturesTable } from "./FeaturesTable";
 import { SubscribeButton } from "./SubscribeButton";
 import { SubscribeButtonFallback } from "./SubscribeButtonFallback";
@@ -83,6 +84,15 @@ export default function SubscriptionPage() {
                 className="opacity-50 hover:opacity-75 transition-opacity"
               />
             </div>
+          </div>
+          <div className="mt-4">
+            <Link
+              href="/subscription/history"
+              className="text-sm text-primary hover:text-primary/80 hover:underline flex items-center justify-center gap-1"
+            >
+              <Clock className="h-3 w-3" />
+              View Subscription History
+            </Link>
           </div>
         </div>
       </div>

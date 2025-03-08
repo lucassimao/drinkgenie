@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
+import { checkSubscription } from "@/lib/actions";
 
 export function TopBar() {
   const { isSignedIn } = useAuth();
@@ -25,6 +26,13 @@ export function TopBar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    checkSubscription().then((result) => {
+      setSubscribed(result.hasActiveSubscription);
+    });
+  }, [isSignedIn, pathname]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -158,7 +166,7 @@ export function TopBar() {
                           </span>
                         </Link>
                         <Link
-                          href="/subscription"
+                          href="/"
                           className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
                            hover:bg-primary/5 transition-colors"
                         >
@@ -169,7 +177,11 @@ export function TopBar() {
                           </span> */}
                         </Link>
                         <Link
-                          href="/subscription"
+                          href={
+                            subscribed
+                              ? "/subscription/history"
+                              : "/subscription"
+                          }
                           className="flex items-center gap-3 px-4 py-2 text-primary/80 hover:text-primary 
                            hover:bg-primary/5 transition-colors"
                         >

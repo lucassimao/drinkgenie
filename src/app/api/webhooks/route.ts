@@ -85,6 +85,7 @@ export async function POST(req: Request) {
       start: new Date(),
       end_date: endDate,
       amount: session.amount_subtotal,
+      status: "active",
     });
 
     console.log(

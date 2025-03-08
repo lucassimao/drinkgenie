@@ -67,6 +67,8 @@ export async function POST(
 
   if (process.env.NODE_ENV == "production") {
     waitUntil(generateImage(drink));
+  } else {
+    console.log("skipping image generation for dev");
   }
   return new Response("ok", {
     status: 200,
