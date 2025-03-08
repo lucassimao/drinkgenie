@@ -11,9 +11,14 @@ import { SignedIn } from "@clerk/nextjs";
 type DrinkCardProps = {
   drink: Cocktail;
   searchParams?: string;
+  hideFavoriteButton?: boolean;
 };
 
-export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
+export function DrinkCard({
+  drink,
+  searchParams,
+  hideFavoriteButton,
+}: DrinkCardProps) {
   // Generate dynamic values for rating and reviewCount
   const rating = Math.round((1 + Math.random() * 4) * 10) / 10; // Random number between 1.0 and 5.0 with one decimal place
   const reviewCount = Math.floor(50 + Math.random() * 51); // Random integer between 50 and 100
@@ -50,13 +55,15 @@ export function DrinkCard({ drink, searchParams }: DrinkCardProps) {
         </div>
 
         {/* Favorite Button - Top right */}
-        <div className="absolute top-4 right-4 z-10">
-          <SignedIn>
-            <div className="absolute top-4 right-4 z-10">
-              <FavoriteDrinkButton drink={drink} />
-            </div>
-          </SignedIn>
-        </div>
+        {!hideFavoriteButton && (
+          <div className="absolute top-4 right-4 z-10">
+            <SignedIn>
+              <div className="absolute top-4 right-4 z-10">
+                <FavoriteDrinkButton drink={drink} />
+              </div>
+            </SignedIn>
+          </div>
+        )}
       </div>
 
       {/* Content Section */}

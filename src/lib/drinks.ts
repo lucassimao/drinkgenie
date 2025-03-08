@@ -56,7 +56,7 @@ export async function countDrinks(
 }
 
 //eslint-disable-next-line
-function mapRowToDrink(row: Record<string, any>): Drink | DrinkWithTotal {
+function mapRowToDrink(row: Record<string, any>): DrinkWithTotal {
   return {
     id: row.id,
     name: row.name,
@@ -322,6 +322,46 @@ export async function getDrinks(
     : mapRowToDrink(result);
 }
 
+export async function getFavoriteDrinks(
+  userId: string,
+  page: number,
+  pageSize: number,
+): Promise<DrinkWithTotal[]> {
+  const offset = (page - 1) * pageSize;
+
+  // Use a window function to get total count in the same query
+  const queryBuilder = knex<Drink>("drinks as d")
+    .select("d.*")
+    .select(knex.raw("COUNT(*) OVER() as total_drinks"))
+    .select(knex.raw("TRUE as is_favorite"))
+    .innerJoin("favorites AS fav", function (queryBuilder) {
+      queryBuilder
+        .on("d.id", "=", "fav.drink_id")
+        .andOn(knex.raw("fav.user_id = ?", userId));
+    })
+    .orderBy("d.id", "desc")
+    .offset(offset)
+    .limit(pageSize);
+
+  // Mark all returned drinks as favorites since they're coming from the favorites table
+  const drinks = await queryBuilder;
+  return drinks.map(mapRowToDrink);
+}
+
+/**
+ * Get the count of favorite drinks for a specific user
+ * @param userId The ID of the user
+ * @returns A Promise that resolves to the count of favorite drinks
+ */
+export async function countFavoriteDrinks(userId: string): Promise<number> {
+  const result = await knex("favorites")
+    .count("* as count")
+    .where("user_id", userId)
+    .first();
+
+  return result ? Number(result.count) : 0;
+}
+
 export async function incrementViews(drinkId: number): Promise<void> {
   await knex("drinks").where("id", drinkId).increment("views", 1);
 }
@@ -423,7 +463,7 @@ export async function generateDrink(
                 - Consider classic and modern cocktails that could be made
                 - Think about possible variations or substitutions
                 - Take into account seasonal relevance
-              
+
               SUGGEST A DRINK:
                 For each drink, provide:
                 - Name of the cocktail

@@ -17,6 +17,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { checkSubscription } from "@/lib/actions";
+import { countFavoriteDrinks } from "@/lib/drinks";
 
 export function TopBar() {
   const { isSignedIn } = useAuth();
@@ -27,12 +28,17 @@ export function TopBar() {
   const searchRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const [subscribed, setSubscribed] = useState(false);
+  const [favoritesCount, setFavoritesCount] = useState<null | number>(null);
 
   useEffect(() => {
     checkSubscription().then((result) => {
       setSubscribed(result.hasActiveSubscription);
     });
-  }, [isSignedIn, pathname]);
+
+    if (user) {
+      countFavoriteDrinks(user.id).then(setFavoritesCount);
+    }
+  }, [user, pathname]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -84,13 +90,15 @@ export function TopBar() {
             {isSignedIn && (
               <div className="hidden md:flex items-center gap-4">
                 <Link
-                  href="search?favorites"
+                  href="/favorites"
                   className="group relative p-2 text-primary/60 hover:text-primary transition-colors"
                 >
                   <Heart className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-white text-xs rounded-full flex items-center justify-center">
-                    3
-                  </span>
+                  {favoritesCount && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-white text-xs rounded-full flex items-center justify-center">
+                      {favoritesCount}
+                    </span>
+                  )}
                 </Link>
 
                 <button className="group relative p-2 text-primary/60 hover:text-primary transition-colors">
@@ -161,9 +169,11 @@ export function TopBar() {
                         >
                           <Heart className="h-4 w-4" />
                           <span>Favorite Recipes</span>
-                          <span className="ml-auto bg-warning text-white text-xs px-2 py-1 rounded-full">
-                            2
-                          </span>
+                          {favoritesCount && (
+                            <span className="ml-auto bg-warning text-white text-xs px-2 py-1 rounded-full">
+                              {favoritesCount}
+                            </span>
+                          )}
                         </Link>
                         <Link
                           href="/"
