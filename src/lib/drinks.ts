@@ -422,12 +422,12 @@ export async function generateDrink(
       return "You need to authenticate first.";
     }
 
-    creator = user;
-  }
+    const { hasActiveSubscription } = await checkSubscription();
+    if (!hasActiveSubscription) {
+      return "You need an active subscription to use the AI Cocktail Builder.";
+    }
 
-  const { hasActiveSubscription } = await checkSubscription();
-  if (!hasActiveSubscription) {
-    return "You need an active subscription to use the AI Cocktail Builder.";
+    creator = user;
   }
 
   if (!Array.isArray(ingredients) || ingredients.length == 0) {
